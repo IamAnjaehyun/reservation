@@ -53,12 +53,11 @@
 
 ## ERD
 
-[//]: # (&#40;![ERD]&#40;doc/img/erd.png&#41;&#41;)
-<img width="727" alt="image" src="https://github.com/casealot/casealot-backend/assets/101981639/3a98da79-4d7b-4c7d-bc7e-bedabd4b271c">
+![ERD](doc/img/erd.png)
 
 ## Trouble Shooting
 
-[//]: # ([go to the trouble shooting section]&#40;doc/TROUBLE_SHOOTING.md&#41;)
+[go to the trouble shooting section](doc/TROUBLE_SHOOTING.md)
 
 ### Tech Stack
 
