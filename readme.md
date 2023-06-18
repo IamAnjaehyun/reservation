@@ -1,6 +1,6 @@
 # 🗒 상점 예약 서비스
 
-상점 목록을 조회하고, 원하는 시간대에 예약을 할 수 있는 API 입니다.
+등록된 매장에 한해서 실시간 검색 순위를 볼 수 있으며, 예약시간 10분전 SMS 문자알림이 가는 식당 예약 API 입니다.
 
 ## 프로젝트 기능 및 설계
 
@@ -43,11 +43,22 @@
 - 자주가는 식당 추가 기능
     - 자신이 자주가는 식당을 등록하여 특정 요청시 그 상점에 대한 정보만 확인할 수 있다.
 
-## ERD
-[//]: # (![ERD]&#40;doc/img/erd.png&#41;)
-## Trouble Shooting
-[//]: # ([go to the trouble shooting section]&#40;doc/TROUBLE_SHOOTING.md&#41;)
+### [ Goal of this project ]
 
+- AWS 웹 호스팅, CI/CD
+
+- Elasticsearch 를 통한 실시간 검색 순위 구현
+
+- 예약 승인, 예약 거절, 예약시간 10분 전 세 가지 경우에 SENS(Simple & Easy Notification Service)를 통해 SMS 전송
+
+## ERD
+
+[//]: # (&#40;![ERD]&#40;doc/img/erd.png&#41;&#41;)
+<img width="727" alt="image" src="https://github.com/casealot/casealot-backend/assets/101981639/3a98da79-4d7b-4c7d-bc7e-bedabd4b271c">
+
+## Trouble Shooting
+
+[//]: # ([go to the trouble shooting section]&#40;doc/TROUBLE_SHOOTING.md&#41;)
 
 ### Tech Stack
 
@@ -56,7 +67,9 @@
   <img src="https://img.shields.io/badge/Java-007396?style=for-the-square&logo=java&logoColor=white">
   <img src="https://img.shields.io/badge/github-181717?style=for-the-square&logo=github&logoColor=white">
   <img src="https://img.shields.io/badge/Mysql-E6B91E?style=for-the-square&logo=MySql&logoColor=white"/> 
-  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-square&logo=Docker&logoColor=white"/> 
+
+[//]: # (  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-square&logo=Docker&logoColor=white"/> )
   <img src="https://img.shields.io/badge/gradle-02303A?style=for-the-square&logo=gradle&logoColor=white">
-  <img src="https://img.shields.io/badge/AWS-232F3E?style=for-the-square&logo=amazonaws&logoColor=white">
+
+[//]: # (  <img src="https://img.shields.io/badge/AWS-232F3E?style=for-the-square&logo=amazonaws&logoColor=white">)
 </div>
