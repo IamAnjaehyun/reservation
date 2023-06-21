@@ -5,14 +5,28 @@ import com.jaehyun.reservation.admin.store.entity.Store;
 import com.jaehyun.reservation.global.entity.BaseTimeEntity;
 import com.jaehyun.reservation.user.review.domain.Review;
 import com.jaehyun.reservation.user.type.RoleType;
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "USER")
 public class User extends BaseTimeEntity {
 
   @Id
@@ -31,12 +45,10 @@ public class User extends BaseTimeEntity {
   @Enumerated(EnumType.STRING)
   private RoleType roleType;
 
-  @Builder.Default
   @JsonBackReference
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   private List<Review> reviewList;
 
-  @Builder.Default
   @JsonBackReference
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   private List<Store> storeList;

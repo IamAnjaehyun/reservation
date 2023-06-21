@@ -8,15 +8,29 @@ import com.jaehyun.reservation.global.entity.BaseTimeEntity;
 import com.jaehyun.reservation.user.review.domain.Review;
 import com.jaehyun.reservation.user.type.ReservationStatus;
 import com.jaehyun.reservation.user.user.domain.User;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.LocalDateTime;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Setter
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "RESERVATION")
 public class Reservation extends BaseTimeEntity {
 
   @Id
