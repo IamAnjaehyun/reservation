@@ -1,15 +1,15 @@
 package com.jaehyun.reservation.user.reservation.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jaehyun.reservation.admin.store.entity.Store;
 import com.jaehyun.reservation.global.entity.BaseTimeEntity;
-import com.jaehyun.reservation.user.review.domain.Review;
 import com.jaehyun.reservation.user.type.ReservationStatus;
-import com.jaehyun.reservation.user.user.domain.User;
+import com.jaehyun.reservation.user.user.domain.entity.User;
 import java.time.LocalDateTime;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -18,7 +18,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,13 +34,15 @@ public class Reservation extends BaseTimeEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long reservationId; //예약 id
+  private Long id; //예약 id
 
   @ManyToOne
+  @JsonBackReference
   @JoinColumn(name = "USER_ID")
   private User user; //유저 고유 id
 
   @ManyToOne
+  @JsonManagedReference
   @JoinColumn(name = "STORE_ID")
   private Store store; //상점 id
 
@@ -55,7 +56,4 @@ public class Reservation extends BaseTimeEntity {
 
   @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
   private LocalDateTime comeCheckTime; //예약 날짜 및 시간
-
-  @OneToOne(cascade = CascadeType.ALL)
-  private Review review; //예약 한 후 상점을 이용한 회원이라면 리뷰작성이 가능
 }

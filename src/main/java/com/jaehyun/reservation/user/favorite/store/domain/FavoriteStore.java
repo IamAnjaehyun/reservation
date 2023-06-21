@@ -1,6 +1,7 @@
 package com.jaehyun.reservation.user.favorite.store.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.jaehyun.reservation.admin.store.entity.Store;
 import com.jaehyun.reservation.global.entity.BaseTimeEntity;
 import com.jaehyun.reservation.user.favorite.domain.Favorite;
 import javax.persistence.Entity;
@@ -25,14 +26,15 @@ import lombok.NoArgsConstructor;
 public class FavoriteStore extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long favoriteStoreId; //pk
+  private Long id; //pk
 
   @ManyToOne(fetch = FetchType.EAGER)
+  @JsonManagedReference
   @JoinColumn(name = "FAVORITE_ID")
   private Favorite favorite; //부모ID
 
-  @JsonManagedReference
   @ManyToOne(fetch = FetchType.EAGER)
+  @JsonManagedReference
   @JoinColumn(name = "STORE_ID")
-  private FavoriteStore store; //식당ID
+  private Store store; //식당ID
 }

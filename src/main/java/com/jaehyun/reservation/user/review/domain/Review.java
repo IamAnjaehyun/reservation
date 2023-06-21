@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jaehyun.reservation.admin.store.entity.Store;
 import com.jaehyun.reservation.global.entity.BaseTimeEntity;
 import com.jaehyun.reservation.user.reservation.domain.Reservation;
-import com.jaehyun.reservation.user.user.domain.User;
+import com.jaehyun.reservation.user.user.domain.entity.User;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,7 +28,7 @@ public class Review extends BaseTimeEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long reviewId; //리뷰 아이디
+  private Long id; //리뷰 아이디
 
   @ManyToOne
   @JsonManagedReference
