@@ -1,0 +1,19 @@
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:
+    url: jdbc:mysql://localhost:3306/reservation
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      format_sql: true
+      ddl-auto: create-drop
+
+  jwt:
+    secret: anjaehyunUsingForTest #원래는 공개하면 안됨.
