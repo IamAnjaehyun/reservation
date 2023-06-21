@@ -16,4 +16,4 @@ spring:
       ddl-auto: create-drop
 
   jwt:
-    secret: anjaehyunUsingForTest #원래는 공개하면 안됨.
+    secret: ${SPRING_JWT_SECRET}
