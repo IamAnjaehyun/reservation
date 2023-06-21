@@ -1,9 +1,10 @@
 package com.jaehyun.reservation.user.favorite.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jaehyun.reservation.global.entity.BaseTimeEntity;
 import com.jaehyun.reservation.user.favorite.store.domain.FavoriteStore;
-import com.jaehyun.reservation.user.user.domain.User;
+import com.jaehyun.reservation.user.user.domain.entity.User;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -29,7 +30,7 @@ import lombok.NoArgsConstructor;
 public class Favorite extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long favoriteId; //사람 1명당 1개의 favorite 테이블 존재.
+  private Long id; //사람 1명당 1개의 favorite 테이블 존재.
 
   @OneToOne
   @JoinColumn(name = "USER_ID")

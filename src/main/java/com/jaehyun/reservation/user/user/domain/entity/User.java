@@ -1,4 +1,4 @@
-package com.jaehyun.reservation.user.user.domain;
+package com.jaehyun.reservation.user.user.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.jaehyun.reservation.admin.store.entity.Store;
@@ -31,25 +31,25 @@ public class User extends BaseTimeEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long userId; //유저 id
+  private Long id; //유저 id
 
-  private String userLoginId; //로그인용 아이디
+  private String loginId; //로그인용 아이디
 
   @Column(unique = true)
-  private String userPhoneNum;//유저 휴대폰 번호 겸 아이디
+  private String phoneNum;//유저 휴대폰 번호 겸 아이디
 
-  private String userPassword;//유저 비밀번호
+  private String password;//유저 비밀번호
 
-  private String userName; //유저 이름
+  private String name; //유저 이름
 
   @Enumerated(EnumType.STRING)
   private RoleType roleType;
 
   @JsonBackReference
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-  private List<Review> reviewList;
+  @OneToMany(mappedBy = "user")
+  private List<Review> reviewList; //회원 탈퇴해도 리뷰는 남아있음
 
   @JsonBackReference
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-  private List<Store> storeList;
+  private List<Store> storeList; //사장 회원탈퇴하면 상점 사라져야함
 }
