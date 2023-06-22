@@ -1,13 +1,13 @@
 package com.jaehyun.reservation.global.config;
 
 import com.jaehyun.reservation.global.service.CustomUserDetailService;
+import com.jaehyun.reservation.user.type.RoleType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
@@ -44,7 +43,7 @@ public class JwtTokenProvider {
     }
 
     // JWT 토큰 생성
-    public String createToken(String userPk, List<String> roles) {
+    public String createToken(String userPk, RoleType roles) {
         Claims claims = Jwts.claims().setSubject(userPk);
         claims.put("roles", roles); // 정보는 key / value 쌍으로 저장
         Date now = new Date();

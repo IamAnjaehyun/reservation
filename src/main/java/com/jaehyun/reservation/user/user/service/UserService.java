@@ -4,12 +4,12 @@ import com.jaehyun.reservation.global.config.JwtTokenProvider;
 import com.jaehyun.reservation.global.exception.DuplicatedIdOrPhoneNumException;
 import com.jaehyun.reservation.global.exception.IncorrectPassWordException;
 import com.jaehyun.reservation.global.exception.NotExistUserException;
+import com.jaehyun.reservation.user.type.RoleType;
 import com.jaehyun.reservation.user.user.domain.dto.UserJoinDto;
 import com.jaehyun.reservation.user.user.domain.dto.UserLoginDto;
 import com.jaehyun.reservation.user.user.domain.entity.User;
 import com.jaehyun.reservation.user.user.domain.repository.UserRepository;
 import java.security.Principal;
-import java.util.Collections;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,7 @@ public class UserService {
         .phoneNum(userJoinDto.getPhoneNum())
         .password(encodedPassword)
         .name(userJoinDto.getName())
-        .roles(Collections.singletonList("USER"))
+        .roles(RoleType.USER)
         .build();
 
     userRepository.save(user);

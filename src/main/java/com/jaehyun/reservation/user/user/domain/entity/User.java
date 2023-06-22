@@ -5,15 +5,13 @@ import com.jaehyun.reservation.admin.store.entity.Store;
 import com.jaehyun.reservation.global.entity.BaseTimeEntity;
 import com.jaehyun.reservation.user.favorite.domain.Favorite;
 import com.jaehyun.reservation.user.review.domain.Review;
-import java.util.ArrayList;
-import java.util.Collection;
+import com.jaehyun.reservation.user.type.RoleType;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,10 +22,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cascade;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @Entity
@@ -35,7 +29,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "USER")
-public class User extends BaseTimeEntity implements UserDetails {
+public class User extends BaseTimeEntity{
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,10 +45,8 @@ public class User extends BaseTimeEntity implements UserDetails {
 
   private String name; //유저 이름
 
-  @ElementCollection(fetch = FetchType.EAGER)
-  @Builder.Default
-  @Cascade(org.hibernate.annotations.CascadeType.REMOVE) // 추가: User 삭제 시 roles도 함께 삭제
-  private List<String> roles = new ArrayList<>();
+  @Enumerated(EnumType.STRING)
+  private RoleType roles; //ADMIN or USER
 
   @JsonBackReference
   @OneToMany(mappedBy = "user")
@@ -66,42 +58,4 @@ public class User extends BaseTimeEntity implements UserDetails {
 
   @OneToOne
   private Favorite favoriteList; //자주가는 식당 목록
-
-
-  @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return this.roles.stream()
-        .map(SimpleGrantedAuthority::new)
-        .collect(Collectors.toList());
-  }
-
-  @Override
-  public String getUsername() {
-    return name;
-  }
-
-  @Override
-  public String getPassword() {
-    return password;
-  }
-
-  @Override
-  public boolean isAccountNonExpired() {
-    return true;
-  }
-
-  @Override
-  public boolean isAccountNonLocked() {
-    return true;
-  }
-
-  @Override
-  public boolean isCredentialsNonExpired() {
-    return true;
-  }
-
-  @Override
-  public boolean isEnabled() {
-    return true;
-  }
 }
