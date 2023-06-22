@@ -8,12 +8,14 @@ import com.jaehyun.reservation.user.user.domain.dto.UserJoinDto;
 import com.jaehyun.reservation.user.user.domain.dto.UserLoginDto;
 import com.jaehyun.reservation.user.user.domain.entity.User;
 import com.jaehyun.reservation.user.user.domain.repository.UserRepository;
+import java.security.Principal;
 import java.util.Collections;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -57,4 +59,10 @@ public class UserService {
     return jwtTokenProvider.createToken(user.get().getLoginId(), user.get().getRoles());
   }
 
+  @Transactional
+  public String quit(String phoneNum, Principal principal) {
+    User user = userRepository.findByPhoneNum(phoneNum);
+    userRepository.deleteById(user.getId());
+    return user.getLoginId() + "회원의 회원탈퇴 성공";
+  }
 }

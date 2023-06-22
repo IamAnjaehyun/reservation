@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,6 +53,7 @@ public class User extends BaseTimeEntity implements UserDetails {
 
   @ElementCollection(fetch = FetchType.EAGER)
   @Builder.Default
+  @Cascade(org.hibernate.annotations.CascadeType.REMOVE) // 추가: User 삭제 시 roles도 함께 삭제
   private List<String> roles = new ArrayList<>();
 
   @JsonBackReference
