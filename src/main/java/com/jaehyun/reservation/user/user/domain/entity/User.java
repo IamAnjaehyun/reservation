@@ -3,23 +3,30 @@ package com.jaehyun.reservation.user.user.domain.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.jaehyun.reservation.admin.store.entity.Store;
 import com.jaehyun.reservation.global.entity.BaseTimeEntity;
+import com.jaehyun.reservation.user.favorite.domain.Favorite;
 import com.jaehyun.reservation.user.review.domain.Review;
-import com.jaehyun.reservation.user.type.RoleType;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @Entity
@@ -27,12 +34,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "USER")
-public class User extends BaseTimeEntity {
+public class User extends BaseTimeEntity implements UserDetails {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id; //유저 id
 
+  @Column(unique = true)
   private String loginId; //로그인용 아이디
 
   @Column(unique = true)
@@ -42,8 +50,9 @@ public class User extends BaseTimeEntity {
 
   private String name; //유저 이름
 
-  @Enumerated(EnumType.STRING)
-  private RoleType roleType;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @Builder.Default
+  private List<String> roles = new ArrayList<>();
 
   @JsonBackReference
   @OneToMany(mappedBy = "user")
@@ -52,4 +61,45 @@ public class User extends BaseTimeEntity {
   @JsonBackReference
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   private List<Store> storeList; //사장 회원탈퇴하면 상점 사라져야함
+
+  @OneToOne
+  private Favorite favoriteList; //자주가는 식당 목록
+
+
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return this.roles.stream()
+        .map(SimpleGrantedAuthority::new)
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public String getUsername() {
+    return name;
+  }
+
+  @Override
+  public String getPassword() {
+    return password;
+  }
+
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return true;
+  }
 }

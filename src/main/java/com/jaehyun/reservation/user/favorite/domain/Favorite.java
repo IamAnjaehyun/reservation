@@ -37,6 +37,6 @@ public class Favorite extends BaseTimeEntity {
   private User user; //유저id
 
   @JsonBackReference
-  @OneToMany(mappedBy = "favorite", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "favorite", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<FavoriteStore> favoriteStoreList; //자주가는 식당 목록
 }
