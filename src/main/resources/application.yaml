@@ -17,3 +17,7 @@ spring:
 
   jwt:
     secret: ${SPRING_JWT_SECRET}
+
+#token:
+#  header: ${TOKEN_HEADER}
+#  prefix: ${TOKEN_PREFIX}
