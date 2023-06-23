@@ -1,9 +1,9 @@
 package com.jaehyun.reservation.user.user.service;
 
 import com.jaehyun.reservation.global.config.JwtTokenProvider;
-import com.jaehyun.reservation.global.exception.DuplicatedIdOrPhoneNumException;
-import com.jaehyun.reservation.global.exception.IncorrectPassWordException;
-import com.jaehyun.reservation.global.exception.NotExistUserException;
+import com.jaehyun.reservation.global.exception.impl.user.DuplicatedIdOrPhoneNumException;
+import com.jaehyun.reservation.global.exception.impl.user.IncorrectPassWordException;
+import com.jaehyun.reservation.global.exception.impl.user.NotExistUserException;
 import com.jaehyun.reservation.user.type.RoleType;
 import com.jaehyun.reservation.user.user.domain.dto.UserJoinDto;
 import com.jaehyun.reservation.user.user.domain.dto.UserLoginDto;

@@ -1,9 +1,8 @@
 package com.jaehyun.reservation.user.user.controller;
 
-import com.jaehyun.reservation.global.exception.DuplicatedIdOrPhoneNumException;
+import com.jaehyun.reservation.global.exception.impl.user.DuplicatedIdOrPhoneNumException;
 import com.jaehyun.reservation.user.user.domain.dto.UserJoinDto;
 import com.jaehyun.reservation.user.user.domain.dto.UserLoginDto;
-import com.jaehyun.reservation.user.user.domain.entity.User;
 import com.jaehyun.reservation.user.user.service.UserService;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
