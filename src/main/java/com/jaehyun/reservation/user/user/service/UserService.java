@@ -26,9 +26,7 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
 
-  public String join(UserJoinDto userJoinDto) throws DuplicatedIdOrPhoneNumException {
-    String encodedPassword = passwordEncoder.encode(userJoinDto.getPassword());
-
+  public User join(UserJoinDto userJoinDto) throws DuplicatedIdOrPhoneNumException {
     if (userRepository.existsByLoginIdOrPhoneNum(userJoinDto.getLoginId(),
         userJoinDto.getPhoneNum())) {
       throw new DuplicatedIdOrPhoneNumException();
@@ -37,21 +35,16 @@ public class UserService {
     User user = User.builder()
         .loginId(userJoinDto.getLoginId())
         .phoneNum(userJoinDto.getPhoneNum())
-        .password(encodedPassword)
+        .password(passwordEncoder.encode(userJoinDto.getPassword()))
         .name(userJoinDto.getName())
         .roles(RoleType.USER)
         .build();
-
-    userRepository.save(user);
-    return user.getId() + "번째 유저가 회원가입을 완료하였습니다.";
+    return userRepository.save(user);
   }
 
   public String login(UserLoginDto userLoginDto) {
-    Optional<User> user = userRepository.findByLoginId(userLoginDto.getId());
-
-    if (user.isEmpty()) {
-      throw new NotExistUserException();
-    }
+    Optional<User> user = Optional.ofNullable(userRepository.findByLoginId(userLoginDto.getId())
+        .orElseThrow(NotExistUserException::new));
     if (!passwordEncoder.matches(userLoginDto.getPassword(), user.get().getPassword())) {
       throw new IncorrectPassWordException();
     }
@@ -60,9 +53,9 @@ public class UserService {
   }
 
   @Transactional
-  public String quit(String phoneNum, Principal principal) {
-    User user = userRepository.findByPhoneNum(phoneNum);
-    userRepository.deleteById(user.getId());
-    return user.getLoginId() + "회원의 회원탈퇴 성공";
+  public void quit(Principal principal) {
+    Optional<User> user = Optional.ofNullable(userRepository.findByLoginId(principal.getName())
+        .orElseThrow(NotExistUserException::new));
+    userRepository.deleteById(user.get().getId());
   }
 }
