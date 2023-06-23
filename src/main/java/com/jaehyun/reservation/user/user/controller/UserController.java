@@ -3,9 +3,12 @@ package com.jaehyun.reservation.user.user.controller;
 import com.jaehyun.reservation.global.exception.DuplicatedIdOrPhoneNumException;
 import com.jaehyun.reservation.user.user.domain.dto.UserJoinDto;
 import com.jaehyun.reservation.user.user.domain.dto.UserLoginDto;
+import com.jaehyun.reservation.user.user.domain.entity.User;
 import com.jaehyun.reservation.user.user.service.UserService;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,24 +19,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/reservation/v1/user")
+@RequestMapping("/v1")
 public class UserController {
 
   private final UserService userService;
 
   // 회원가입
-  @PostMapping("/join")
-  public String join(@RequestBody UserJoinDto userJoinDto) throws DuplicatedIdOrPhoneNumException {
-    return userService.join(userJoinDto);
+  @PostMapping("/user/join")
+  public ResponseEntity<String> join(@RequestBody UserJoinDto userJoinDto) throws DuplicatedIdOrPhoneNumException {
+    userService.join(userJoinDto);
+    return ResponseEntity.status(HttpStatus.OK).body("join ok");
   }
 
-  @GetMapping("/login")
-  public String login(@RequestBody UserLoginDto userLoginDto) {
-    return userService.login(userLoginDto);
+  @GetMapping("/user/login")
+  public ResponseEntity<String> login(@RequestBody UserLoginDto userLoginDto) {
+    String token = userService.login(userLoginDto);
+    return ResponseEntity.status(HttpStatus.OK).body(token);
   }
 
-  @DeleteMapping("/quit")
-  public String quit(@RequestParam String phoneNum, Principal principal) {
-    return userService.quit(phoneNum, principal);
+  @DeleteMapping("/user/reservation/quit")
+  public ResponseEntity<String>  quit(Principal principal) {
+    userService.quit(principal);
+    return ResponseEntity.status(HttpStatus.OK).body("quit ok");
   }
 }
