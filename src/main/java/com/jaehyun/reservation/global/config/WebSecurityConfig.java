@@ -43,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/v1/reservation/user/**")
         .hasAnyRole("USER", "ADMIN") // USER 또는 ADMIN 역할을 가진 사용자 접근 가능
         .antMatchers("/v1/reservation/admin/**").hasRole("ADMIN")
-        .antMatchers("/v1/common/**").permitAll()
+        .antMatchers("/v1/guest/**").permitAll()
         .and()
         .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
             UsernamePasswordAuthenticationFilter.class);

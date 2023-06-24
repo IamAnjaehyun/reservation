@@ -2,6 +2,7 @@ package com.jaehyun.reservation.user.user.service;
 
 import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.global.config.JwtTokenProvider;
+import com.jaehyun.reservation.global.exception.impl.token.BadTokenException;
 import com.jaehyun.reservation.global.exception.impl.user.DuplicatedIdOrPhoneNumException;
 import com.jaehyun.reservation.global.exception.impl.user.IncorrectPassWordException;
 import com.jaehyun.reservation.global.exception.impl.user.NotExistUserException;
@@ -62,5 +63,29 @@ public class UserService {
         .orElseThrow(NotExistUserException::new));
     userRepository.deleteById(user.get().getId());
     return APIResponse.delete();
+  }
+
+  public APIResponse<String> changeRole(Principal principal) {
+    Optional<User> userOptional = userRepository.findByLoginId(principal.getName());
+
+    if (userOptional.isPresent()) {
+      User user = userOptional.get();
+
+      User updatedUser = User.builder()
+          .id(user.getId())
+          .loginId(user.getLoginId())
+          .phoneNum(user.getPhoneNum())
+          .password(user.getPassword())
+          .name(user.getName())
+          .roles(RoleType.ADMIN) // 변경할 역할 값으로 설정
+          .reviewList(user.getReviewList())
+          .storeList(user.getStoreList())
+          .favoriteList(user.getFavoriteList())
+          .build();
+      userRepository.saveAndFlush(updatedUser);
+      return APIResponse.success(API_NAME, user.getName());
+    } else {
+      throw new BadTokenException();
+    }
   }
 }
