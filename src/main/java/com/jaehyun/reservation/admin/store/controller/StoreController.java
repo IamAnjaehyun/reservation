@@ -7,6 +7,7 @@ import com.jaehyun.reservation.global.common.APIResponse;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,7 +24,8 @@ public class StoreController {
   private final StoreService storeService;
 
   @PostMapping
-  public APIResponse<StoreResDto> createStore(@RequestBody StoreReqDto storeReqDto, Principal principal) {
+  public APIResponse<StoreResDto> createStore(@RequestBody StoreReqDto storeReqDto,
+      Principal principal) {
     return storeService.createStore(storeReqDto, principal);
   }
 
@@ -31,6 +33,11 @@ public class StoreController {
   public APIResponse<StoreResDto> updateStore(@PathVariable String storeName,
       @RequestBody StoreReqDto storeReqDto, Principal principal) {
     return storeService.updateStore(storeName, storeReqDto, principal);
+  }
+
+  @DeleteMapping("/{storeName}")
+  public APIResponse<String> deleteStore(@PathVariable String storeName, Principal principal) {
+    return storeService.deleteStore(storeName, principal);
   }
 
 }

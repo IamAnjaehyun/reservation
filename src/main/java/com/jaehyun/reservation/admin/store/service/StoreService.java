@@ -58,7 +58,7 @@ public class StoreService {
 
   public APIResponse<StoreResDto> updateStore(String storeId, StoreReqDto storeDto,
       Principal principal) {
-    if(storeRepository.existsByName(storeDto.getName())){
+    if (storeRepository.existsByName(storeDto.getName())) {
       throw new AlreadyExistStoreException();
     }
     Optional<User> adminOptional = userRepository.findByLoginId(principal.getName());
@@ -110,6 +110,25 @@ public class StoreService {
             .phoneNum(updatedStore.getPhoneNum())
             .build();
         return APIResponse.success(API_NAME, storeResDto);
+      } else {
+        throw new UnauthorizedException();
+      }
+    } else {
+      throw new NotExistStoreException();
+    }
+  }
+
+  public APIResponse<String> deleteStore(String storeId, Principal principal) {
+    Optional<User> adminOptional = userRepository.findByLoginId(principal.getName());
+    Optional<Store> storeOptional = storeRepository.findByName(storeId);
+
+    if (storeOptional.isPresent()) {
+      Store store = storeOptional.get();
+      User user = store.getUser();
+
+      if (user.getId().equals(adminOptional.get().getId())) {
+        storeRepository.deleteById(store.getId());
+        return APIResponse.delete();
       } else {
         throw new UnauthorizedException();
       }
