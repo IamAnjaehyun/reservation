@@ -2,6 +2,7 @@ package com.jaehyun.reservation.admin.store.service;
 
 import com.jaehyun.reservation.admin.store.domain.dto.StoreReqDto;
 import com.jaehyun.reservation.admin.store.domain.dto.StoreResDto;
+import com.jaehyun.reservation.admin.store.domain.dto.StoreViewDto;
 import com.jaehyun.reservation.admin.store.domain.entity.Store;
 import com.jaehyun.reservation.admin.store.domain.repository.StoreRepository;
 import com.jaehyun.reservation.global.common.APIResponse;
@@ -11,6 +12,8 @@ import com.jaehyun.reservation.global.exception.impl.store.NotExistStoreExceptio
 import com.jaehyun.reservation.user.user.domain.entity.User;
 import com.jaehyun.reservation.user.user.domain.repository.UserRepository;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -135,5 +138,44 @@ public class StoreService {
     } else {
       throw new NotExistStoreException();
     }
+  }
+
+  public APIResponse<List<StoreViewDto>> getStoreList(){
+    List<StoreViewDto> storeList = new ArrayList<>();
+
+    // 상점 목록 조회
+    List<Store> stores = storeRepository.findAll();
+
+    for (Store store : stores) {
+      StoreViewDto storeDto = StoreViewDto.builder()
+          .name(store.getName())
+          .description(store.getDescription())
+          .location(store.getLocation())
+          .phoneNum(store.getPhoneNum())
+          .averageRating(store.getAverageRating())
+          .totalReviewCount(store.getTotalReviewCount())
+          .build();
+
+      storeList.add(storeDto);
+    }
+    return APIResponse.success(API_NAME, storeList);
+  }
+
+  public APIResponse<StoreViewDto> getStoreDetail(String storeName){
+
+    // 상점 목록 조회
+    Optional<Store> storeOptional = Optional.ofNullable(
+        storeRepository.findByName(storeName).orElseThrow(NotExistStoreException::new));
+    Store store = storeOptional.get();
+
+      StoreViewDto storeDto = StoreViewDto.builder()
+          .name(store.getName())
+          .description(store.getDescription())
+          .location(store.getLocation())
+          .phoneNum(store.getPhoneNum())
+          .averageRating(store.getAverageRating())
+          .totalReviewCount(store.getTotalReviewCount())
+          .build();
+    return APIResponse.success(API_NAME, storeDto);
   }
 }
