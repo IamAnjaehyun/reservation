@@ -1,4 +1,4 @@
-package com.jaehyun.reservation.admin.store.entity;
+package com.jaehyun.reservation.admin.store.domain.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
