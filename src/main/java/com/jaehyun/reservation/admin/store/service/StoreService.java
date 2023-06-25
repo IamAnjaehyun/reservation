@@ -5,7 +5,9 @@ import com.jaehyun.reservation.admin.store.domain.dto.StoreResDto;
 import com.jaehyun.reservation.admin.store.domain.entity.Store;
 import com.jaehyun.reservation.admin.store.domain.repository.StoreRepository;
 import com.jaehyun.reservation.global.common.APIResponse;
+import com.jaehyun.reservation.global.exception.impl.role.UnauthorizedException;
 import com.jaehyun.reservation.global.exception.impl.store.AlreadyExistStoreException;
+import com.jaehyun.reservation.global.exception.impl.store.NotExistStoreException;
 import com.jaehyun.reservation.user.user.domain.entity.User;
 import com.jaehyun.reservation.user.user.domain.repository.UserRepository;
 import java.security.Principal;
@@ -51,6 +53,68 @@ public class StoreService {
       return APIResponse.success(API_NAME, storeResDto);
     } else {
       throw new AlreadyExistStoreException();
+    }
+  }
+
+  public APIResponse<StoreResDto> updateStore(String storeId, StoreReqDto storeDto,
+      Principal principal) {
+    if(storeRepository.existsByName(storeDto.getName())){
+      throw new AlreadyExistStoreException();
+    }
+    Optional<User> adminOptional = userRepository.findByLoginId(principal.getName());
+    Optional<Store> storeOptional = storeRepository.findByName(storeId);
+
+    if (storeOptional.isPresent()) {
+      Store store = storeOptional.get();
+      User user = store.getUser();
+
+      if (user.getId().equals(adminOptional.get().getId())) {
+        // 기존 상점 정보 가져오기
+        String name = store.getName();
+        String description = store.getDescription();
+        String location = store.getLocation();
+        String phoneNum = store.getPhoneNum();
+
+        // StoreDto에서 받은 정보로 필드 업데이트
+        if (storeDto.getName() != null) {
+          name = storeDto.getName();
+        }
+        if (storeDto.getDescription() != null) {
+          description = storeDto.getDescription();
+        }
+        if (storeDto.getLocation() != null) {
+          location = storeDto.getLocation();
+        }
+        if (storeDto.getPhoneNum() != null) {
+          phoneNum = storeDto.getPhoneNum();
+        }
+
+        Store updatedStore = Store.builder()
+            .id(store.getId())
+            .user(store.getUser())
+            .name(name)
+            .description(description)
+            .location(location)
+            .phoneNum(phoneNum)
+            .averageRating(store.getAverageRating())
+            .totalRating(store.getTotalRating())
+            .totalReviewCount(store.getTotalReviewCount())
+            .build();
+
+        storeRepository.save(updatedStore);
+        StoreResDto storeResDto = StoreResDto.builder()
+            .adminName(updatedStore.getUser().getName())
+            .name(updatedStore.getName())
+            .description(updatedStore.getDescription())
+            .location(updatedStore.getLocation())
+            .phoneNum(updatedStore.getPhoneNum())
+            .build();
+        return APIResponse.success(API_NAME, storeResDto);
+      } else {
+        throw new UnauthorizedException();
+      }
+    } else {
+      throw new NotExistStoreException();
     }
   }
 }
