@@ -1,9 +1,10 @@
 package com.jaehyun.reservation.user.user.service;
 
+import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.global.config.JwtTokenProvider;
-import com.jaehyun.reservation.global.exception.DuplicatedIdOrPhoneNumException;
-import com.jaehyun.reservation.global.exception.IncorrectPassWordException;
-import com.jaehyun.reservation.global.exception.NotExistUserException;
+import com.jaehyun.reservation.global.exception.impl.user.DuplicatedIdOrPhoneNumException;
+import com.jaehyun.reservation.global.exception.impl.user.IncorrectPassWordException;
+import com.jaehyun.reservation.global.exception.impl.user.NotExistUserException;
 import com.jaehyun.reservation.user.type.RoleType;
 import com.jaehyun.reservation.user.user.domain.dto.UserJoinDto;
 import com.jaehyun.reservation.user.user.domain.dto.UserLoginDto;
@@ -25,8 +26,9 @@ public class UserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
+  private final String API_NAME = "user";
 
-  public User join(UserJoinDto userJoinDto) throws DuplicatedIdOrPhoneNumException {
+  public APIResponse<String> join(UserJoinDto userJoinDto) throws DuplicatedIdOrPhoneNumException {
     if (userRepository.existsByLoginIdOrPhoneNum(userJoinDto.getLoginId(),
         userJoinDto.getPhoneNum())) {
       throw new DuplicatedIdOrPhoneNumException();
@@ -39,23 +41,26 @@ public class UserService {
         .name(userJoinDto.getName())
         .roles(RoleType.USER)
         .build();
-    return userRepository.save(user);
+    userRepository.save(user);
+    return APIResponse.create(API_NAME, user.getLoginId());
   }
 
-  public String login(UserLoginDto userLoginDto) {
+  public APIResponse<String> login(UserLoginDto userLoginDto) {
     Optional<User> user = Optional.ofNullable(userRepository.findByLoginId(userLoginDto.getId())
         .orElseThrow(NotExistUserException::new));
     if (!passwordEncoder.matches(userLoginDto.getPassword(), user.get().getPassword())) {
       throw new IncorrectPassWordException();
     }
 
-    return jwtTokenProvider.createToken(user.get().getLoginId(), user.get().getRoles());
+    return APIResponse.success(API_NAME,
+        jwtTokenProvider.createToken(user.get().getLoginId(), user.get().getRoles()));
   }
 
   @Transactional
-  public void quit(Principal principal) {
+  public APIResponse<Void> quit(Principal principal) {
     Optional<User> user = Optional.ofNullable(userRepository.findByLoginId(principal.getName())
         .orElseThrow(NotExistUserException::new));
     userRepository.deleteById(user.get().getId());
+    return APIResponse.delete();
   }
 }
