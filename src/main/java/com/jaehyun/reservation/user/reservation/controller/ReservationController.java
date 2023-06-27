@@ -25,12 +25,18 @@ public class ReservationController {
 
   @PostMapping("/{storeName}")
   public APIResponse<ReservationResDto> createReservation(@PathVariable String storeName,
-      @RequestBody ReservationReqDto reservationReqDto, Principal principal){
+      @RequestBody ReservationReqDto reservationReqDto, Principal principal) {
     return reservationService.createReservation(storeName, reservationReqDto, principal);
   }
 
   @GetMapping
-  public APIResponse<List<ReservationResDto>> getReservationList(Principal principal){
+  public APIResponse<List<ReservationResDto>> getReservationList(Principal principal) {
     return reservationService.getReservationList(principal);
+  }
+
+  @GetMapping("/{reservationId}")
+  public APIResponse<ReservationResDto> getReservationDetail(@PathVariable Long reservationId,
+      Principal principal) {
+    return reservationService.getReservationDetail(reservationId, principal);
   }
 }

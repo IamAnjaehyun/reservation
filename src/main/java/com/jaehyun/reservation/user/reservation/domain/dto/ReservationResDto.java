@@ -19,6 +19,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReservationResDto {
+  private Long reservationId;
+
   private String userName;
   private String storeName;
 

@@ -3,6 +3,7 @@ package com.jaehyun.reservation.user.reservation.service;
 import com.jaehyun.reservation.admin.store.domain.entity.Store;
 import com.jaehyun.reservation.admin.store.domain.repository.StoreRepository;
 import com.jaehyun.reservation.global.common.APIResponse;
+import com.jaehyun.reservation.global.exception.impl.reservation.NotExistReservationException;
 import com.jaehyun.reservation.global.exception.impl.reservation.ReservationDateException;
 import com.jaehyun.reservation.global.exception.impl.store.NotExistStoreException;
 import com.jaehyun.reservation.global.exception.impl.user.DuplicatedIdOrPhoneNumException;
@@ -64,22 +65,48 @@ public class ReservationService {
         .reservationDateTime(reservation.getReservationDateTime())
         .reservationPeopleNum(reservation.getReservationPeopleNum())
         .build();
+
     return APIResponse.success(API_NAME, reservationResDto);
   }
 
-  public APIResponse<List<ReservationResDto>> getReservationList(Principal principal){
-    Optional<User> user = userRepository.findByLoginId(principal.getName());
+  public APIResponse<List<ReservationResDto>> getReservationList(Principal principal) {
+    Optional<User> user = Optional.ofNullable(userRepository.findByLoginId(principal.getName())
+        .orElseThrow(NotExistUserException::new));
+
     List<ReservationResDto> reservationResDtoList = new ArrayList<>();
     List<Reservation> reservationList = reservationRepository.findAllByUser(user.get());
-    for(Reservation reservation : reservationList){
+
+    for (Reservation reservation : reservationList) {
       ReservationResDto reservationResDto = ReservationResDto.builder()
           .userName(reservation.getUser().getName())
           .storeName(reservation.getStore().getName())
+          .reservationId(reservation.getId())
           .reservationDateTime(reservation.getReservationDateTime())
           .reservationPeopleNum(reservation.getReservationPeopleNum())
           .build();
       reservationResDtoList.add(reservationResDto);
     }
-    return APIResponse.success(API_NAME,reservationResDtoList);
+    return APIResponse.success(API_NAME, reservationResDtoList);
+  }
+
+  public APIResponse<ReservationResDto> getReservationDetail(Long reservationId,
+      Principal principal) {
+    Optional<User> user = Optional.ofNullable(userRepository.findByLoginId(principal.getName())
+        .orElseThrow(NotExistUserException::new));
+
+    Optional<Reservation> reservationOptional = Optional.ofNullable(
+        reservationRepository.findByUserAndId(user.get(), reservationId)
+            .orElseThrow(NotExistStoreException::new));
+
+    Reservation reservation = reservationOptional.get();
+    ReservationResDto reservationResDto = ReservationResDto.builder()
+        .userName(reservation.getUser().getName())
+        .storeName(reservation.getStore().getName())
+        .reservationId(reservation.getId())
+        .reservationDateTime(reservation.getReservationDateTime())
+        .reservationPeopleNum(reservation.getReservationPeopleNum())
+        .build();
+
+    return APIResponse.success(API_NAME, reservationResDto);
   }
 }
