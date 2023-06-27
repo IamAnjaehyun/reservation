@@ -5,8 +5,10 @@ import com.jaehyun.reservation.user.reservation.domain.dto.ReservationReqDto;
 import com.jaehyun.reservation.user.reservation.domain.dto.ReservationResDto;
 import com.jaehyun.reservation.user.reservation.service.ReservationService;
 import java.security.Principal;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,5 +27,10 @@ public class ReservationController {
   public APIResponse<ReservationResDto> createReservation(@PathVariable String storeName,
       @RequestBody ReservationReqDto reservationReqDto, Principal principal){
     return reservationService.createReservation(storeName, reservationReqDto, principal);
+  }
+
+  @GetMapping
+  public APIResponse<List<ReservationResDto>> getReservationList(Principal principal){
+    return reservationService.getReservationList(principal);
   }
 }

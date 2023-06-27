@@ -29,10 +29,8 @@ import org.springframework.stereotype.Service;
 public class ReservationService {
 
   private final StoreRepository storeRepository;
-
   private final UserRepository userRepository;
   private final ReservationRepository reservationRepository;
-
   private final String API_NAME = "reservation";
 
 
@@ -67,5 +65,21 @@ public class ReservationService {
         .reservationPeopleNum(reservation.getReservationPeopleNum())
         .build();
     return APIResponse.success(API_NAME, reservationResDto);
+  }
+
+  public APIResponse<List<ReservationResDto>> getReservationList(Principal principal){
+    Optional<User> user = userRepository.findByLoginId(principal.getName());
+    List<ReservationResDto> reservationResDtoList = new ArrayList<>();
+    List<Reservation> reservationList = reservationRepository.findAllByUser(user.get());
+    for(Reservation reservation : reservationList){
+      ReservationResDto reservationResDto = ReservationResDto.builder()
+          .userName(reservation.getUser().getName())
+          .storeName(reservation.getStore().getName())
+          .reservationDateTime(reservation.getReservationDateTime())
+          .reservationPeopleNum(reservation.getReservationPeopleNum())
+          .build();
+      reservationResDtoList.add(reservationResDto);
+    }
+    return APIResponse.success(API_NAME,reservationResDtoList);
   }
 }
