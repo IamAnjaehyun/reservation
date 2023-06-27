@@ -23,6 +23,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -56,4 +57,8 @@ public class Reservation extends BaseTimeEntity {
 
   @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
   private LocalDateTime comeCheckTime; //도착 여부
+
+  public void setStatus(ReservationStatus status) {
+    this.status = status;
+  }
 }

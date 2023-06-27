@@ -39,4 +39,10 @@ public class ReservationController {
       Principal principal) {
     return reservationService.getReservationDetail(reservationId, principal);
   }
+
+  @PostMapping("/cancel/{reservationId}")
+  public APIResponse<String> cancelReservation(@PathVariable Long reservationId,
+      Principal principal) {
+    return reservationService.cancelReservation(reservationId, principal);
+  }
 }

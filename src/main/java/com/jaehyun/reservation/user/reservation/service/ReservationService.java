@@ -3,6 +3,7 @@ package com.jaehyun.reservation.user.reservation.service;
 import com.jaehyun.reservation.admin.store.domain.entity.Store;
 import com.jaehyun.reservation.admin.store.domain.repository.StoreRepository;
 import com.jaehyun.reservation.global.common.APIResponse;
+import com.jaehyun.reservation.global.exception.impl.reservation.DuplicateReservationException;
 import com.jaehyun.reservation.global.exception.impl.reservation.NotExistReservationException;
 import com.jaehyun.reservation.global.exception.impl.reservation.ReservationDateException;
 import com.jaehyun.reservation.global.exception.impl.store.NotExistStoreException;
@@ -15,6 +16,7 @@ import com.jaehyun.reservation.user.reservation.domain.repository.ReservationRep
 import com.jaehyun.reservation.user.type.ReservationStatus;
 import com.jaehyun.reservation.user.user.domain.entity.User;
 import com.jaehyun.reservation.user.user.domain.repository.UserRepository;
+import com.sun.jdi.request.DuplicateRequestException;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,17 +39,21 @@ public class ReservationService {
 
   public APIResponse<ReservationResDto> createReservation(String storeName,
       ReservationReqDto reservationReqDto, Principal principal) {
-    // 예약 날짜 비교 로직 구현 (원하는 비교 조건에 따라 수정 필요)
-
-    if (reservationReqDto.getReservationDateTime().isBefore(LocalDateTime.now())) {
-      // 예약 날짜가 현재 시간보다 이전인 경우 예외 처리
-      throw new ReservationDateException();
-    }
-
     Store store = storeRepository.findByName(storeName)
         .orElseThrow(NotExistStoreException::new);
     User user = userRepository.findByLoginId(principal.getName())
         .orElseThrow(NotExistUserException::new);
+
+    // 예약 날짜가 현재 시간보다 이전인 경우 예외 처리
+    if (reservationReqDto.getReservationDateTime().isBefore(LocalDateTime.now())) {
+      throw new ReservationDateException();
+    }
+
+    //같은 시간에 이미 예약한경우 예외처리
+    if (reservationRepository.existsByReservationDateTimeAndUser(
+        reservationReqDto.getReservationDateTime(), user)) {
+      throw new DuplicateReservationException();
+    }
 
     // 예약 생성
     Reservation reservation = Reservation.builder()
@@ -60,9 +66,11 @@ public class ReservationService {
     reservationRepository.save(reservation);
 
     ReservationResDto reservationResDto = ReservationResDto.builder()
+        .reservationId(reservation.getId())
         .storeName(reservation.getStore().getName())
         .userName(reservation.getUser().getName())
         .reservationDateTime(reservation.getReservationDateTime())
+        .reservationStatus(reservation.getStatus())
         .reservationPeopleNum(reservation.getReservationPeopleNum())
         .build();
 
@@ -81,6 +89,7 @@ public class ReservationService {
           .userName(reservation.getUser().getName())
           .storeName(reservation.getStore().getName())
           .reservationId(reservation.getId())
+          .reservationStatus(reservation.getStatus())
           .reservationDateTime(reservation.getReservationDateTime())
           .reservationPeopleNum(reservation.getReservationPeopleNum())
           .build();
@@ -103,10 +112,27 @@ public class ReservationService {
         .userName(reservation.getUser().getName())
         .storeName(reservation.getStore().getName())
         .reservationId(reservation.getId())
+        .reservationStatus(reservation.getStatus())
         .reservationDateTime(reservation.getReservationDateTime())
         .reservationPeopleNum(reservation.getReservationPeopleNum())
         .build();
 
     return APIResponse.success(API_NAME, reservationResDto);
+  }
+
+  public APIResponse<String> cancelReservation(Long reservationId,
+      Principal principal) {
+    Optional<User> user = Optional.ofNullable(userRepository.findByLoginId(principal.getName())
+        .orElseThrow(NotExistUserException::new));
+
+    Optional<Reservation> reservationOptional = Optional.ofNullable(
+        reservationRepository.findByUserAndId(user.get(), reservationId)
+            .orElseThrow(NotExistStoreException::new));
+
+    Reservation reservation = reservationOptional.get();
+    reservation.setStatus(ReservationStatus.CANCEL);
+    reservationRepository.save(reservation);
+
+    return APIResponse.success(API_NAME, ReservationStatus.CANCEL.toString());
   }
 }

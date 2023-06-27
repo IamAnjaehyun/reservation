@@ -23,6 +23,7 @@ public class ReservationResDto {
 
   private String userName;
   private String storeName;
+  private ReservationStatus reservationStatus;
 
   @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
   private LocalDateTime reservationDateTime; //예약 날짜 및 시간
