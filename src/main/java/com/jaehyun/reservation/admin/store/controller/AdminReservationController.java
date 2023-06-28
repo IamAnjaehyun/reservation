@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -56,12 +57,13 @@ public class AdminReservationController {
   }
 
   //예약 상태 OKAY로 변경
-  @PostMapping("/{storeId}/{reservationId}/changeStatus")
-  public APIResponse<String> changeReservationStatus(@PathVariable String storeId,
+  @PostMapping("/{storeId}/{reservationId}/{reservationStatus}/change")
+  public APIResponse<String> changeReservationStatus(@PathVariable Long storeId,
       @PathVariable Long reservationId,
       @PathVariable ReservationStatus reservationStatus,
+      @RequestParam ReservationStatus changeStatus,
       Principal principal) {
-    return adminReservationService.changeReservationStatus(principal);
+    return adminReservationService.changeReservationStatus(storeId, reservationId,
+        reservationStatus, changeStatus,principal);
   }
-
 }
