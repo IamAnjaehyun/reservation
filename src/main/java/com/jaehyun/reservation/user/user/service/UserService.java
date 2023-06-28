@@ -2,6 +2,7 @@ package com.jaehyun.reservation.user.user.service;
 
 import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.global.config.JwtTokenProvider;
+import com.jaehyun.reservation.global.exception.impl.token.BadTokenException;
 import com.jaehyun.reservation.global.exception.impl.user.DuplicatedIdOrPhoneNumException;
 import com.jaehyun.reservation.global.exception.impl.user.IncorrectPassWordException;
 import com.jaehyun.reservation.global.exception.impl.user.NotExistUserException;
@@ -62,5 +63,11 @@ public class UserService {
         .orElseThrow(NotExistUserException::new));
     userRepository.deleteById(user.get().getId());
     return APIResponse.delete();
+  }
+
+  public APIResponse<String> changeRole(Principal principal) {
+    User user = userRepository.findByLoginId(principal.getName()).orElseThrow(() -> new BadTokenException());
+    user.setRoles(RoleType.ADMIN);
+    userRepository.saveAndFlush(user);
   }
 }

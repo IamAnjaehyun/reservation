@@ -1,5 +1,6 @@
 package com.jaehyun.reservation.global.config;
 
+import com.jaehyun.reservation.user.type.RoleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,17 +34,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
-        .httpBasic().disable() // 기본 설정은 해제
+        .httpBasic().disable() // rest api 만을 고려하여 기본 설정은 해제하겠습니다.
         .csrf().disable() // csrf 보안 토큰 disable처리.
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증 세션 사용안함
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 역시 사용하지 않습니다.
         .and()
         .authorizeRequests() // 요청에 대한 사용권한 체크
+        .antMatchers("/v1/reservation/user/**")
+        .hasAnyRole("USER", "ADMIN") // USER 또는 ADMIN 역할을 가진 사용자 접근 가능
         .antMatchers("/v1/reservation/admin/**").hasRole("ADMIN")
-        .antMatchers("/v1/reservation/user/**").hasRole("USER")
-        .antMatchers("/v1/user/join","/v1/user/login").permitAll()
+        .antMatchers("/v1/guest/**").permitAll()
         .and()
         .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
             UsernamePasswordAuthenticationFilter.class);
     // JwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 전에 넣는다
   }
+
 }
