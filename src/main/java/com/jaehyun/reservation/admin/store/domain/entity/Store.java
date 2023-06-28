@@ -4,7 +4,7 @@ package com.jaehyun.reservation.admin.store.domain.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jaehyun.reservation.global.entity.BaseTimeEntity;
-import com.jaehyun.reservation.user.reservation.domain.Reservation;
+import com.jaehyun.reservation.user.reservation.domain.entity.Reservation;
 import com.jaehyun.reservation.user.review.domain.Review;
 import com.jaehyun.reservation.user.user.domain.entity.User;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.jaehyun.reservation.user.reservation.domain;
+package com.jaehyun.reservation.user.reservation.domain.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -23,6 +23,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -55,5 +56,9 @@ public class Reservation extends BaseTimeEntity {
   private ReservationStatus status = ReservationStatus.DEFAULT; //예약 승인 여부 (기본 PLEASE_WAIT)
 
   @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-  private LocalDateTime comeCheckTime; //예약 날짜 및 시간
+  private LocalDateTime comeCheckTime; //도착 여부
+
+  public void setStatus(ReservationStatus status) {
+    this.status = status;
+  }
 }
