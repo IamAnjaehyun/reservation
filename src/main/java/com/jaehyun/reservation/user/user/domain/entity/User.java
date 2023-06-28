@@ -58,4 +58,8 @@ public class User extends BaseTimeEntity{
 
   @OneToOne
   private Favorite favoriteList; //자주가는 식당 목록
+
+  public void setRoles(RoleType roles) {
+    this.roles = roles;
+  }
 }

@@ -69,5 +69,6 @@ public class UserService {
     User user = userRepository.findByLoginId(principal.getName()).orElseThrow(() -> new BadTokenException());
     user.setRoles(RoleType.ADMIN);
     userRepository.saveAndFlush(user);
+    return APIResponse.success(API_NAME, RoleType.ADMIN.getKey());
   }
 }
