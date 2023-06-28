@@ -66,26 +66,8 @@ public class UserService {
   }
 
   public APIResponse<String> changeRole(Principal principal) {
-    Optional<User> userOptional = userRepository.findByLoginId(principal.getName());
-
-    if (userOptional.isPresent()) {
-      User user = userOptional.get();
-
-      User updatedUser = User.builder()
-          .id(user.getId())
-          .loginId(user.getLoginId())
-          .phoneNum(user.getPhoneNum())
-          .password(user.getPassword())
-          .name(user.getName())
-          .roles(RoleType.ADMIN) // 변경할 역할 값으로 설정
-          .reviewList(user.getReviewList())
-          .storeList(user.getStoreList())
-          .favoriteList(user.getFavoriteList())
-          .build();
-      userRepository.saveAndFlush(updatedUser);
-      return APIResponse.success(API_NAME, user.getName());
-    } else {
-      throw new BadTokenException();
-    }
+    User user = userRepository.findByLoginId(principal.getName()).orElseThrow(() -> new BadTokenException());
+    user.setRoles(RoleType.ADMIN);
+    userRepository.saveAndFlush(user);
   }
 }
