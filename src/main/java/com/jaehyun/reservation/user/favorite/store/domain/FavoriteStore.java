@@ -1,7 +1,7 @@
 package com.jaehyun.reservation.user.favorite.store.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.jaehyun.reservation.admin.store.domain.entity.Store;
+import com.jaehyun.reservation.admin.store.entity.Store;
 import com.jaehyun.reservation.global.entity.BaseTimeEntity;
 import com.jaehyun.reservation.user.favorite.domain.Favorite;
 import javax.persistence.Entity;
