@@ -25,7 +25,7 @@ public class UserController {
     return userService.quit(principal);
   }
 
-  @PostMapping("/changeRole")
+  @PostMapping("/changeRoleAdmin")
   public APIResponse<String> changeRole(Principal principal) {
     return userService.changeRole(principal);
   }
