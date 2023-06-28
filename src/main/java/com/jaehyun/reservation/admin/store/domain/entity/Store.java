@@ -1,4 +1,4 @@
-package com.jaehyun.reservation.admin.store.entity;
+package com.jaehyun.reservation.admin.store.domain.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -62,4 +62,20 @@ public class Store extends BaseTimeEntity {
   @JsonBackReference
   @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
   private List<Review> reviewList; //리뷰 목록
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public void setLocation(String location) {
+    this.location = location;
+  }
+
+  public void setPhoneNum(String phoneNum) {
+    this.phoneNum = phoneNum;
+  }
 }
