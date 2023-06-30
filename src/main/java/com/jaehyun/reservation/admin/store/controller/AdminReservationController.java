@@ -73,7 +73,7 @@ public class AdminReservationController {
       @RequestParam ReservationStatus changeStatus,
       Principal principal) {
 
-    return APIResponse.success(API_NAME,
+    return APIResponse.success("status",
         adminReservationService.changeReservationStatus(
             storeId, reservationId, reservationStatus, changeStatus, principal));
   }
