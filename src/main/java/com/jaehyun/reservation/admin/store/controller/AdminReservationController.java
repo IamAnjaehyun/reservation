@@ -7,10 +7,12 @@ import com.jaehyun.reservation.user.reservation.domain.dto.ReservationResDto;
 import com.jaehyun.reservation.user.reservation.domain.repository.ReservationRepository;
 import com.jaehyun.reservation.user.type.ReservationStatus;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,24 +47,26 @@ public class AdminReservationController {
   }
 
   //내 상점 클릭해서 특정 상점 예약 목록 전체 확인 ALL/CANCEL/REFUSE/REQUEST/OKAY
-  @GetMapping("/{storeId}/{status}")
+  @GetMapping("/status/{storeId}")
   public APIResponse<List<ReservationResDto>> getStoreReservationList(@PathVariable Long storeId,
-      @PathVariable ReservationStatus status, Principal principal) {
-    return adminReservationService.getStoreReservationListByStatus(storeId, status, principal);
+      @RequestParam ReservationStatus status, Principal principal) {
+    return APIResponse.success(API_NAME,
+        adminReservationService.getStoreReservationListByStatus(storeId, status, principal));
   }
 
   //내 상점 클릭해서 특정 상점 특정 날짜 예약 목록 전체 요청 목록 확인 ALL/CANCEL/REFUSE/REQUEST/OKAY
-  @GetMapping("/{storeId}/{date}/{status}")
+  @GetMapping("/status/date/{storeId}")
   public APIResponse<List<ReservationResDto>> getReservationStatusList(@PathVariable Long storeId,
-      @PathVariable LocalDateTime localDateTime,
-      @PathVariable ReservationStatus status,
+      @RequestParam("localDateTime") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate localDateTime,
+      @RequestParam ReservationStatus status,
       Principal principal) {
-    return adminReservationService.getStoreReservationListByDateAndStatus(
-        storeId, localDateTime, status, principal);
+    return APIResponse.success(API_NAME,
+        adminReservationService.getStoreReservationListByDateAndStatus(storeId, localDateTime,
+            status, principal));
   }
 
   //예약 상태 OKAY로 변경
-  @PostMapping("/{storeId}/{reservationId}/{reservationStatus}/change")
+  @PostMapping("/change/{storeId}/{reservationId}/{reservationStatus}")
   public APIResponse<String> changeReservationStatus(@PathVariable Long storeId,
       @PathVariable Long reservationId,
       @PathVariable ReservationStatus reservationStatus,

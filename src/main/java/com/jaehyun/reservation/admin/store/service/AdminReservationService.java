@@ -13,7 +13,9 @@ import com.jaehyun.reservation.user.type.ReservationStatus;
 import com.jaehyun.reservation.user.user.domain.entity.User;
 import com.jaehyun.reservation.user.user.domain.repository.UserRepository;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -88,14 +90,68 @@ public class AdminReservationService {
     return reservationResDtoList;
   }
 
-  public APIResponse<List<ReservationResDto>> getStoreReservationListByStatus(Long storeId,
+  public List<ReservationResDto> getStoreReservationListByStatus(Long storeId,
       ReservationStatus status, Principal principal) {
-    return null;
+    User user = userRepository.findByLoginId(principal.getName())
+        .orElseThrow(NotExistUserException::new);
+
+    Store store = storeRepository.findByUserAndId(user, storeId)
+        .orElseThrow(NotExistStoreException::new);
+
+    List<ReservationResDto> reservationResDtoList = new ArrayList<>();
+
+    List<Reservation> reservationList = reservationRepository.findAllByStoreAndStatus(store,
+        status); //예약 목록
+    for (Reservation reservation : reservationList) {
+      if (reservation.getStore().getId().equals(storeId)) {
+        ReservationResDto reservationResDto = ReservationResDto.builder()
+            .storeId(reservation.getStore().getId())
+            .userId(reservation.getUser().getId())
+            .reservationId(reservation.getId())
+            .reservationStatus(reservation.getStatus())
+            .reservationPeopleNum(reservation.getReservationPeopleNum())
+            .reservationDateTime(reservation.getReservationDateTime())
+            .storeName(reservation.getStore().getName())
+            .userName(reservation.getUser().getName())
+            .build();
+        reservationResDtoList.add(reservationResDto);
+      }
+    }
+    return reservationResDtoList;
   }
 
-  public APIResponse<List<ReservationResDto>> getStoreReservationListByDateAndStatus(Long storeId,
-      LocalDateTime localDateTime, ReservationStatus status, Principal principal) {
-    return null;
+  public List<ReservationResDto> getStoreReservationListByDateAndStatus(Long storeId,
+      LocalDate localDateTime, ReservationStatus status, Principal principal) {
+    User user = userRepository.findByLoginId(principal.getName())
+        .orElseThrow(NotExistUserException::new);
+
+    Store store = storeRepository.findByUserAndId(user, storeId)
+        .orElseThrow(NotExistStoreException::new);
+
+    List<ReservationResDto> reservationResDtoList = new ArrayList<>();
+
+    LocalDateTime startDate = localDateTime.atStartOfDay();
+    LocalDateTime endDate = localDateTime.atTime(LocalTime.MAX);
+
+    List<Reservation> reservationList = reservationRepository.findAllByStoreAndStatusAndReservationDateTimeBetween(
+        store, status, startDate, endDate); // 예약 목록
+
+    for (Reservation reservation : reservationList) {
+      if (reservation.getStore().getId().equals(storeId)) {
+        ReservationResDto reservationResDto = ReservationResDto.builder()
+            .storeId(reservation.getStore().getId())
+            .userId(reservation.getUser().getId())
+            .reservationId(reservation.getId())
+            .reservationStatus(reservation.getStatus())
+            .reservationPeopleNum(reservation.getReservationPeopleNum())
+            .reservationDateTime(reservation.getReservationDateTime())
+            .storeName(reservation.getStore().getName())
+            .userName(reservation.getUser().getName())
+            .build();
+        reservationResDtoList.add(reservationResDto);
+      }
+    }
+    return reservationResDtoList;
   }
 
   public String changeReservationStatus(Long storeId,
