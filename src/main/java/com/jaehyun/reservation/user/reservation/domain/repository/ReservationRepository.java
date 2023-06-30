@@ -1,5 +1,6 @@
 package com.jaehyun.reservation.user.reservation.domain.repository;
 
+import com.jaehyun.reservation.admin.store.domain.entity.Store;
 import com.jaehyun.reservation.user.reservation.domain.entity.Reservation;
 import com.jaehyun.reservation.user.type.ReservationStatus;
 import com.jaehyun.reservation.user.user.domain.entity.User;
@@ -12,6 +13,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
   List<Reservation> findAllByUser(User user);
+  List<Reservation> findAllByStore(Store store);
 
   Optional<Reservation> findByUserAndId(User user, Long id);
 

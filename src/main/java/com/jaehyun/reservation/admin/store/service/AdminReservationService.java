@@ -13,9 +13,10 @@ import com.jaehyun.reservation.user.type.ReservationStatus;
 import com.jaehyun.reservation.user.user.domain.entity.User;
 import com.jaehyun.reservation.user.user.domain.repository.UserRepository;
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.swing.text.html.Option;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,26 +30,75 @@ public class AdminReservationService {
   private final StoreRepository storeRepository;
   private final UserRepository userRepository;
 
-  private final String API_NAME = "reservationList";
 
-  public APIResponse<List<ReservationResDto>> getAllStoreReservationList(Principal principal) {
+  public List<ReservationResDto> getAllStoreReservationList(Principal principal) {
+    User user = userRepository.findByLoginId(principal.getName())
+        .orElseThrow(NotExistUserException::new);
+
+    List<Store> storeList = storeRepository.findAllByUser(user); //사장이 갖고있는 모든 상점들 list
+
+    List<ReservationResDto> reservationResDtoList = new ArrayList<>();
+
+    for (Store store : storeList) { //갖고있는 모든 상점
+      List<Reservation> reservationList = reservationRepository.findAllByStore(
+          store); //상점에게 요청된 모든 예약들
+      for (Reservation reservation : reservationList) {
+        ReservationResDto reservationResDto = ReservationResDto.builder()
+            .storeId(reservation.getStore().getId())
+            .userId(reservation.getUser().getId())
+            .reservationId(reservation.getId())
+            .reservationStatus(reservation.getStatus())
+            .reservationPeopleNum(reservation.getReservationPeopleNum())
+            .reservationDateTime(reservation.getReservationDateTime())
+            .storeName(reservation.getStore().getName())
+            .userName(reservation.getUser().getName())
+            .build();
+        reservationResDtoList.add(reservationResDto);
+      }
+    }
+
+    return reservationResDtoList;
+  }
+
+  public List<ReservationResDto> getAllReservationList(Long storeId, Principal principal) {
+    User user = userRepository.findByLoginId(principal.getName())
+        .orElseThrow(NotExistUserException::new);
+
+    Store store = storeRepository.findByUserAndId(user, storeId)
+        .orElseThrow(NotExistStoreException::new);
+
+    List<ReservationResDto> reservationResDtoList = new ArrayList<>();
+
+    List<Reservation> reservationList = reservationRepository.findAllByStore(store); //예약 목록
+    for (Reservation reservation : reservationList) {
+      if (reservation.getStore().getId().equals(storeId)) {
+        ReservationResDto reservationResDto = ReservationResDto.builder()
+            .storeId(reservation.getStore().getId())
+            .userId(reservation.getUser().getId())
+            .reservationId(reservation.getId())
+            .reservationStatus(reservation.getStatus())
+            .reservationPeopleNum(reservation.getReservationPeopleNum())
+            .reservationDateTime(reservation.getReservationDateTime())
+            .storeName(reservation.getStore().getName())
+            .userName(reservation.getUser().getName())
+            .build();
+        reservationResDtoList.add(reservationResDto);
+      }
+    }
+    return reservationResDtoList;
+  }
+
+  public APIResponse<List<ReservationResDto>> getStoreReservationListByStatus(Long storeId,
+      ReservationStatus status, Principal principal) {
     return null;
   }
 
-  public APIResponse<List<ReservationResDto>> getAllReservationList(Principal principal) {
+  public APIResponse<List<ReservationResDto>> getStoreReservationListByDateAndStatus(Long storeId,
+      LocalDateTime localDateTime, ReservationStatus status, Principal principal) {
     return null;
   }
 
-  public APIResponse<List<ReservationResDto>> getStoreReservationListByStatus(Principal principal) {
-    return null;
-  }
-
-  public APIResponse<List<ReservationResDto>> getStoreReservationListByDateAndStatus(
-      Principal principal) {
-    return null;
-  }
-
-  public APIResponse<String> changeReservationStatus(Long storeId,
+  public String changeReservationStatus(Long storeId,
       Long reservationId, ReservationStatus reservationStatus, ReservationStatus changeStatus,
       Principal principal) {
     Optional<User> userOptional = Optional.ofNullable(
@@ -67,6 +117,6 @@ public class AdminReservationService {
     reservation.setStatus(changeStatus);
     reservationRepository.save(reservation);
 
-    return APIResponse.success("reservationStatus", reservation.getStatus().toString());
+    return reservation.getStatus().toString();
   }
 }
