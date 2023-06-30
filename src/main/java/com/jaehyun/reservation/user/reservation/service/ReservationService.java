@@ -67,6 +67,8 @@ public class ReservationService {
 
     ReservationResDto reservationResDto = ReservationResDto.builder()
         .reservationId(reservation.getId())
+        .storeId(reservation.getStore().getId())
+        .userId(reservation.getUser().getId())
         .storeName(reservation.getStore().getName())
         .userName(reservation.getUser().getName())
         .reservationDateTime(reservation.getReservationDateTime())
@@ -86,6 +88,8 @@ public class ReservationService {
 
     for (Reservation reservation : reservationList) {
       ReservationResDto reservationResDto = ReservationResDto.builder()
+          .storeId(reservation.getStore().getId())
+          .userId(reservation.getUser().getId())
           .userName(reservation.getUser().getName())
           .storeName(reservation.getStore().getName())
           .reservationId(reservation.getId())
@@ -109,6 +113,8 @@ public class ReservationService {
 
     Reservation reservation = reservationOptional.get();
     ReservationResDto reservationResDto = ReservationResDto.builder()
+        .storeId(reservation.getStore().getId())
+        .userId(reservation.getUser().getId())
         .userName(reservation.getUser().getName())
         .storeName(reservation.getStore().getName())
         .reservationId(reservation.getId())

@@ -26,34 +26,39 @@ public class AdminReservationController {
 
   private final ReservationRepository reservationRepository;
   private final AdminReservationService adminReservationService;
+  private final String API_NAME = "reservationList";
+
 
   //내 상점 목록 확인
   @GetMapping
   public APIResponse<List<ReservationResDto>> getAllReservationList(Principal principal) {
-    return adminReservationService.getAllStoreReservationList(principal);
+    return APIResponse.success(API_NAME,
+        adminReservationService.getAllStoreReservationList(principal));
   }
 
   //내 특정 상점 목록 확인
   @GetMapping("/{storeId}")
   public APIResponse<List<ReservationResDto>> getAllReservationByStoreList(
-      @PathVariable String storeId, Principal principal) {
-    return adminReservationService.getAllReservationList(principal);
+      @PathVariable Long storeId, Principal principal) {
+    return APIResponse.success(
+        API_NAME, adminReservationService.getAllReservationList(storeId, principal));
   }
 
   //내 상점 클릭해서 특정 상점 예약 목록 전체 확인 ALL/CANCEL/REFUSE/REQUEST/OKAY
   @GetMapping("/{storeId}/{status}")
-  public APIResponse<List<ReservationResDto>> getStoreReservationList(@PathVariable String storeId,
+  public APIResponse<List<ReservationResDto>> getStoreReservationList(@PathVariable Long storeId,
       @PathVariable ReservationStatus status, Principal principal) {
-    return adminReservationService.getStoreReservationListByStatus(principal);
+    return adminReservationService.getStoreReservationListByStatus(storeId, status, principal);
   }
 
   //내 상점 클릭해서 특정 상점 특정 날짜 예약 목록 전체 요청 목록 확인 ALL/CANCEL/REFUSE/REQUEST/OKAY
   @GetMapping("/{storeId}/{date}/{status}")
-  public APIResponse<List<ReservationResDto>> getReservationStatusList(@PathVariable String storeId,
+  public APIResponse<List<ReservationResDto>> getReservationStatusList(@PathVariable Long storeId,
       @PathVariable LocalDateTime localDateTime,
       @PathVariable ReservationStatus status,
       Principal principal) {
-    return adminReservationService.getStoreReservationListByDateAndStatus(principal);
+    return adminReservationService.getStoreReservationListByDateAndStatus(
+        storeId, localDateTime, status, principal);
   }
 
   //예약 상태 OKAY로 변경
@@ -63,7 +68,9 @@ public class AdminReservationController {
       @PathVariable ReservationStatus reservationStatus,
       @RequestParam ReservationStatus changeStatus,
       Principal principal) {
-    return adminReservationService.changeReservationStatus(storeId, reservationId,
-        reservationStatus, changeStatus,principal);
+
+    return APIResponse.success(API_NAME,
+        adminReservationService.changeReservationStatus(
+            storeId, reservationId, reservationStatus, changeStatus, principal));
   }
 }
