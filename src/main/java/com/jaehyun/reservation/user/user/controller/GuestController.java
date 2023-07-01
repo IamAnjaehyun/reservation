@@ -43,8 +43,8 @@ public class GuestController {
   }
 
   //상점 상세 조회
-  @GetMapping("/store/{storeName}")
-  public APIResponse<StoreViewDto> storeDetail(@PathVariable String storeName){
-    return storeService.getStoreDetail(storeName);
+  @GetMapping("/store/{storeId}")
+  public APIResponse<StoreViewDto> storeDetail(@PathVariable Long storeId){
+    return storeService.getStoreDetail(storeId);
   }
 }

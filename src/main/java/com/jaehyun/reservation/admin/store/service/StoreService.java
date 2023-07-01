@@ -59,7 +59,7 @@ public class StoreService {
     return APIResponse.success(API_NAME, storeResDto);
   }
 
-  public APIResponse<StoreResDto> updateStore(String storeId, StoreReqDto storeDto,
+  public APIResponse<StoreResDto> updateStore(Long storeId, StoreReqDto storeDto,
       Principal principal) {
     //상점 중복이름 불가
     if (storeRepository.existsByName(storeDto.getName())) {
@@ -69,7 +69,7 @@ public class StoreService {
         userRepository.findByLoginId(principal.getName()).orElseThrow(
             NotExistUserException::new));
     Optional<Store> storeOptional = Optional.ofNullable(
-        storeRepository.findByName(storeId).orElseThrow(NotExistStoreException::new));
+        storeRepository.findById(storeId).orElseThrow(NotExistStoreException::new));
 
     Store store = storeOptional.get();
     User user = store.getUser();
@@ -94,10 +94,10 @@ public class StoreService {
     }
   }
 
-  public APIResponse<String> deleteStore(String storeId, Principal principal) {
+  public APIResponse<String> deleteStore(Long storeId, Principal principal) {
     Optional<User> adminOptional = userRepository.findByLoginId(principal.getName());
     Optional<Store> storeOptional = Optional.ofNullable(
-        storeRepository.findByName(storeId).orElseThrow(NotExistStoreException::new));
+        storeRepository.findById(storeId).orElseThrow(NotExistStoreException::new));
 
       Store store = storeOptional.get();
       User user = store.getUser();
@@ -118,6 +118,7 @@ public class StoreService {
 
     for (Store store : stores) {
       StoreViewDto storeDto = StoreViewDto.builder()
+          .storeId(store.getId())
           .name(store.getName())
           .description(store.getDescription())
           .location(store.getLocation())
@@ -131,14 +132,15 @@ public class StoreService {
     return APIResponse.success(API_NAME, storeList);
   }
 
-  public APIResponse<StoreViewDto> getStoreDetail(String storeName) {
+  public APIResponse<StoreViewDto> getStoreDetail(Long storeId) {
 
     // 상점 목록 조회
     Optional<Store> storeOptional = Optional.ofNullable(
-        storeRepository.findByName(storeName).orElseThrow(NotExistStoreException::new));
+        storeRepository.findById(storeId).orElseThrow(NotExistStoreException::new));
     Store store = storeOptional.get();
 
     StoreViewDto storeDto = StoreViewDto.builder()
+        .storeId(store.getId())
         .name(store.getName())
         .description(store.getDescription())
         .location(store.getLocation())

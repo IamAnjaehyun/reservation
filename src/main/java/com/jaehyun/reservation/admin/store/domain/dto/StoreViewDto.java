@@ -13,6 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StoreViewDto {
+  private Long storeId; //매장 고유 번호
   private String name; //매장 이름
 
   private String description; //매장 설명

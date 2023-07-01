@@ -23,10 +23,10 @@ public class ReservationController {
 
   private final ReservationService reservationService;
 
-  @PostMapping("/{storeName}")
-  public APIResponse<ReservationResDto> createReservation(@PathVariable String storeName,
+  @PostMapping("/{storeId}")
+  public APIResponse<ReservationResDto> createReservation(@PathVariable Long storeId,
       @RequestBody ReservationReqDto reservationReqDto, Principal principal) {
-    return reservationService.createReservation(storeName, reservationReqDto, principal);
+    return reservationService.createReservation(storeId, reservationReqDto, principal);
   }
 
   @GetMapping

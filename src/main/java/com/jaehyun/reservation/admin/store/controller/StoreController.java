@@ -29,15 +29,15 @@ public class StoreController {
     return storeService.createStore(storeReqDto, principal);
   }
 
-  @PutMapping("/{storeName}")
-  public APIResponse<StoreResDto> updateStore(@PathVariable String storeName,
+  @PutMapping("/{storeId}")
+  public APIResponse<StoreResDto> updateStore(@PathVariable Long storeId,
       @RequestBody StoreReqDto storeReqDto, Principal principal) {
-    return storeService.updateStore(storeName, storeReqDto, principal);
+    return storeService.updateStore(storeId, storeReqDto, principal);
   }
 
-  @DeleteMapping("/{storeName}")
-  public APIResponse<String> deleteStore(@PathVariable String storeName, Principal principal) {
-    return storeService.deleteStore(storeName, principal);
+  @DeleteMapping("/{storeId}")
+  public APIResponse<String> deleteStore(@PathVariable Long storeId, Principal principal) {
+    return storeService.deleteStore(storeId, principal);
   }
 
 }

@@ -37,9 +37,9 @@ public class ReservationService {
   private final String API_NAME = "reservation";
 
 
-  public APIResponse<ReservationResDto> createReservation(String storeName,
+  public APIResponse<ReservationResDto> createReservation(Long storeId,
       ReservationReqDto reservationReqDto, Principal principal) {
-    Store store = storeRepository.findByName(storeName)
+    Store store = storeRepository.findById(storeId)
         .orElseThrow(NotExistStoreException::new);
     User user = userRepository.findByLoginId(principal.getName())
         .orElseThrow(NotExistUserException::new);
