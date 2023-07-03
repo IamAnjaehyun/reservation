@@ -9,6 +9,7 @@ import com.jaehyun.reservation.user.review.service.ReviewService;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,13 +34,21 @@ public class ReviewController {
       @PathVariable Long reservationId,
       @RequestBody ReviewReqDto reviewReqDto,
       Principal principal) {
-    return APIResponse.success(API_NAME, reviewService.createReview(storeId, reviewReqDto, reservationId, principal));
+    return APIResponse.success(API_NAME,
+        reviewService.createReview(storeId, reviewReqDto, reservationId, principal));
   }
 
   @PutMapping("/{reviewId}")
   public APIResponse<ReviewResDto> updateReview(@PathVariable Long reviewId,
       @RequestBody ReviewReqDto reviewReqDto,
       Principal principal) {
-    return APIResponse.success(API_NAME, reviewService.updateReview(reviewId, reviewReqDto, principal));
+    return APIResponse.success(API_NAME,
+        reviewService.updateReview(reviewId, reviewReqDto, principal));
+  }
+
+  @DeleteMapping("/{reviewId}")
+  public APIResponse<Void> deleteReview(@PathVariable Long reviewId, Principal principal) {
+    reviewService.deleteReview(reviewId, principal);
+    return APIResponse.delete();
   }
 }

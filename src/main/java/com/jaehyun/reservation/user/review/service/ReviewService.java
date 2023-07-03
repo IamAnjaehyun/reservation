@@ -80,4 +80,11 @@ public class ReviewService {
         .storeName(review.getStore().getName())
         .build();
   }
+
+  public void deleteReview(Long reviewId, Principal principal) {
+    User user = userRepository.findByLoginId(principal.getName()).get();
+    Review review = reviewRepository.findByIdAndUser(reviewId, user).orElseThrow(NotExistReviewException::new);
+
+    reviewRepository.delete(review);
+  }
 }
