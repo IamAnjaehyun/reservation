@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,5 +34,12 @@ public class ReviewController {
       @RequestBody ReviewReqDto reviewReqDto,
       Principal principal) {
     return APIResponse.success(API_NAME, reviewService.createReview(storeId, reviewReqDto, reservationId, principal));
+  }
+
+  @PutMapping("/{reviewId}")
+  public APIResponse<ReviewResDto> updateReview(@PathVariable Long reviewId,
+      @RequestBody ReviewReqDto reviewReqDto,
+      Principal principal) {
+    return APIResponse.success(API_NAME, reviewService.updateReview(reviewId, reviewReqDto, principal));
   }
 }

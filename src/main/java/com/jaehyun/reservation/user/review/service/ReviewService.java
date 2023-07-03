@@ -2,9 +2,9 @@ package com.jaehyun.reservation.user.review.service;
 
 import com.jaehyun.reservation.admin.store.domain.entity.Store;
 import com.jaehyun.reservation.admin.store.domain.repository.StoreRepository;
-import com.jaehyun.reservation.global.exception.impl.reservation.NotExistReservationException;
 import com.jaehyun.reservation.global.exception.impl.reservation.NotUsedStoreException;
 import com.jaehyun.reservation.global.exception.impl.review.AlreadyExistReviewException;
+import com.jaehyun.reservation.global.exception.impl.review.NotExistReviewException;
 import com.jaehyun.reservation.global.exception.impl.store.NotExistStoreException;
 import com.jaehyun.reservation.user.reservation.domain.entity.Reservation;
 import com.jaehyun.reservation.user.reservation.domain.repository.ReservationRepository;
@@ -58,6 +58,25 @@ public class ReviewService {
         .userName(review.getUser().getName())
         .reviewText(review.getReviewText())
         .storeId(storeId)
+        .storeName(review.getStore().getName())
+        .build();
+  }
+
+  public ReviewResDto updateReview(Long reviewId, ReviewReqDto reviewReqDto, Principal principal) {
+    User user = userRepository.findByLoginId(principal.getName()).get();
+    Review review = reviewRepository.findByIdAndUser(reviewId, user).orElseThrow(NotExistReviewException::new);
+
+    review.setReviewText(reviewReqDto.getReviewText());
+    review.setStarRating(reviewReqDto.getStars());
+    reviewRepository.save(review);
+
+    return ReviewResDto.builder()
+        .stars(review.getStarRating())
+        .reviewId(review.getId())
+        .userId(review.getUser().getId())
+        .userName(review.getUser().getName())
+        .reviewText(review.getReviewText())
+        .storeId(review.getStore().getId())
         .storeName(review.getStore().getName())
         .build();
   }

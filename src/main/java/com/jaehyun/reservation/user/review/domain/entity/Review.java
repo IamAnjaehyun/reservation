@@ -45,4 +45,12 @@ public class Review extends BaseTimeEntity {
 
   private String reviewText; //리뷰 텍스트
   private double starRating; //별점
+
+  public void setReviewText(String reviewText) {
+    this.reviewText = reviewText;
+  }
+
+  public void setStarRating(double starRating) {
+    this.starRating = starRating;
+  }
 }
