@@ -1,4 +1,4 @@
-package com.jaehyun.reservation.user.review.domain;
+package com.jaehyun.reservation.user.review.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jaehyun.reservation.admin.store.domain.entity.Store;
@@ -44,5 +44,5 @@ public class Review extends BaseTimeEntity {
   private Reservation reservation; //예약번호
 
   private String reviewText; //리뷰 텍스트
-  private int starRating; //별점
+  private double starRating; //별점
 }
