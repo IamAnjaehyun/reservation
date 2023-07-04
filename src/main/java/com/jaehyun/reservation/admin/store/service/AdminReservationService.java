@@ -87,8 +87,8 @@ public class AdminReservationService {
         .orElseThrow(NotExistUserException::new);
     List<Store> storeList = storeRepository.findAllByUser(user);
 
-    Page<Reservation> reservationPage = reservationRepository.findAllByStoreIn(storeList, pageable);
-    return reservationPage.map(this::mapToReservationResDto);
+    return reservationRepository.findAllByStoreIn(storeList, pageable)
+        .map(this::mapToReservationResDto);
   }
 
   public Page<ReservationResDto> getStoreReservationListByStatus(Long storeId,
@@ -98,14 +98,13 @@ public class AdminReservationService {
     Store store = storeRepository.findByUserAndId(user, storeId)
         .orElseThrow(CantFindStoreException::new);
 
-    Page<Reservation> reservationPage;
     if (status != null) {
-      reservationPage = reservationRepository.findAllByStoreAndStatus(store, status, pageable);
+      return reservationRepository.findAllByStoreAndStatus(store, status, pageable)
+          .map(this::mapToReservationResDto);
     } else {
-      reservationPage = reservationRepository.findAllByStore(store, pageable);
+      return reservationRepository.findAllByStore(store, pageable)
+          .map(this::mapToReservationResDto);
     }
-
-    return reservationPage.map(this::mapToReservationResDto);
   }
 
   public Page<ReservationResDto> getStoreReservationListByDateAndStatus(Long storeId,
@@ -117,24 +116,21 @@ public class AdminReservationService {
     LocalDateTime startDate = localDate.atStartOfDay();
     LocalDateTime endDate = localDate.atTime(LocalTime.MAX);
 
-    Page<Reservation> reservationPage;
     if (status != null) {
-      reservationPage = reservationRepository
-          .findAllByStoreAndStatusAndReservationDateTimeBetween(store, status, startDate, endDate,
-              pageable);
+      return reservationRepository.findAllByStoreAndStatusAndReservationDateTimeBetween(store, status, startDate, endDate, pageable)
+          .map(this::mapToReservationResDto);
     } else {
-      reservationPage = reservationRepository
-          .findAllByStoreAndReservationDateTimeBetween(store, startDate, endDate, pageable);
+      return reservationRepository.findAllByStoreAndReservationDateTimeBetween(store, startDate, endDate, pageable)
+          .map(this::mapToReservationResDto);
     }
-
-    return reservationPage.map(this::mapToReservationResDto);
   }
 
   public ReservationStatus changeReservationStatus(Long storeId,
       Long reservationId, ReservationStatus reservationStatus, ReservationStatus changeStatus,
       Principal principal) {
     //내가 가게의 사장인지 확인
-    User user = userRepository.findByLoginId(principal.getName()).get();
+    User user = userRepository.findByLoginId(principal.getName())
+        .orElseThrow(NotExistUserException::new);
     Store store = storeRepository.findByUserIdAndId(user.getId(), storeId)
         .orElseThrow(NotExistStoreException::new);
     Reservation reservation = reservationRepository.findByStoreIdAndIdAndStatus(store.getId(),
@@ -157,14 +153,5 @@ public class AdminReservationService {
         .storeName(reservation.getStore().getName())
         .userName(reservation.getUser().getName())
         .build();
-  }
-
-  //return 용 list 생성
-  private List<ReservationResDto> mapToReservationResDtoList(List<Reservation> reservationList) {
-    List<ReservationResDto> reservationResDtoList = new ArrayList<>();
-    for (Reservation reservation : reservationList) {
-      reservationResDtoList.add(mapToReservationResDto(reservation));
-    }
-    return reservationResDtoList;
   }
 }

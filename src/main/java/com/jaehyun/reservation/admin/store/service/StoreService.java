@@ -110,34 +110,19 @@ public class StoreService {
   }
 
   public Page<StoreViewDto> getStoreList(Pageable pageable) {
-    List<StoreViewDto> storeList = new ArrayList<>();
-
-    // 상점 목록 조회
     Page<Store> storePage = storeRepository.findAll(pageable);
-
-    for (Store store : storePage.getContent()) {
-      StoreViewDto storeDto = StoreViewDto.builder()
-          .storeId(store.getId())
-          .name(store.getName())
-          .description(store.getDescription())
-          .location(store.getLocation())
-          .phoneNum(store.getPhoneNum())
-          .averageRating(store.getAverageRating())
-          .totalReviewCount(store.getTotalReviewCount())
-          .build();
-
-      storeList.add(storeDto);
-    }
-    return new PageImpl<>(storeList, pageable, storePage.getTotalElements());
+    return storePage.map(this::mapToStoreViewDto);
   }
 
   public StoreViewDto getStoreDetail(Long storeId) {
 
-    // 상점 목록 조회
-    Optional<Store> storeOptional = Optional.ofNullable(
-        storeRepository.findById(storeId).orElseThrow(NotExistStoreException::new));
-    Store store = storeOptional.get();
+    // 상점 상세 조회
+    Store store = storeRepository.findById(storeId)
+        .orElseThrow(NotExistStoreException::new);
+    return mapToStoreViewDto(store);
+  }
 
+  private StoreViewDto mapToStoreViewDto(Store store) {
     return StoreViewDto.builder()
         .storeId(store.getId())
         .name(store.getName())
