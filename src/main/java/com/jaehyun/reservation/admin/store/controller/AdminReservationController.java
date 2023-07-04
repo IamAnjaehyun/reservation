@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminReservationController {
 
   private final AdminReservationService adminReservationService;
-  private final String API_NAME = "reservationList";
+  private static final String API_NAME = "reservationList";
 
 
   //내 상점 목록 확인
