@@ -1,8 +1,6 @@
 package com.jaehyun.reservation.user.review.controller;
 
 import com.jaehyun.reservation.global.common.APIResponse;
-import com.jaehyun.reservation.user.reservation.domain.dto.ReservationReqDto;
-import com.jaehyun.reservation.user.reservation.domain.dto.ReservationResDto;
 import com.jaehyun.reservation.user.review.domain.dto.ReviewReqDto;
 import com.jaehyun.reservation.user.review.domain.dto.ReviewResDto;
 import com.jaehyun.reservation.user.review.service.ReviewService;

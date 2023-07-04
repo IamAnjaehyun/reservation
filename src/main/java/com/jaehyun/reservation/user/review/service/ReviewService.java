@@ -64,7 +64,8 @@ public class ReviewService {
 
   public ReviewResDto updateReview(Long reviewId, ReviewReqDto reviewReqDto, Principal principal) {
     User user = userRepository.findByLoginId(principal.getName()).get();
-    Review review = reviewRepository.findByIdAndUser(reviewId, user).orElseThrow(NotExistReviewException::new);
+    Review review = reviewRepository.findByIdAndUser(reviewId, user)
+        .orElseThrow(NotExistReviewException::new);
 
     review.setReviewText(reviewReqDto.getReviewText());
     review.setStarRating(reviewReqDto.getStars());
@@ -83,7 +84,8 @@ public class ReviewService {
 
   public void deleteReview(Long reviewId, Principal principal) {
     User user = userRepository.findByLoginId(principal.getName()).get();
-    Review review = reviewRepository.findByIdAndUser(reviewId, user).orElseThrow(NotExistReviewException::new);
+    Review review = reviewRepository.findByIdAndUser(reviewId, user)
+        .orElseThrow(NotExistReviewException::new);
 
     reviewRepository.delete(review);
   }

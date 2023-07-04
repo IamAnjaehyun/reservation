@@ -5,7 +5,6 @@ import com.jaehyun.reservation.admin.store.domain.dto.StoreResDto;
 import com.jaehyun.reservation.admin.store.domain.dto.StoreViewDto;
 import com.jaehyun.reservation.admin.store.domain.entity.Store;
 import com.jaehyun.reservation.admin.store.domain.repository.StoreRepository;
-import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.global.exception.impl.role.UnauthorizedException;
 import com.jaehyun.reservation.global.exception.impl.store.AlreadyExistStoreException;
 import com.jaehyun.reservation.global.exception.impl.store.NotExistStoreException;
@@ -30,9 +29,8 @@ public class StoreService {
 
   private final UserRepository userRepository;
   private final StoreRepository storeRepository;
-  private final String API_NAME = "store";
 
-  public APIResponse<StoreResDto> createStore(StoreReqDto storeReqDto, Principal principal) {
+  public StoreResDto createStore(StoreReqDto storeReqDto, Principal principal) {
     Optional<User> adminOptional = Optional.ofNullable(
         userRepository.findByLoginId(principal.getName()).orElseThrow(NotExistUserException::new));
     //중복된 상점의 이름이 들어온다면 예외처리
@@ -52,17 +50,16 @@ public class StoreService {
         .build();
     storeRepository.save(store);
 
-    StoreResDto storeResDto = StoreResDto.builder()
+    return StoreResDto.builder()
         .adminName(store.getUser().getName())
         .name(store.getName())
         .description(store.getDescription())
         .location(store.getLocation())
         .phoneNum(store.getPhoneNum())
         .build();
-    return APIResponse.success(API_NAME, storeResDto);
   }
 
-  public APIResponse<StoreResDto> updateStore(Long storeId, StoreReqDto storeDto,
+  public StoreResDto updateStore(Long storeId, StoreReqDto storeDto,
       Principal principal) {
     //상점 중복이름 불가
     if (storeRepository.existsByName(storeDto.getName())) {
@@ -84,36 +81,35 @@ public class StoreService {
       store.setPhoneNum(storeDto.getPhoneNum());
 
       storeRepository.save(store);
-      StoreResDto storeResDto = StoreResDto.builder()
+      return StoreResDto.builder()
           .adminName(store.getUser().getName())
           .name(store.getName())
           .description(store.getDescription())
           .location(store.getLocation())
           .phoneNum(store.getPhoneNum())
           .build();
-      return APIResponse.success(API_NAME, storeResDto);
     } else {
       throw new UnauthorizedException();
     }
   }
 
-  public APIResponse<String> deleteStore(Long storeId, Principal principal) {
+  public void deleteStore(Long storeId, Principal principal) {
+
     Optional<User> adminOptional = userRepository.findByLoginId(principal.getName());
     Optional<Store> storeOptional = Optional.ofNullable(
         storeRepository.findById(storeId).orElseThrow(NotExistStoreException::new));
 
-      Store store = storeOptional.get();
-      User user = store.getUser();
+    Store store = storeOptional.get();
+    User user = store.getUser();
 
-      if (user.getId().equals(adminOptional.get().getId())) {
-        storeRepository.deleteById(store.getId());
-        return APIResponse.delete();
-      } else {
-        throw new UnauthorizedException();
-      }
+    if (user.getId().equals(adminOptional.get().getId())) {
+      storeRepository.deleteById(store.getId());
+    } else {
+      throw new UnauthorizedException();
+    }
   }
 
-  public APIResponse<Page<StoreViewDto>> getStoreList(Pageable pageable) {
+  public Page<StoreViewDto> getStoreList(Pageable pageable) {
     List<StoreViewDto> storeList = new ArrayList<>();
 
     // 상점 목록 조회
@@ -132,17 +128,17 @@ public class StoreService {
 
       storeList.add(storeDto);
     }
-    return APIResponse.success(API_NAME, new PageImpl<>(storeList, pageable, storePage.getTotalElements()));
+    return new PageImpl<>(storeList, pageable, storePage.getTotalElements());
   }
 
-  public APIResponse<StoreViewDto> getStoreDetail(Long storeId) {
+  public StoreViewDto getStoreDetail(Long storeId) {
 
     // 상점 목록 조회
     Optional<Store> storeOptional = Optional.ofNullable(
         storeRepository.findById(storeId).orElseThrow(NotExistStoreException::new));
     Store store = storeOptional.get();
 
-    StoreViewDto storeDto = StoreViewDto.builder()
+    return StoreViewDto.builder()
         .storeId(store.getId())
         .name(store.getName())
         .description(store.getDescription())
@@ -151,6 +147,5 @@ public class StoreService {
         .averageRating(store.getAverageRating())
         .totalReviewCount(store.getTotalReviewCount())
         .build();
-    return APIResponse.success(API_NAME, storeDto);
   }
 }

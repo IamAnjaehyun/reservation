@@ -22,27 +22,31 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReservationController {
 
   private final ReservationService reservationService;
+  private static final String API_NAME = "reservation";
 
   @PostMapping("/{storeId}")
   public APIResponse<ReservationResDto> createReservation(@PathVariable Long storeId,
       @RequestBody ReservationReqDto reservationReqDto, Principal principal) {
-    return reservationService.createReservation(storeId, reservationReqDto, principal);
+    return APIResponse.success(API_NAME,
+        reservationService.createReservation(storeId, reservationReqDto, principal));
   }
 
   @GetMapping
   public APIResponse<List<ReservationResDto>> getReservationList(Principal principal) {
-    return reservationService.getReservationList(principal);
+    return APIResponse.success(API_NAME, reservationService.getReservationList(principal));
   }
 
   @GetMapping("/{reservationId}")
   public APIResponse<ReservationResDto> getReservationDetail(@PathVariable Long reservationId,
       Principal principal) {
-    return reservationService.getReservationDetail(reservationId, principal);
+    return APIResponse.success(API_NAME,
+        reservationService.getReservationDetail(reservationId, principal));
   }
 
   @PostMapping("/cancel/{reservationId}")
   public APIResponse<String> cancelReservation(@PathVariable Long reservationId,
       Principal principal) {
-    return reservationService.cancelReservation(reservationId, principal);
+    return APIResponse.success(API_NAME,
+        reservationService.cancelReservation(reservationId, principal));
   }
 }

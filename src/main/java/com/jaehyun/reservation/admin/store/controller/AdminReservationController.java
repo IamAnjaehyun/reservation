@@ -4,11 +4,9 @@ package com.jaehyun.reservation.admin.store.controller;
 import com.jaehyun.reservation.admin.store.service.AdminReservationService;
 import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.user.reservation.domain.dto.ReservationResDto;
-import com.jaehyun.reservation.user.reservation.domain.repository.ReservationRepository;
 import com.jaehyun.reservation.user.type.ReservationStatus;
 import java.security.Principal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/reservation/admin/reservation")
 public class AdminReservationController {
 
-  private final ReservationRepository reservationRepository;
   private final AdminReservationService adminReservationService;
   private final String API_NAME = "reservationList";
 
