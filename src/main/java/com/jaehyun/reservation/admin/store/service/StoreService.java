@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -110,13 +113,13 @@ public class StoreService {
       }
   }
 
-  public APIResponse<List<StoreViewDto>> getStoreList() {
+  public APIResponse<Page<StoreViewDto>> getStoreList(Pageable pageable) {
     List<StoreViewDto> storeList = new ArrayList<>();
 
     // 상점 목록 조회
-    List<Store> stores = storeRepository.findAll();
+    Page<Store> storePage = storeRepository.findAll(pageable);
 
-    for (Store store : stores) {
+    for (Store store : storePage.getContent()) {
       StoreViewDto storeDto = StoreViewDto.builder()
           .storeId(store.getId())
           .name(store.getName())
@@ -129,7 +132,7 @@ public class StoreService {
 
       storeList.add(storeDto);
     }
-    return APIResponse.success(API_NAME, storeList);
+    return APIResponse.success(API_NAME, new PageImpl<>(storeList, pageable, storePage.getTotalElements()));
   }
 
   public APIResponse<StoreViewDto> getStoreDetail(Long storeId) {

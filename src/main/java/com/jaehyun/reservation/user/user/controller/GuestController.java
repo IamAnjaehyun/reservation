@@ -9,6 +9,8 @@ import com.jaehyun.reservation.user.user.domain.dto.UserLoginDto;
 import com.jaehyun.reservation.user.user.service.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,8 +40,8 @@ public class GuestController {
 
   //상점 조회
   @GetMapping("/store")
-  public APIResponse<List<StoreViewDto>> storeList(){
-    return storeService.getStoreList();
+  public APIResponse<Page<StoreViewDto>> storeList(Pageable pageable){
+    return storeService.getStoreList(pageable);
   }
 
   //상점 상세 조회
