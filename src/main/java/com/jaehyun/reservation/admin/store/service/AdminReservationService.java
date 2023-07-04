@@ -3,6 +3,7 @@ package com.jaehyun.reservation.admin.store.service;
 import com.jaehyun.reservation.admin.store.domain.entity.Store;
 import com.jaehyun.reservation.admin.store.domain.repository.StoreRepository;
 import com.jaehyun.reservation.global.exception.impl.reservation.NotExistReservationException;
+import com.jaehyun.reservation.global.exception.impl.store.CantFindStoreException;
 import com.jaehyun.reservation.global.exception.impl.store.NotExistStoreException;
 import com.jaehyun.reservation.global.exception.impl.user.NotExistUserException;
 import com.jaehyun.reservation.user.reservation.domain.dto.ReservationResDto;
@@ -36,23 +37,11 @@ public class AdminReservationService {
     List<ReservationResDto> reservationResDtoList = new ArrayList<>();
     List<Store> storeList = storeRepository.findAllByUser(user);
 
-    for (Store store : storeList) {
-      List<Reservation> reservationList = reservationRepository.findAllByStore(store);
-      for (Reservation reservation : reservationList) {
-        reservationResDtoList.add(mapToReservationResDto(reservation));
-      }
+    List<Reservation> reservationList = reservationRepository.findAllByStoreIn(storeList);
+    for (Reservation reservation : reservationList) {
+      reservationResDtoList.add(mapToReservationResDto(reservation));
     }
     return reservationResDtoList;
-  }
-
-  public List<ReservationResDto> getAllReservationList(Long storeId, Principal principal) {
-    User user = userRepository.findByLoginId(principal.getName())
-        .orElseThrow(NotExistUserException::new);
-    Store store = storeRepository.findByUserAndId(user, storeId)
-        .orElseThrow(NotExistStoreException::new);
-    List<Reservation> reservationList = reservationRepository.findAllByStore(store);
-
-    return mapToReservationResDtoList(reservationList);
   }
 
   public List<ReservationResDto> getStoreReservationListByStatus(Long storeId,
@@ -60,11 +49,15 @@ public class AdminReservationService {
     User user = userRepository.findByLoginId(principal.getName())
         .orElseThrow(NotExistUserException::new);
     Store store = storeRepository.findByUserAndId(user, storeId)
-        .orElseThrow(NotExistStoreException::new);
-    List<Reservation> reservationList = reservationRepository.findAllByStoreAndStatus(store,
-        status);
-
+        .orElseThrow(CantFindStoreException::new);
+    List<Reservation> reservationList;
+    if (status != null) {
+      reservationList = reservationRepository.findAllByStoreAndStatus(store, status);
+    } else {
+      reservationList = reservationRepository.findAllByStore(store);
+    }
     return mapToReservationResDtoList(reservationList);
+
   }
 
   public List<ReservationResDto> getStoreReservationListByDateAndStatus(Long storeId,
@@ -72,12 +65,18 @@ public class AdminReservationService {
     User user = userRepository.findByLoginId(principal.getName())
         .orElseThrow(NotExistUserException::new);
     Store store = storeRepository.findByUserAndId(user, storeId)
-        .orElseThrow(NotExistStoreException::new);
+        .orElseThrow(CantFindStoreException::new);
     LocalDateTime startDate = localDate.atStartOfDay();
     LocalDateTime endDate = localDate.atTime(LocalTime.MAX);
-    List<Reservation> reservationList = reservationRepository
-        .findAllByStoreAndStatusAndReservationDateTimeBetween(store, status, startDate, endDate);
 
+    List<Reservation> reservationList;
+    if (status != null) {
+      reservationList = reservationRepository
+          .findAllByStoreAndStatusAndReservationDateTimeBetween(store, status, startDate, endDate);
+    } else {
+      reservationList = reservationRepository
+          .findAllByStoreAndReservationDateTimeBetween(store, startDate, endDate);
+    }
     return mapToReservationResDtoList(reservationList);
   }
 

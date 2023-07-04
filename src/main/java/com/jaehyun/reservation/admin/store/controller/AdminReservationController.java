@@ -34,30 +34,22 @@ public class AdminReservationController {
         adminReservationService.getAllStoreReservationList(principal));
   }
 
-  //내 특정 상점 목록 확인
+  //내 상점 클릭해서 특정 상점 예약 목록 전체 확인 / 상태 안넣으면 ALL /CANCEL/REFUSE/REQUEST/OKAY
   @GetMapping("/{storeId}")
-  public APIResponse<List<ReservationResDto>> getAllReservationByStoreList(
-      @PathVariable Long storeId, Principal principal) {
-    return APIResponse.success(
-        "reservationList", adminReservationService.getAllReservationList(storeId, principal));
-  }
-
-  //내 상점 클릭해서 특정 상점 예약 목록 전체 확인 ALL/CANCEL/REFUSE/REQUEST/OKAY
-  @GetMapping("/status/{storeId}")
   public APIResponse<List<ReservationResDto>> getStoreReservationList(@PathVariable Long storeId,
-      @RequestParam ReservationStatus status, Principal principal) {
+      @RequestParam(required = false) ReservationStatus status, Principal principal) {
     return APIResponse.success("reservationList",
         adminReservationService.getStoreReservationListByStatus(storeId, status, principal));
   }
 
-  //내 상점 클릭해서 특정 상점 특정 날짜 예약 목록 전체 요청 목록 확인 ALL/CANCEL/REFUSE/REQUEST/OKAY
-  @GetMapping("/status/date/{storeId}")
+  //내 상점 클릭해서 특정 상점 특정 날짜 예약 목록 전체 요청 목록 확인 / 상태 안넣으면 ALL /CANCEL/REFUSE/REQUEST/OKAY
+  @GetMapping("/date/{storeId}")
   public APIResponse<List<ReservationResDto>> getReservationStatusList(@PathVariable Long storeId,
-      @RequestParam("localDateTime") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate localDateTime,
-      @RequestParam ReservationStatus status,
+      @RequestParam(value = "localDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate localDate,
+      @RequestParam(required = false) ReservationStatus status,
       Principal principal) {
     return APIResponse.success("reservationList",
-        adminReservationService.getStoreReservationListByDateAndStatus(storeId, localDateTime,
+        adminReservationService.getStoreReservationListByDateAndStatus(storeId, localDate,
             status, principal));
   }
 
