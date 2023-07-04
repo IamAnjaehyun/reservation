@@ -81,7 +81,7 @@ public class AdminReservationService {
     return mapToReservationResDtoList(reservationList);
   }
 
-  public String changeReservationStatus(Long storeId,
+  public ReservationStatus changeReservationStatus(Long storeId,
       Long reservationId, ReservationStatus reservationStatus, ReservationStatus changeStatus,
       Principal principal) {
     //내가 가게의 사장인지 확인
@@ -93,7 +93,7 @@ public class AdminReservationService {
     reservation.setStatus(changeStatus);
     reservationRepository.save(reservation);
 
-    return reservation.getStatus().toString();
+    return reservation.getStatus();
   }
 
   //단일 dto 생성

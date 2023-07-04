@@ -25,30 +25,27 @@ public class GuestController {
   private final UserService userService;
   private final StoreService storeService;
 
-  private static final String STORE_API_NAME = "store";
-  private static final String API_NAME = "user";
-
   // 회원가입
   @PostMapping("/join")
   public APIResponse<String> join(@RequestBody UserJoinDto userJoinDto)
       throws DuplicatedIdOrPhoneNumException {
-    return APIResponse.success(API_NAME, userService.join(userJoinDto));
+    return APIResponse.success("user", userService.join(userJoinDto));
   }
 
   @GetMapping("/login")
   public APIResponse<String> login(@RequestBody UserLoginDto userLoginDto) {
-    return APIResponse.success(API_NAME, userService.login(userLoginDto));
+    return APIResponse.success("accessToken", userService.login(userLoginDto));
   }
 
   //상점 조회
   @GetMapping("/store")
   public APIResponse<Page<StoreViewDto>> storeList(Pageable pageable) {
-    return APIResponse.success(API_NAME, storeService.getStoreList(pageable));
+    return APIResponse.success("storeList", storeService.getStoreList(pageable));
   }
 
   //상점 상세 조회
   @GetMapping("/store/{storeId}")
   public APIResponse<StoreViewDto> storeDetail(@PathVariable Long storeId) {
-    return APIResponse.success(STORE_API_NAME, storeService.getStoreDetail(storeId));
+    return APIResponse.success("store", storeService.getStoreDetail(storeId));
   }
 }

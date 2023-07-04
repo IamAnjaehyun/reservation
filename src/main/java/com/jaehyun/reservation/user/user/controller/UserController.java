@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
   private final UserService userService;
-  private static final String API_NAME = "user";
 
   @DeleteMapping("/quit")
   public APIResponse<Void> quit(Principal principal) {
@@ -27,6 +26,6 @@ public class UserController {
 
   @PostMapping("/changeRoleAdmin")
   public APIResponse<String> changeRole(Principal principal) {
-    return APIResponse.success(API_NAME, userService.changeRole(principal));
+    return APIResponse.success("user", userService.changeRole(principal));
   }
 }

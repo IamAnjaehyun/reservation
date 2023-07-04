@@ -25,13 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminReservationController {
 
   private final AdminReservationService adminReservationService;
-  private static final String API_NAME = "reservationList";
 
 
   //내 상점 목록 확인
   @GetMapping
   public APIResponse<List<ReservationResDto>> getAllReservationList(Principal principal) {
-    return APIResponse.success(API_NAME,
+    return APIResponse.success("reservationList",
         adminReservationService.getAllStoreReservationList(principal));
   }
 
@@ -40,14 +39,14 @@ public class AdminReservationController {
   public APIResponse<List<ReservationResDto>> getAllReservationByStoreList(
       @PathVariable Long storeId, Principal principal) {
     return APIResponse.success(
-        API_NAME, adminReservationService.getAllReservationList(storeId, principal));
+        "reservationList", adminReservationService.getAllReservationList(storeId, principal));
   }
 
   //내 상점 클릭해서 특정 상점 예약 목록 전체 확인 ALL/CANCEL/REFUSE/REQUEST/OKAY
   @GetMapping("/status/{storeId}")
   public APIResponse<List<ReservationResDto>> getStoreReservationList(@PathVariable Long storeId,
       @RequestParam ReservationStatus status, Principal principal) {
-    return APIResponse.success(API_NAME,
+    return APIResponse.success("reservationList",
         adminReservationService.getStoreReservationListByStatus(storeId, status, principal));
   }
 
@@ -57,20 +56,20 @@ public class AdminReservationController {
       @RequestParam("localDateTime") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate localDateTime,
       @RequestParam ReservationStatus status,
       Principal principal) {
-    return APIResponse.success(API_NAME,
+    return APIResponse.success("reservationList",
         adminReservationService.getStoreReservationListByDateAndStatus(storeId, localDateTime,
             status, principal));
   }
 
   //예약 상태 OKAY로 변경
   @PostMapping("/change/{storeId}/{reservationId}/{reservationStatus}")
-  public APIResponse<String> changeReservationStatus(@PathVariable Long storeId,
+  public APIResponse<ReservationStatus> changeReservationStatus(@PathVariable Long storeId,
       @PathVariable Long reservationId,
       @PathVariable ReservationStatus reservationStatus,
       @RequestParam ReservationStatus changeStatus,
       Principal principal) {
 
-    return APIResponse.success("status",
+    return APIResponse.success("statusChanged",
         adminReservationService.changeReservationStatus(
             storeId, reservationId, reservationStatus, changeStatus, principal));
   }

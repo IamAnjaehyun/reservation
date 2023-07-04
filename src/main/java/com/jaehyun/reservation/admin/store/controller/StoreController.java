@@ -22,19 +22,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class StoreController {
 
   private final StoreService storeService;
-  private static final String API_NAME = "store";
 
 
   @PostMapping
   public APIResponse<StoreResDto> createStore(@RequestBody StoreReqDto storeReqDto,
       Principal principal) {
-    return APIResponse.success(API_NAME, storeService.createStore(storeReqDto, principal));
+    return APIResponse.success("store", storeService.createStore(storeReqDto, principal));
   }
 
   @PutMapping("/{storeId}")
   public APIResponse<StoreResDto> updateStore(@PathVariable Long storeId,
       @RequestBody StoreReqDto storeReqDto, Principal principal) {
-    return APIResponse.success(API_NAME, storeService.updateStore(storeId, storeReqDto, principal));
+    return APIResponse.success("updatedStore", storeService.updateStore(storeId, storeReqDto, principal));
   }
 
   @DeleteMapping("/{storeId}")

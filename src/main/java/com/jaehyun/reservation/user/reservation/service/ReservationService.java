@@ -117,7 +117,7 @@ public class ReservationService {
         .build();
   }
 
-  public String cancelReservation(Long reservationId,
+  public ReservationStatus cancelReservation(Long reservationId,
       Principal principal) {
     Optional<User> user = Optional.ofNullable(userRepository.findByLoginId(principal.getName())
         .orElseThrow(NotExistUserException::new));
@@ -130,6 +130,6 @@ public class ReservationService {
     reservation.setStatus(ReservationStatus.CANCEL);
     reservationRepository.save(reservation);
 
-    return ReservationStatus.CANCEL.toString();
+    return reservation.getStatus();
   }
 }

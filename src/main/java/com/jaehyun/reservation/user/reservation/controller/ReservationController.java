@@ -4,6 +4,7 @@ import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.user.reservation.domain.dto.ReservationReqDto;
 import com.jaehyun.reservation.user.reservation.domain.dto.ReservationResDto;
 import com.jaehyun.reservation.user.reservation.service.ReservationService;
+import com.jaehyun.reservation.user.type.ReservationStatus;
 import java.security.Principal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,31 +23,30 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReservationController {
 
   private final ReservationService reservationService;
-  private static final String API_NAME = "reservation";
 
   @PostMapping("/{storeId}")
   public APIResponse<ReservationResDto> createReservation(@PathVariable Long storeId,
       @RequestBody ReservationReqDto reservationReqDto, Principal principal) {
-    return APIResponse.success(API_NAME,
+    return APIResponse.success("reservation",
         reservationService.createReservation(storeId, reservationReqDto, principal));
   }
 
   @GetMapping
   public APIResponse<List<ReservationResDto>> getReservationList(Principal principal) {
-    return APIResponse.success(API_NAME, reservationService.getReservationList(principal));
+    return APIResponse.success("reservationList", reservationService.getReservationList(principal));
   }
 
   @GetMapping("/{reservationId}")
   public APIResponse<ReservationResDto> getReservationDetail(@PathVariable Long reservationId,
       Principal principal) {
-    return APIResponse.success(API_NAME,
+    return APIResponse.success("reservation",
         reservationService.getReservationDetail(reservationId, principal));
   }
 
   @PostMapping("/cancel/{reservationId}")
-  public APIResponse<String> cancelReservation(@PathVariable Long reservationId,
+  public APIResponse<ReservationStatus> cancelReservation(@PathVariable Long reservationId,
       Principal principal) {
-    return APIResponse.success(API_NAME,
+    return APIResponse.success("statusChanged",
         reservationService.cancelReservation(reservationId, principal));
   }
 }

@@ -24,7 +24,6 @@ public class ReviewController {
   //별점 + 리뷰 내용
 
   private final ReviewService reviewService;
-  private static final String API_NAME = "reivew";
 
   //상점 대한 리뷰 작성
   @PostMapping("/{storeId}/{reservationId}")
@@ -32,7 +31,7 @@ public class ReviewController {
       @PathVariable Long reservationId,
       @RequestBody ReviewReqDto reviewReqDto,
       Principal principal) {
-    return APIResponse.success(API_NAME,
+    return APIResponse.success("review",
         reviewService.createReview(storeId, reviewReqDto, reservationId, principal));
   }
 
@@ -40,7 +39,7 @@ public class ReviewController {
   public APIResponse<ReviewResDto> updateReview(@PathVariable Long reviewId,
       @RequestBody ReviewReqDto reviewReqDto,
       Principal principal) {
-    return APIResponse.success(API_NAME,
+    return APIResponse.success("updatedReview",
         reviewService.updateReview(reviewId, reviewReqDto, principal));
   }
 
