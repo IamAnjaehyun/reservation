@@ -21,7 +21,10 @@ import lombok.Setter;
 public class ReservationResDto {
   private Long reservationId;
 
+  private Long userId;
   private String userName;
+
+  private Long storeId;
   private String storeName;
   private ReservationStatus reservationStatus;
 
