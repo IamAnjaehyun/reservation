@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,37 +33,83 @@ public class AdminReservationService {
   private final StoreRepository storeRepository;
   private final UserRepository userRepository;
 
-  public List<ReservationResDto> getAllStoreReservationList(Principal principal) {
+  //  public Page<ReservationResDto> getAllStoreReservationList(Principal principal, Pageable pageable) {
+//    User user = userRepository.findByLoginId(principal.getName())
+//        .orElseThrow(NotExistUserException::new);
+//    List<ReservationResDto> reservationResDtoList = new ArrayList<>();
+//    List<Store> storeList = storeRepository.findAllByUser(user);
+//
+//    List<Reservation> reservationList = reservationRepository.findAllByStoreIn(storeList);
+//    for (Reservation reservation : reservationList) {
+//      reservationResDtoList.add(mapToReservationResDto(reservation));
+//    }
+//    return reservationResDtoList;
+//  }
+//
+//  public Page<ReservationResDto> getStoreReservationListByStatus(Long storeId,
+//      ReservationStatus status, Principal principal, Pageable pageable) {
+//    User user = userRepository.findByLoginId(principal.getName())
+//        .orElseThrow(NotExistUserException::new);
+//    Store store = storeRepository.findByUserAndId(user, storeId)
+//        .orElseThrow(CantFindStoreException::new);
+//    List<Reservation> reservationList;
+//    if (status != null) {
+//      reservationList = reservationRepository.findAllByStoreAndStatus(store, status);
+//    } else {
+//      reservationList = reservationRepository.findAllByStore(store);
+//    }
+//    return mapToReservationResDtoList(reservationList);
+//
+//  }
+//
+//  public Page<ReservationResDto> getStoreReservationListByDateAndStatus(Long storeId,
+//      LocalDate localDate, ReservationStatus status, Principal principal, Pageable pageable) {
+//    User user = userRepository.findByLoginId(principal.getName())
+//        .orElseThrow(NotExistUserException::new);
+//    Store store = storeRepository.findByUserAndId(user, storeId)
+//        .orElseThrow(CantFindStoreException::new);
+//    LocalDateTime startDate = localDate.atStartOfDay();
+//    LocalDateTime endDate = localDate.atTime(LocalTime.MAX);
+//
+//    List<Reservation> reservationList;
+//    if (status != null) {
+//      reservationList = reservationRepository
+//          .findAllByStoreAndStatusAndReservationDateTimeBetween(store, status, startDate, endDate);
+//    } else {
+//      reservationList = reservationRepository
+//          .findAllByStoreAndReservationDateTimeBetween(store, startDate, endDate);
+//    }
+//    return mapToReservationResDtoList(reservationList);
+//  }
+  public Page<ReservationResDto> getAllStoreReservationList(Principal principal,
+      Pageable pageable) {
     User user = userRepository.findByLoginId(principal.getName())
         .orElseThrow(NotExistUserException::new);
-    List<ReservationResDto> reservationResDtoList = new ArrayList<>();
     List<Store> storeList = storeRepository.findAllByUser(user);
 
-    List<Reservation> reservationList = reservationRepository.findAllByStoreIn(storeList);
-    for (Reservation reservation : reservationList) {
-      reservationResDtoList.add(mapToReservationResDto(reservation));
-    }
-    return reservationResDtoList;
+    Page<Reservation> reservationPage = reservationRepository.findAllByStoreIn(storeList, pageable);
+    return reservationPage.map(this::mapToReservationResDto);
   }
 
-  public List<ReservationResDto> getStoreReservationListByStatus(Long storeId,
-      ReservationStatus status, Principal principal) {
+  public Page<ReservationResDto> getStoreReservationListByStatus(Long storeId,
+      ReservationStatus status, Principal principal, Pageable pageable) {
     User user = userRepository.findByLoginId(principal.getName())
         .orElseThrow(NotExistUserException::new);
     Store store = storeRepository.findByUserAndId(user, storeId)
         .orElseThrow(CantFindStoreException::new);
-    List<Reservation> reservationList;
-    if (status != null) {
-      reservationList = reservationRepository.findAllByStoreAndStatus(store, status);
-    } else {
-      reservationList = reservationRepository.findAllByStore(store);
-    }
-    return mapToReservationResDtoList(reservationList);
 
+    Page<Reservation> reservationPage;
+    if (status != null) {
+      reservationPage = reservationRepository.findAllByStoreAndStatus(store, status, pageable);
+    } else {
+      reservationPage = reservationRepository.findAllByStore(store, pageable);
+    }
+
+    return reservationPage.map(this::mapToReservationResDto);
   }
 
-  public List<ReservationResDto> getStoreReservationListByDateAndStatus(Long storeId,
-      LocalDate localDate, ReservationStatus status, Principal principal) {
+  public Page<ReservationResDto> getStoreReservationListByDateAndStatus(Long storeId,
+      LocalDate localDate, ReservationStatus status, Principal principal, Pageable pageable) {
     User user = userRepository.findByLoginId(principal.getName())
         .orElseThrow(NotExistUserException::new);
     Store store = storeRepository.findByUserAndId(user, storeId)
@@ -69,15 +117,17 @@ public class AdminReservationService {
     LocalDateTime startDate = localDate.atStartOfDay();
     LocalDateTime endDate = localDate.atTime(LocalTime.MAX);
 
-    List<Reservation> reservationList;
+    Page<Reservation> reservationPage;
     if (status != null) {
-      reservationList = reservationRepository
-          .findAllByStoreAndStatusAndReservationDateTimeBetween(store, status, startDate, endDate);
+      reservationPage = reservationRepository
+          .findAllByStoreAndStatusAndReservationDateTimeBetween(store, status, startDate, endDate,
+              pageable);
     } else {
-      reservationList = reservationRepository
-          .findAllByStoreAndReservationDateTimeBetween(store, startDate, endDate);
+      reservationPage = reservationRepository
+          .findAllByStoreAndReservationDateTimeBetween(store, startDate, endDate, pageable);
     }
-    return mapToReservationResDtoList(reservationList);
+
+    return reservationPage.map(this::mapToReservationResDto);
   }
 
   public ReservationStatus changeReservationStatus(Long storeId,
