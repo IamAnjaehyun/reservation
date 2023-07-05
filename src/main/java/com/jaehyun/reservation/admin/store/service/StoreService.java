@@ -31,16 +31,15 @@ public class StoreService {
   private final StoreRepository storeRepository;
 
   public StoreResDto createStore(StoreReqDto storeReqDto, Principal principal) {
-    Optional<User> adminOptional = Optional.ofNullable(
-        userRepository.findByLoginId(principal.getName()).orElseThrow(NotExistUserException::new));
+    User admin = userRepository.findByLoginId(principal.getName())
+        .orElseThrow(NotExistUserException::new);
     //중복된 상점의 이름이 들어온다면 예외처리
-    Optional<Store> storeOptional = Optional.ofNullable(
-        storeRepository.findByName(storeReqDto.getName())
-            .orElseThrow(AlreadyExistStoreException::new));
+    Store storeCheck = storeRepository.findByName(storeReqDto.getName())
+        .orElseThrow(AlreadyExistStoreException::new);
 
     //권한체크 안해도됨 security에서 하기떄문
     Store store = Store.builder()
-        .user(adminOptional.get())
+        .user(admin)
         .name(storeReqDto.getName())
         .phoneNum(storeReqDto.getPhoneNum())
         .description(storeReqDto.getDescription())
@@ -50,13 +49,8 @@ public class StoreService {
         .build();
     storeRepository.save(store);
 
-    return StoreResDto.builder()
-        .adminName(store.getUser().getName())
-        .name(store.getName())
-        .description(store.getDescription())
-        .location(store.getLocation())
-        .phoneNum(store.getPhoneNum())
-        .build();
+    return StoreResDto.fromStore(store);
+
   }
 
   public StoreResDto updateStore(Long storeId, StoreReqDto storeDto,
@@ -65,29 +59,20 @@ public class StoreService {
     if (storeRepository.existsByName(storeDto.getName())) {
       throw new AlreadyExistStoreException();
     }
-    Optional<User> adminOptional = Optional.ofNullable(
-        userRepository.findByLoginId(principal.getName()).orElseThrow(
-            NotExistUserException::new));
-    Optional<Store> storeOptional = Optional.ofNullable(
-        storeRepository.findById(storeId).orElseThrow(NotExistStoreException::new));
+    User admin = userRepository.findByLoginId(principal.getName())
+        .orElseThrow(NotExistUserException::new);
+    Store store = storeRepository.findById(storeId).orElseThrow(NotExistStoreException::new);
 
-    Store store = storeOptional.get();
     User user = store.getUser();
 
-    if (user.getId().equals(adminOptional.get().getId())) {
+    if (user.getId().equals(admin.getId())) {
       store.setName(storeDto.getName());
       store.setDescription(storeDto.getDescription());
       store.setLocation(storeDto.getLocation());
       store.setPhoneNum(storeDto.getPhoneNum());
 
       storeRepository.save(store);
-      return StoreResDto.builder()
-          .adminName(store.getUser().getName())
-          .name(store.getName())
-          .description(store.getDescription())
-          .location(store.getLocation())
-          .phoneNum(store.getPhoneNum())
-          .build();
+      return StoreResDto.fromStore(store);
     } else {
       throw new UnauthorizedException();
     }
@@ -95,15 +80,11 @@ public class StoreService {
 
   public void deleteStore(Long storeId, Principal principal) {
 
-    Optional<User> adminOptional = userRepository.findByLoginId(principal.getName());
-    Optional<Store> storeOptional = Optional.ofNullable(
-        storeRepository.findById(storeId).orElseThrow(NotExistStoreException::new));
-
-    Store store = storeOptional.get();
-    User user = store.getUser();
-
-    if (user.getId().equals(adminOptional.get().getId())) {
-      storeRepository.deleteById(store.getId());
+    User admin = userRepository.findByLoginId(principal.getName()).get();
+    Store store = storeRepository.findById(storeId).orElseThrow(NotExistStoreException::new);
+    Long storeAdminName = store.getUser().getId();
+    if (storeAdminName.equals(admin.getId())) {
+      storeRepository.deleteById(store.getId());S
     } else {
       throw new UnauthorizedException();
     }
@@ -111,7 +92,7 @@ public class StoreService {
 
   public Page<StoreViewDto> getStoreList(Pageable pageable) {
     Page<Store> storePage = storeRepository.findAll(pageable);
-    return storePage.map(this::mapToStoreViewDto);
+    return storePage.map(StoreViewDto::fromStore);
   }
 
   public StoreViewDto getStoreDetail(Long storeId) {
@@ -119,18 +100,6 @@ public class StoreService {
     // 상점 상세 조회
     Store store = storeRepository.findById(storeId)
         .orElseThrow(NotExistStoreException::new);
-    return mapToStoreViewDto(store);
-  }
-
-  private StoreViewDto mapToStoreViewDto(Store store) {
-    return StoreViewDto.builder()
-        .storeId(store.getId())
-        .name(store.getName())
-        .description(store.getDescription())
-        .location(store.getLocation())
-        .phoneNum(store.getPhoneNum())
-        .averageRating(store.getAverageRating())
-        .totalReviewCount(store.getTotalReviewCount())
-        .build();
+    return StoreViewDto.fromStore(store);
   }
 }

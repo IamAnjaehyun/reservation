@@ -1,5 +1,6 @@
 package com.jaehyun.reservation.admin.store.domain.dto;
 
+import com.jaehyun.reservation.admin.store.domain.entity.Store;
 import javax.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,5 +27,15 @@ public class StoreViewDto {
   private double averageRating; //평점
 
   private int totalReviewCount; //별점 준 인원수
-
+  public static StoreViewDto fromStore(Store store) {
+    return StoreViewDto.builder()
+        .storeId(store.getId())
+        .name(store.getName())
+        .description(store.getDescription())
+        .location(store.getLocation())
+        .phoneNum(store.getPhoneNum())
+        .averageRating(store.getAverageRating())
+        .totalReviewCount(store.getTotalReviewCount())
+        .build();
+  }
 }
