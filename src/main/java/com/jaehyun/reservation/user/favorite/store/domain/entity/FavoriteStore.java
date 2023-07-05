@@ -1,4 +1,4 @@
-package com.jaehyun.reservation.user.favorite.store.domain;
+package com.jaehyun.reservation.user.favorite.store.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jaehyun.reservation.admin.store.domain.entity.Store;
@@ -37,4 +37,12 @@ public class FavoriteStore extends BaseTimeEntity {
   @JsonManagedReference
   @JoinColumn(name = "STORE_ID")
   private Store store; //식당ID
+
+  public void setFavorite(Favorite favorite) {
+    this.favorite = favorite;
+  }
+
+  public void setStore(Store store) {
+    this.store = store;
+  }
 }

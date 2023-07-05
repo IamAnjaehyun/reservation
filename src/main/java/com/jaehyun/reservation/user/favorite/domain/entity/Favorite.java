@@ -1,9 +1,8 @@
 package com.jaehyun.reservation.user.favorite.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jaehyun.reservation.global.entity.BaseTimeEntity;
-import com.jaehyun.reservation.user.favorite.store.domain.FavoriteStore;
+import com.jaehyun.reservation.user.favorite.store.domain.entity.FavoriteStore;
 import com.jaehyun.reservation.user.user.domain.entity.User;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -39,4 +38,13 @@ public class Favorite extends BaseTimeEntity {
   @JsonBackReference
   @OneToMany(mappedBy = "favorite", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<FavoriteStore> favoriteStoreList; //자주가는 식당 목록
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+  public void setFavoriteStoreList(
+      List<FavoriteStore> favoriteStoreList) {
+    this.favoriteStoreList = favoriteStoreList;
+  }
 }
