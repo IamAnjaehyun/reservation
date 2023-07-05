@@ -1,5 +1,6 @@
 package com.jaehyun.reservation.user.favorite.domain.dto;
 
+import com.jaehyun.reservation.user.favorite.store.domain.dto.FavoriteStoreResDto;
 import com.jaehyun.reservation.user.favorite.store.domain.entity.FavoriteStore;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,6 @@ import lombok.Setter;
 public class FavoriteResDto {
   private Long id;
   private String userName;
-  private List<FavoriteStore> favoriteStoreList;
+  private List<FavoriteStoreResDto> favoriteStoreResDto;
 
 }
