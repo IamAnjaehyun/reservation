@@ -1,6 +1,5 @@
 package com.jaehyun.reservation.admin.store.domain.dto;
 
-import javax.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +11,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StoreViewDto {
+public class StoreDetailDto {
   private Long storeId; //매장 고유 번호
   private String name; //매장 이름
 

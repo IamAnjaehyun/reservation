@@ -5,7 +5,8 @@ public enum ReservationStatus {
   CANCEL,
   REFUSE,
   REQUEST,
-  OKAY;
+  OKAY,
+  USED;
 
   public static final ReservationStatus DEFAULT = REQUEST;
 }

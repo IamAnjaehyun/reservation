@@ -7,8 +7,9 @@ import com.jaehyun.reservation.global.exception.impl.user.DuplicatedIdOrPhoneNum
 import com.jaehyun.reservation.user.user.domain.dto.UserJoinDto;
 import com.jaehyun.reservation.user.user.domain.dto.UserLoginDto;
 import com.jaehyun.reservation.user.user.service.UserService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,23 +29,23 @@ public class GuestController {
   @PostMapping("/join")
   public APIResponse<String> join(@RequestBody UserJoinDto userJoinDto)
       throws DuplicatedIdOrPhoneNumException {
-    return userService.join(userJoinDto);
+    return APIResponse.success("user", userService.join(userJoinDto));
   }
 
   @GetMapping("/login")
   public APIResponse<String> login(@RequestBody UserLoginDto userLoginDto) {
-    return userService.login(userLoginDto);
+    return APIResponse.success("accessToken", userService.login(userLoginDto));
   }
 
   //상점 조회
   @GetMapping("/store")
-  public APIResponse<List<StoreViewDto>> storeList(){
-    return storeService.getStoreList();
+  public APIResponse<Page<StoreViewDto>> storeList(Pageable pageable) {
+    return APIResponse.success("storeList", storeService.getStoreList(pageable));
   }
 
   //상점 상세 조회
-  @GetMapping("/store/{storeName}")
-  public APIResponse<StoreViewDto> storeDetail(@PathVariable String storeName){
-    return storeService.getStoreDetail(storeName);
+  @GetMapping("/store/{storeId}")
+  public APIResponse<StoreViewDto> storeDetail(@PathVariable Long storeId) {
+    return APIResponse.success("store", storeService.getStoreDetail(storeId));
   }
 }

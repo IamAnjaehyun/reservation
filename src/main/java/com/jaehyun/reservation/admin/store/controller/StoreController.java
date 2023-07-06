@@ -23,21 +23,23 @@ public class StoreController {
 
   private final StoreService storeService;
 
+
   @PostMapping
   public APIResponse<StoreResDto> createStore(@RequestBody StoreReqDto storeReqDto,
       Principal principal) {
-    return storeService.createStore(storeReqDto, principal);
+    return APIResponse.success("store", storeService.createStore(storeReqDto, principal));
   }
 
-  @PutMapping("/{storeName}")
-  public APIResponse<StoreResDto> updateStore(@PathVariable String storeName,
+  @PutMapping("/{storeId}")
+  public APIResponse<StoreResDto> updateStore(@PathVariable Long storeId,
       @RequestBody StoreReqDto storeReqDto, Principal principal) {
-    return storeService.updateStore(storeName, storeReqDto, principal);
+    return APIResponse.success("updatedStore", storeService.updateStore(storeId, storeReqDto, principal));
   }
 
-  @DeleteMapping("/{storeName}")
-  public APIResponse<String> deleteStore(@PathVariable String storeName, Principal principal) {
-    return storeService.deleteStore(storeName, principal);
+  @DeleteMapping("/{storeId}")
+  public APIResponse<Void> deleteStore(@PathVariable Long storeId, Principal principal) {
+    storeService.deleteStore(storeId, principal);
+    return APIResponse.delete();
   }
 
 }

@@ -7,20 +7,34 @@ import com.jaehyun.reservation.user.user.domain.entity.User;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import javax.swing.text.html.Option;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
   List<Reservation> findAllByUser(User user);
-  List<Reservation> findAllByStore(Store store);
-  List<Reservation> findAllByStoreAndStatus(Store store, ReservationStatus status);
-  List<Reservation> findAllByStoreAndStatusAndReservationDateTimeBetween(Store store, ReservationStatus status, LocalDateTime startTime, LocalDateTime endTime);
+
+  Page<Reservation> findAllByStore(Store store, Pageable pageable);
+
+  Page<Reservation> findAllByStoreIn(List<Store> storeList, Pageable pageable);
+
+  Page<Reservation> findAllByStoreAndStatus(Store store, ReservationStatus status,
+      Pageable pageable);
+
+  Page<Reservation> findAllByStoreAndStatusAndReservationDateTimeBetween(Store store,
+      ReservationStatus status, LocalDateTime startTime, LocalDateTime endTime, Pageable pageable);
+
+  Page<Reservation> findAllByStoreAndReservationDateTimeBetween(Store store,
+      LocalDateTime startTime, LocalDateTime endTime, Pageable pageable);
 
   Optional<Reservation> findByUserAndId(User user, Long id);
 
   boolean existsByReservationDateTimeAndUser(LocalDateTime localDateTime, User user);
 
+  Optional<Reservation> findByUserAndStoreIdAndIdAndStatus(User user, Long storeId,
+      Long reservationId, ReservationStatus reservationStatus);
+
   Optional<Reservation> findByStoreIdAndIdAndStatus(
-      Long storeId, Long Id,ReservationStatus status);
+      Long storeId, Long Id, ReservationStatus status);
 }

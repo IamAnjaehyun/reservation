@@ -4,6 +4,7 @@ import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.user.reservation.domain.dto.ReservationReqDto;
 import com.jaehyun.reservation.user.reservation.domain.dto.ReservationResDto;
 import com.jaehyun.reservation.user.reservation.service.ReservationService;
+import com.jaehyun.reservation.user.type.ReservationStatus;
 import java.security.Principal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -23,26 +24,29 @@ public class ReservationController {
 
   private final ReservationService reservationService;
 
-  @PostMapping("/{storeName}")
-  public APIResponse<ReservationResDto> createReservation(@PathVariable String storeName,
+  @PostMapping("/{storeId}")
+  public APIResponse<ReservationResDto> createReservation(@PathVariable Long storeId,
       @RequestBody ReservationReqDto reservationReqDto, Principal principal) {
-    return reservationService.createReservation(storeName, reservationReqDto, principal);
+    return APIResponse.success("reservation",
+        reservationService.createReservation(storeId, reservationReqDto, principal));
   }
 
   @GetMapping
   public APIResponse<List<ReservationResDto>> getReservationList(Principal principal) {
-    return reservationService.getReservationList(principal);
+    return APIResponse.success("reservationList", reservationService.getReservationList(principal));
   }
 
   @GetMapping("/{reservationId}")
   public APIResponse<ReservationResDto> getReservationDetail(@PathVariable Long reservationId,
       Principal principal) {
-    return reservationService.getReservationDetail(reservationId, principal);
+    return APIResponse.success("reservation",
+        reservationService.getReservationDetail(reservationId, principal));
   }
 
   @PostMapping("/cancel/{reservationId}")
-  public APIResponse<String> cancelReservation(@PathVariable Long reservationId,
+  public APIResponse<ReservationStatus> cancelReservation(@PathVariable Long reservationId,
       Principal principal) {
-    return reservationService.cancelReservation(reservationId, principal);
+    return APIResponse.success("statusChanged",
+        reservationService.cancelReservation(reservationId, principal));
   }
 }

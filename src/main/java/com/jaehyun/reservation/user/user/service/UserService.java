@@ -27,9 +27,8 @@ public class UserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
-  private final String API_NAME = "user";
 
-  public APIResponse<String> join(UserJoinDto userJoinDto) throws DuplicatedIdOrPhoneNumException {
+  public String join(UserJoinDto userJoinDto) throws DuplicatedIdOrPhoneNumException {
     if (userRepository.existsByLoginIdOrPhoneNum(userJoinDto.getLoginId(),
         userJoinDto.getPhoneNum())) {
       throw new DuplicatedIdOrPhoneNumException();
@@ -43,32 +42,32 @@ public class UserService {
         .roles(RoleType.USER)
         .build();
     userRepository.save(user);
-    return APIResponse.create(API_NAME, user.getLoginId());
+    return user.getLoginId();
   }
 
-  public APIResponse<String> login(UserLoginDto userLoginDto) {
+  public String login(UserLoginDto userLoginDto) {
     Optional<User> user = Optional.ofNullable(userRepository.findByLoginId(userLoginDto.getId())
         .orElseThrow(NotExistUserException::new));
     if (!passwordEncoder.matches(userLoginDto.getPassword(), user.get().getPassword())) {
       throw new IncorrectPassWordException();
     }
 
-    return APIResponse.success(API_NAME,
-        jwtTokenProvider.createToken(user.get().getLoginId(), user.get().getRoles()));
+    return jwtTokenProvider.createToken(user.get().getLoginId(), user.get().getRoles());
   }
 
   @Transactional
-  public APIResponse<Void> quit(Principal principal) {
+  public void quit(Principal principal) {
     Optional<User> user = Optional.ofNullable(userRepository.findByLoginId(principal.getName())
         .orElseThrow(NotExistUserException::new));
     userRepository.deleteById(user.get().getId());
-    return APIResponse.delete();
+    APIResponse.delete();
   }
 
-  public APIResponse<String> changeRole(Principal principal) {
-    User user = userRepository.findByLoginId(principal.getName()).orElseThrow(() -> new BadTokenException());
+  public String changeRole(Principal principal) {
+    User user = userRepository.findByLoginId(principal.getName())
+        .orElseThrow(BadTokenException::new);
     user.setRoles(RoleType.ADMIN);
     userRepository.saveAndFlush(user);
-    return APIResponse.success(API_NAME, RoleType.ADMIN.getKey());
+    return RoleType.ADMIN.getKey();
   }
 }

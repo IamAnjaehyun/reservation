@@ -2,12 +2,9 @@ package com.jaehyun.reservation.user.reservation.service;
 
 import com.jaehyun.reservation.admin.store.domain.entity.Store;
 import com.jaehyun.reservation.admin.store.domain.repository.StoreRepository;
-import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.global.exception.impl.reservation.DuplicateReservationException;
-import com.jaehyun.reservation.global.exception.impl.reservation.NotExistReservationException;
 import com.jaehyun.reservation.global.exception.impl.reservation.ReservationDateException;
 import com.jaehyun.reservation.global.exception.impl.store.NotExistStoreException;
-import com.jaehyun.reservation.global.exception.impl.user.DuplicatedIdOrPhoneNumException;
 import com.jaehyun.reservation.global.exception.impl.user.NotExistUserException;
 import com.jaehyun.reservation.user.reservation.domain.dto.ReservationReqDto;
 import com.jaehyun.reservation.user.reservation.domain.dto.ReservationResDto;
@@ -16,7 +13,6 @@ import com.jaehyun.reservation.user.reservation.domain.repository.ReservationRep
 import com.jaehyun.reservation.user.type.ReservationStatus;
 import com.jaehyun.reservation.user.user.domain.entity.User;
 import com.jaehyun.reservation.user.user.domain.repository.UserRepository;
-import com.sun.jdi.request.DuplicateRequestException;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,12 +30,11 @@ public class ReservationService {
   private final StoreRepository storeRepository;
   private final UserRepository userRepository;
   private final ReservationRepository reservationRepository;
-  private final String API_NAME = "reservation";
 
 
-  public APIResponse<ReservationResDto> createReservation(String storeName,
+  public ReservationResDto createReservation(Long storeId,
       ReservationReqDto reservationReqDto, Principal principal) {
-    Store store = storeRepository.findByName(storeName)
+    Store store = storeRepository.findById(storeId)
         .orElseThrow(NotExistStoreException::new);
     User user = userRepository.findByLoginId(principal.getName())
         .orElseThrow(NotExistUserException::new);
@@ -65,7 +60,7 @@ public class ReservationService {
         .build();
     reservationRepository.save(reservation);
 
-    ReservationResDto reservationResDto = ReservationResDto.builder()
+    return ReservationResDto.builder()
         .reservationId(reservation.getId())
         .storeId(reservation.getStore().getId())
         .userId(reservation.getUser().getId())
@@ -75,11 +70,9 @@ public class ReservationService {
         .reservationStatus(reservation.getStatus())
         .reservationPeopleNum(reservation.getReservationPeopleNum())
         .build();
-
-    return APIResponse.success(API_NAME, reservationResDto);
   }
 
-  public APIResponse<List<ReservationResDto>> getReservationList(Principal principal) {
+  public List<ReservationResDto> getReservationList(Principal principal) {
     Optional<User> user = Optional.ofNullable(userRepository.findByLoginId(principal.getName())
         .orElseThrow(NotExistUserException::new));
 
@@ -99,10 +92,10 @@ public class ReservationService {
           .build();
       reservationResDtoList.add(reservationResDto);
     }
-    return APIResponse.success(API_NAME, reservationResDtoList);
+    return reservationResDtoList;
   }
 
-  public APIResponse<ReservationResDto> getReservationDetail(Long reservationId,
+  public ReservationResDto getReservationDetail(Long reservationId,
       Principal principal) {
     Optional<User> user = Optional.ofNullable(userRepository.findByLoginId(principal.getName())
         .orElseThrow(NotExistUserException::new));
@@ -112,7 +105,7 @@ public class ReservationService {
             .orElseThrow(NotExistStoreException::new));
 
     Reservation reservation = reservationOptional.get();
-    ReservationResDto reservationResDto = ReservationResDto.builder()
+    return ReservationResDto.builder()
         .storeId(reservation.getStore().getId())
         .userId(reservation.getUser().getId())
         .userName(reservation.getUser().getName())
@@ -122,11 +115,9 @@ public class ReservationService {
         .reservationDateTime(reservation.getReservationDateTime())
         .reservationPeopleNum(reservation.getReservationPeopleNum())
         .build();
-
-    return APIResponse.success(API_NAME, reservationResDto);
   }
 
-  public APIResponse<String> cancelReservation(Long reservationId,
+  public ReservationStatus cancelReservation(Long reservationId,
       Principal principal) {
     Optional<User> user = Optional.ofNullable(userRepository.findByLoginId(principal.getName())
         .orElseThrow(NotExistUserException::new));
@@ -139,6 +130,6 @@ public class ReservationService {
     reservation.setStatus(ReservationStatus.CANCEL);
     reservationRepository.save(reservation);
 
-    return APIResponse.success(API_NAME, ReservationStatus.CANCEL.toString());
+    return reservation.getStatus();
   }
 }

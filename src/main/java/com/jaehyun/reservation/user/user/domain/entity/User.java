@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.jaehyun.reservation.admin.store.domain.entity.Store;
 import com.jaehyun.reservation.global.entity.BaseTimeEntity;
 import com.jaehyun.reservation.user.favorite.domain.Favorite;
-import com.jaehyun.reservation.user.review.domain.Review;
+import com.jaehyun.reservation.user.review.domain.entity.Review;
 import com.jaehyun.reservation.user.type.RoleType;
 import java.util.List;
 import javax.persistence.CascadeType;
