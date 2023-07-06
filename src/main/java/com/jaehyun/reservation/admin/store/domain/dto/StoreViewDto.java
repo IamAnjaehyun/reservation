@@ -27,12 +27,15 @@ public class StoreViewDto {
   private double averageRating; //평점
 
   private int totalReviewCount; //별점 준 인원수
+  private int favoriteCount; //즐겨찾기 수
+
   public static StoreViewDto fromStore(Store store) {
     return StoreViewDto.builder()
         .storeId(store.getId())
         .name(store.getName())
         .description(store.getDescription())
         .location(store.getLocation())
+        .favoriteCount(store.getFavoriteCount())
         .phoneNum(store.getPhoneNum())
         .averageRating(store.getAverageRating())
         .totalReviewCount(store.getTotalReviewCount())

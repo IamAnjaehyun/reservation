@@ -10,5 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface FavoriteStoreRepository extends JpaRepository<FavoriteStore, Long> {
   Optional<FavoriteStore> findByStoreAndFavorite(Store store, Favorite favorite);
   boolean existsByStoreAndFavorite(Store store, Favorite favorite);
-  List<FavoriteStore> findByFavorite(Favorite favorite);
+  List<FavoriteStore> findAllByFavorite(Favorite favorite);
 }

@@ -18,12 +18,14 @@ public class StoreResDto {
   private String description; //매장 설명
   private String location; //매장 위치
   private String phoneNum; //매장 전화번호
+  private int favoriteCount; //즐겨찾기 수
 
   public static StoreResDto fromStore(Store store) {
     return StoreResDto.builder()
         .name(store.getName())
         .adminName(store.getUser().getName())
         .description(store.getDescription())
+        .favoriteCount(store.getFavoriteCount())
         .location(store.getLocation())
         .phoneNum(store.getPhoneNum())
         .build();

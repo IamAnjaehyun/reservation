@@ -71,7 +71,7 @@ public class ReservationService {
     List<Reservation> reservationList = reservationRepository.findAllByUser(user.get());
 
     for (Reservation reservation : reservationList) {
-      reservationResDtoList.add(ReservationResDto.fromReservation(reservation););
+      reservationResDtoList.add(ReservationResDto.fromReservation(reservation));
     }
     return reservationResDtoList;
   }
