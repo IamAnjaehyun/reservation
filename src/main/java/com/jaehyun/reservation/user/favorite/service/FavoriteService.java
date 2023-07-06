@@ -72,7 +72,7 @@ public class FavoriteService {
     List<FavoriteStore> favoriteStores = favoriteStoreRepository.findByFavorite(favorite);
 
     List<FavoriteStoreResDto> favoriteStoreResDtos = favoriteStores.stream()
-        .map(this::mapToFavoriteStoreResDto)
+        .map(FavoriteStoreResDto::fromFavoriteStoreResDto)
         .collect(Collectors.toList());
 
     return FavoriteResDto.builder()
@@ -96,17 +96,5 @@ public class FavoriteService {
           .orElseThrow(NotFavoriteStoreException::new);
       favoriteStoreRepository.delete(favoriteStore);
     }
-  }
-
-  private FavoriteStoreResDto mapToFavoriteStoreResDto(FavoriteStore favoriteStore) {
-    return FavoriteStoreResDto.builder()
-        .id(favoriteStore.getStore().getId())
-        .name(favoriteStore.getStore().getName())
-        .description(favoriteStore.getStore().getDescription())
-        .location(favoriteStore.getStore().getLocation())
-        .phoneNum(favoriteStore.getStore().getPhoneNum())
-        .averageRating(favoriteStore.getStore().getAverageRating())
-        .totalReviewCount(favoriteStore.getStore().getTotalReviewCount())
-        .build();
   }
 }
