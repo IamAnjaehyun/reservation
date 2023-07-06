@@ -84,7 +84,7 @@ public class StoreService {
     Store store = storeRepository.findById(storeId).orElseThrow(NotExistStoreException::new);
     Long storeAdminName = store.getUser().getId();
     if (storeAdminName.equals(admin.getId())) {
-      storeRepository.deleteById(store.getId());S
+      storeRepository.deleteById(store.getId());
     } else {
       throw new UnauthorizedException();
     }
