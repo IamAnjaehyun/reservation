@@ -16,7 +16,6 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +39,7 @@ public class AdminReservationService {
     List<Store> storeList = storeRepository.findAllByUser(user);
 
     return reservationRepository.findAllByStoreIn(storeList, pageable)
-        .map(this::mapToReservationResDto);
+        .map(ReservationResDto::fromReservation);
   }
 
   public Page<ReservationResDto> getStoreReservationListByStatus(Long storeId,
@@ -52,10 +51,10 @@ public class AdminReservationService {
 
     if (status != null) {
       return reservationRepository.findAllByStoreAndStatus(store, status, pageable)
-          .map(this::mapToReservationResDto);
+          .map(ReservationResDto::fromReservation);
     } else {
       return reservationRepository.findAllByStore(store, pageable)
-          .map(this::mapToReservationResDto);
+          .map(ReservationResDto::fromReservation);
     }
   }
 
@@ -70,10 +69,10 @@ public class AdminReservationService {
 
     if (status != null) {
       return reservationRepository.findAllByStoreAndStatusAndReservationDateTimeBetween(store, status, startDate, endDate, pageable)
-          .map(this::mapToReservationResDto);
+          .map(ReservationResDto::fromReservation);
     } else {
       return reservationRepository.findAllByStoreAndReservationDateTimeBetween(store, startDate, endDate, pageable)
-          .map(this::mapToReservationResDto);
+          .map(ReservationResDto::fromReservation);
     }
   }
 
@@ -91,19 +90,5 @@ public class AdminReservationService {
     reservationRepository.save(reservation);
 
     return reservation.getStatus();
-  }
-
-  //단일 dto 생성
-  private ReservationResDto mapToReservationResDto(Reservation reservation) {
-    return ReservationResDto.builder()
-        .storeId(reservation.getStore().getId())
-        .userId(reservation.getUser().getId())
-        .reservationId(reservation.getId())
-        .reservationStatus(reservation.getStatus())
-        .reservationPeopleNum(reservation.getReservationPeopleNum())
-        .reservationDateTime(reservation.getReservationDateTime())
-        .storeName(reservation.getStore().getName())
-        .userName(reservation.getUser().getName())
-        .build();
   }
 }
