@@ -53,6 +53,7 @@ public class Reservation extends BaseTimeEntity {
   private int reservationPeopleNum; //예약 인원수
 
   @Enumerated(EnumType.STRING)
+  @Builder.Default
   private ReservationStatus status = ReservationStatus.DEFAULT; //예약 승인 여부 (기본 PLEASE_WAIT)
 
   @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
