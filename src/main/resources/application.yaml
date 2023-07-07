@@ -16,7 +16,11 @@ spring:
 
   jwt:
     secret: ${SPRING_JWT_SECRET}
-
+sms:
+  accessKey: ${sms_accessKey}
+  secretKey: ${sms_secretKey}
+  serviceId: ${sms_serviceId}
+  senderPhone: ${sms_senderPhone}
 #token:
 #  header: ${TOKEN_HEADER}
 #  prefix: ${TOKEN_PREFIX}
