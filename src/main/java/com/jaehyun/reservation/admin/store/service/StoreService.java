@@ -30,8 +30,9 @@ public class StoreService {
     User admin = userRepository.findByLoginId(principal.getName())
         .orElseThrow(NotExistUserException::new);
     //중복된 상점의 이름이 들어온다면 예외처리
-    Store storeCheck = storeRepository.findByName(storeReqDto.getName())
-        .orElseThrow(AlreadyExistStoreException::new);
+    if (storeRepository.existsByName(storeReqDto.getName())) {
+      throw new AlreadyExistStoreException();
+    }
 
     //권한체크 안해도됨 security에서 하기떄문
     Store store = Store.builder()
