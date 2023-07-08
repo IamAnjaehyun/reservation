@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +35,7 @@ public class FavoriteService {
   private final UserRepository userRepository;
 
   @Transactional
-  public Long addStoreToFavorite(Long storeId, Principal principal) {
+  public synchronized Long addStoreToFavorite(Long storeId, Principal principal) {
 
     Store store = storeRepository.findById(storeId).orElseThrow(CantFindStoreException::new);
     User user = userRepository.findByLoginId(principal.getName()).get();
@@ -75,13 +76,14 @@ public class FavoriteService {
   }
 
   @Transactional
-  public void deleteStoreFromFavorite(Long storeId, Principal principal, boolean deleteAll) {
+  public synchronized void deleteStoreFromFavorite(Long storeId, Principal principal, boolean deleteAll) {
     //상품 뒤에 달려있으면 상품만 삭제 아니면 전체삭제
     User user = userRepository.findByLoginId(principal.getName()).get();
     Favorite favorite = favoriteRepository.findByUser(user);
 
     if (deleteAll) {
       List<FavoriteStore> favoriteStoreList = favoriteStoreRepository.findAllByFavorite(favorite);
+      //TODO : favoriteCount를 redis에 캐시형태로 저장하여 변화시킬 때 cache를 날려 DB I/O 줄여야 함
       for (FavoriteStore favoriteStore : favoriteStoreList) {
         Store store = favoriteStore.getStore();
         store.setFavoriteCount(favoriteStore.getStore().getFavoriteCount() - 1);
