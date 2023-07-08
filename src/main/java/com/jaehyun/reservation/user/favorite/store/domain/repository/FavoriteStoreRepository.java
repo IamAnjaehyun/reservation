@@ -11,4 +11,5 @@ public interface FavoriteStoreRepository extends JpaRepository<FavoriteStore, Lo
   Optional<FavoriteStore> findByStoreAndFavorite(Store store, Favorite favorite);
   boolean existsByStoreAndFavorite(Store store, Favorite favorite);
   List<FavoriteStore> findAllByFavorite(Favorite favorite);
+  void deleteAllByFavorite(Favorite favorite);
 }

@@ -40,7 +40,8 @@ public class FavoriteController {
   @DeleteMapping
   public APIResponse<Void> deleteStoreFromFavorite(
       @RequestParam(required = false) Long storeId, Principal principal) {
-    favoriteService.deleteStoreFromFavorite(storeId, principal);
+    boolean deleteAll = storeId == null;
+    favoriteService.deleteStoreFromFavorite(storeId, principal, deleteAll);
     return APIResponse.delete();
   }
 }
