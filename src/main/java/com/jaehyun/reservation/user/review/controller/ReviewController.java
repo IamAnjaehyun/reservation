@@ -20,19 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/v1/reservation/user/review")
 public class ReviewController {
-  //리뷰 작성 + 조회는 상점 detail 조회시 같이 보이도록 할 예정
-  //별점 + 리뷰 내용
 
   private final ReviewService reviewService;
 
   //상점 대한 리뷰 작성
-  @PostMapping("/{storeId}/{reservationId}")
-  public APIResponse<ReviewResDto> createReview(@PathVariable Long storeId,
-      @PathVariable Long reservationId,
+  @PostMapping("/create/{reservationId}")
+  public APIResponse<ReviewResDto> createReview(@PathVariable Long reservationId,
       @RequestBody ReviewReqDto reviewReqDto,
       Principal principal) {
     return APIResponse.success("review",
-        reviewService.createReview(storeId, reviewReqDto, reservationId, principal));
+        reviewService.createReview(reviewReqDto, reservationId, principal));
   }
 
   @PutMapping("/{reviewId}")

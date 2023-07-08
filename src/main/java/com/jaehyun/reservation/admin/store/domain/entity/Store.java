@@ -55,6 +55,8 @@ public class Store extends BaseTimeEntity {
   private Long totalRating; //총 별점
   private int totalReviewCount; //별점 준 인원수
 
+  private int favoriteCount; //좋아요 받은 수
+
   @JsonBackReference
   @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
   private List<Reservation> reservationList; //예약 목록
@@ -77,5 +79,9 @@ public class Store extends BaseTimeEntity {
 
   public void setPhoneNum(String phoneNum) {
     this.phoneNum = phoneNum;
+  }
+
+  public void setFavoriteCount(int favoriteCount) {
+    this.favoriteCount = favoriteCount;
   }
 }

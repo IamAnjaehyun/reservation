@@ -60,16 +60,7 @@ public class ReservationService {
         .build();
     reservationRepository.save(reservation);
 
-    return ReservationResDto.builder()
-        .reservationId(reservation.getId())
-        .storeId(reservation.getStore().getId())
-        .userId(reservation.getUser().getId())
-        .storeName(reservation.getStore().getName())
-        .userName(reservation.getUser().getName())
-        .reservationDateTime(reservation.getReservationDateTime())
-        .reservationStatus(reservation.getStatus())
-        .reservationPeopleNum(reservation.getReservationPeopleNum())
-        .build();
+    return ReservationResDto.fromReservation(reservation);
   }
 
   public List<ReservationResDto> getReservationList(Principal principal) {
@@ -80,17 +71,7 @@ public class ReservationService {
     List<Reservation> reservationList = reservationRepository.findAllByUser(user.get());
 
     for (Reservation reservation : reservationList) {
-      ReservationResDto reservationResDto = ReservationResDto.builder()
-          .storeId(reservation.getStore().getId())
-          .userId(reservation.getUser().getId())
-          .userName(reservation.getUser().getName())
-          .storeName(reservation.getStore().getName())
-          .reservationId(reservation.getId())
-          .reservationStatus(reservation.getStatus())
-          .reservationDateTime(reservation.getReservationDateTime())
-          .reservationPeopleNum(reservation.getReservationPeopleNum())
-          .build();
-      reservationResDtoList.add(reservationResDto);
+      reservationResDtoList.add(ReservationResDto.fromReservation(reservation));
     }
     return reservationResDtoList;
   }
@@ -105,16 +86,7 @@ public class ReservationService {
             .orElseThrow(NotExistStoreException::new));
 
     Reservation reservation = reservationOptional.get();
-    return ReservationResDto.builder()
-        .storeId(reservation.getStore().getId())
-        .userId(reservation.getUser().getId())
-        .userName(reservation.getUser().getName())
-        .storeName(reservation.getStore().getName())
-        .reservationId(reservation.getId())
-        .reservationStatus(reservation.getStatus())
-        .reservationDateTime(reservation.getReservationDateTime())
-        .reservationPeopleNum(reservation.getReservationPeopleNum())
-        .build();
+    return ReservationResDto.fromReservation(reservation);
   }
 
   public ReservationStatus cancelReservation(Long reservationId,
