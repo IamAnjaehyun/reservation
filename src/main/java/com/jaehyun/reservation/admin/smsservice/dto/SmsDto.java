@@ -1,4 +1,4 @@
-package com.jaehyun.reservation.admin.store.smsservice.dto;
+package com.jaehyun.reservation.admin.smsservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

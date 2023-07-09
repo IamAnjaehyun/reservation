@@ -1,4 +1,4 @@
-package com.jaehyun.reservation.admin.store.service;
+package com.jaehyun.reservation.admin.smsservice.service;
 
 import com.jaehyun.reservation.admin.store.domain.dto.StoreReqDto;
 import com.jaehyun.reservation.admin.store.domain.dto.StoreResDto;

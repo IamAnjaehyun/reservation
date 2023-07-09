@@ -1,4 +1,4 @@
-package com.jaehyun.reservation.admin.store.service;
+package com.jaehyun.reservation.admin.smsservice.service;
 
 import com.jaehyun.reservation.admin.store.domain.entity.Store;
 import com.jaehyun.reservation.admin.store.domain.repository.StoreRepository;

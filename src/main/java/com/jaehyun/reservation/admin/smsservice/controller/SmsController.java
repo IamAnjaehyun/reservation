@@ -1,9 +1,9 @@
-package com.jaehyun.reservation.admin.store.smsservice.controller;
+package com.jaehyun.reservation.admin.smsservice.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.jaehyun.reservation.admin.store.smsservice.dto.SmsDto;
-import com.jaehyun.reservation.admin.store.smsservice.dto.SmsResDto;
-import com.jaehyun.reservation.admin.store.smsservice.service.SmsService;
+import com.jaehyun.reservation.admin.smsservice.dto.SmsDto;
+import com.jaehyun.reservation.admin.smsservice.dto.SmsResDto;
+import com.jaehyun.reservation.admin.smsservice.service.SmsService;
 import com.jaehyun.reservation.global.common.APIResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
