@@ -31,16 +31,16 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 @Slf4j
 public class SmsService {
-  @Value("${sms.accessKey}")
+  @Value("${sms_accessKey}")
   private String accessKey;
 
-  @Value("${sms.secretKey}")
+  @Value("${sms_secretKey}")
   private String secretKey;
 
-  @Value("${sms.serviceId}")
+  @Value("${sms_serviceId}")
   private String serviceId;
 
-  @Value("${sms.senderPhone}")
+  @Value("${sms_senderPhone}")
   private String phone;
 
   public String makeSignature(Long time) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
