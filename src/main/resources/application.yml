@@ -17,3 +17,7 @@ spring:
 
   jwt:
     secret: ${SPRING_JWT_SECRET}
+
+sms_accessKey: ${sms_accessKey}
+sms_senderPhone: ${sms_senderPhone}
+sms_serviceId: ${sms_serviceId}
