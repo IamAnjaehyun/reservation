@@ -17,3 +17,17 @@
     "ROLE_" 추가하고 해결. 앞전에 바꾸었던 모든 jwt 세팅 원점으로 돌리고 commit.
   - 참고 링크 https://www.inflearn.com/questions/843578/enum-%ED%83%80%EC%9E%85%EC%9D%98-getauthorities
 
+#### 02
+- 발생일시 20230709 16:22 ~ 20230709 21:40
+
+- 문제점
+  - AWS 업로드 중 application.yml 에 있던 환경변수는 업로드시 같이 올라가지 못하는 현상 발생
+
+  - AWS 업로드 중 linux 서버가 자꾸 다운되는 현상 발생
+- 해결법
+  - ubuntu 안에 따로 properties를 만들어 그 안에 application.yml 파일을 생성하여
+  </br> nohup java -jar $JAR_FILE --spring.config.location=/home/ubuntu/properties/application.yml > $APP_LOG 2>&1 $ERROR_LOG &
+  </br> 조건을 걸어 실행시에 application.yml 을 물고 올라가서 실행시에 환경변수를 강제로 대입시켜 문제 해결
+    - 참고 링크 https://shinsunyoung.tistory.com/120
+  - 메모리 스왑을 통해 해결
+    - 참고 링크 https://velog.io/@kku64r/ec2freetier
