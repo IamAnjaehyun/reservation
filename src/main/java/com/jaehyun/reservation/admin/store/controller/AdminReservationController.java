@@ -1,13 +1,12 @@
 package com.jaehyun.reservation.admin.store.controller;
 
 
-import com.jaehyun.reservation.admin.store.service.AdminReservationService;
+import com.jaehyun.reservation.admin.smsservice.service.AdminReservationService;
 import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.user.reservation.domain.dto.ReservationResDto;
 import com.jaehyun.reservation.user.type.ReservationStatus;
 import java.security.Principal;
 import java.time.LocalDate;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

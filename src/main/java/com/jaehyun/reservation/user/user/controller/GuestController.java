@@ -1,7 +1,7 @@
 package com.jaehyun.reservation.user.user.controller;
 
 import com.jaehyun.reservation.admin.store.domain.dto.StoreViewDto;
-import com.jaehyun.reservation.admin.store.service.StoreService;
+import com.jaehyun.reservation.admin.smsservice.service.StoreService;
 import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.global.exception.impl.user.DuplicatedIdOrPhoneNumException;
 import com.jaehyun.reservation.user.user.domain.dto.UserJoinDto;

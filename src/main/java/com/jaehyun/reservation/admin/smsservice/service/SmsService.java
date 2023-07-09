@@ -1,16 +1,15 @@
-package com.jaehyun.reservation.admin.store.smsservice.service;
+package com.jaehyun.reservation.admin.smsservice.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jaehyun.reservation.admin.store.smsservice.dto.SmsDto;
-import com.jaehyun.reservation.admin.store.smsservice.dto.SmsReqDto;
-import com.jaehyun.reservation.admin.store.smsservice.dto.SmsResDto;
+import com.jaehyun.reservation.admin.smsservice.dto.SmsDto;
+import com.jaehyun.reservation.admin.smsservice.dto.SmsReqDto;
+import com.jaehyun.reservation.admin.smsservice.dto.SmsResDto;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.crypto.Mac;
