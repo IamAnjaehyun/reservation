@@ -1,5 +1,9 @@
 package com.jaehyun.reservation.user.reservation.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.jaehyun.reservation.admin.smsservice.controller.SmsController;
+import com.jaehyun.reservation.admin.smsservice.dto.SmsDto;
+import com.jaehyun.reservation.admin.smsservice.service.SmsService;
 import com.jaehyun.reservation.admin.store.domain.entity.Store;
 import com.jaehyun.reservation.admin.store.domain.repository.StoreRepository;
 import com.jaehyun.reservation.global.exception.impl.reservation.DuplicateReservationException;
@@ -13,6 +17,10 @@ import com.jaehyun.reservation.user.reservation.domain.repository.ReservationRep
 import com.jaehyun.reservation.user.type.ReservationStatus;
 import com.jaehyun.reservation.user.user.domain.entity.User;
 import com.jaehyun.reservation.user.user.domain.repository.UserRepository;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,10 +38,12 @@ public class ReservationService {
   private final StoreRepository storeRepository;
   private final UserRepository userRepository;
   private final ReservationRepository reservationRepository;
+  private final SmsService smsService;
 
 
   public ReservationResDto createReservation(Long storeId,
-      ReservationReqDto reservationReqDto, Principal principal) {
+      ReservationReqDto reservationReqDto, Principal principal)
+      throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
     Store store = storeRepository.findById(storeId)
         .orElseThrow(NotExistStoreException::new);
     User user = userRepository.findByLoginId(principal.getName())
@@ -59,6 +69,15 @@ public class ReservationService {
         .status(ReservationStatus.REQUEST) // 예약 요청 상태로 설정
         .build();
     reservationRepository.save(reservation);
+
+    //예약 신청시 문자 발송
+    SmsDto smsDto = new SmsDto().builder()
+        .to(user.getPhoneNum())
+        .content(reservation.getStore().getName() + "\n" + user.getName() + "님께서 "
+            + reservation.getReservationDateTime() + "에 요청하신 예약이 신청 완료되었습니다. ")
+        .build();
+
+    smsService.sendSms(smsDto);
 
     return ReservationResDto.fromReservation(reservation);
   }
@@ -89,19 +108,27 @@ public class ReservationService {
     return ReservationResDto.fromReservation(reservation);
   }
 
-  public ReservationStatus cancelReservation(Long reservationId,
-      Principal principal) {
-    Optional<User> user = Optional.ofNullable(userRepository.findByLoginId(principal.getName())
-        .orElseThrow(NotExistUserException::new));
+  public ReservationStatus cancelReservation(Long reservationId, Principal principal)
+      throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+    User user = userRepository.findByLoginId(principal.getName())
+        .orElseThrow(NotExistUserException::new);
 
     Optional<Reservation> reservationOptional = Optional.ofNullable(
-        reservationRepository.findByUserAndId(user.get(), reservationId)
+        reservationRepository.findByUserAndId(user, reservationId)
             .orElseThrow(NotExistStoreException::new));
 
     Reservation reservation = reservationOptional.get();
     reservation.setStatus(ReservationStatus.CANCEL);
     reservationRepository.save(reservation);
 
+    //예약 취소시 문자 발송
+    SmsDto smsDto = new SmsDto().builder()
+        .to(user.getPhoneNum())
+        .content(reservation.getStore().getName() + "\n" + user.getName() + "님께서 "
+            + reservation.getReservationDateTime() + "에 요청하신 예약이 취소 완료되었습니다. ")
+        .build();
+
+    smsService.sendSms(smsDto);
     return reservation.getStatus();
   }
 }

@@ -1,10 +1,15 @@
 package com.jaehyun.reservation.user.reservation.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.user.reservation.domain.dto.ReservationReqDto;
 import com.jaehyun.reservation.user.reservation.domain.dto.ReservationResDto;
 import com.jaehyun.reservation.user.reservation.service.ReservationService;
 import com.jaehyun.reservation.user.type.ReservationStatus;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +31,8 @@ public class ReservationController {
 
   @PostMapping("/{storeId}")
   public APIResponse<ReservationResDto> createReservation(@PathVariable Long storeId,
-      @RequestBody ReservationReqDto reservationReqDto, Principal principal) {
+      @RequestBody ReservationReqDto reservationReqDto, Principal principal)
+      throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
     return APIResponse.success("reservation",
         reservationService.createReservation(storeId, reservationReqDto, principal));
   }
@@ -45,7 +51,8 @@ public class ReservationController {
 
   @PostMapping("/cancel/{reservationId}")
   public APIResponse<ReservationStatus> cancelReservation(@PathVariable Long reservationId,
-      Principal principal) {
+      Principal principal)
+      throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
     return APIResponse.success("statusChanged",
         reservationService.cancelReservation(reservationId, principal));
   }
