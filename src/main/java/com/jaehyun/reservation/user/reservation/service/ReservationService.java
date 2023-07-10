@@ -76,7 +76,14 @@ public class ReservationService {
         .content(reservation.getStore().getName() + "\n" + user.getName() + "님께서 "
             + reservation.getReservationDateTime() + "에 요청하신 예약이 신청 완료되었습니다. ")
         .build();
-
+//    예약 신청이 오면 상점 관리자 번호로 예약 내역 전송
+//    SmsDto smsDtoToManager = new SmsDto().builder()
+//        .to(store.getPhoneNum())
+//        .content(reservation.getStore().getName() + "\n" + user.getName() + "님께서 "
+//            + reservation.getReservationDateTime() + "에 "
+//            + reservation.getReservationPeopleNum()+ " 인 방문 예약을 요청하였습니다. ")
+//        .build();
+//    smsService.sendSms(smsDtoToManager);
     smsService.sendSms(smsDto);
 
     return ReservationResDto.fromReservation(reservation);
@@ -127,7 +134,14 @@ public class ReservationService {
         .content(reservation.getStore().getName() + "\n" + user.getName() + "님께서 "
             + reservation.getReservationDateTime() + "에 요청하신 예약이 취소 완료되었습니다. ")
         .build();
-
+//    예약 취소시 상점 관리자 번호로 예약 취소 내역 전송
+//    Store store = reservationRepository.findById(reservationId).get().getStore();
+//    SmsDto smsDtoToManager = new SmsDto().builder()
+//        .to(store.getPhoneNum())
+//        .content(reservation.getStore().getName() + "\n" + user.getName() + "님께서 "
+//            + reservation.getReservationDateTime() + "에 요청하신 예약이 취소 처리 되었습니다. ")
+//        .build();
+//    smsService.sendSms(smsDtoToManager);
     smsService.sendSms(smsDto);
     return reservation.getStatus();
   }

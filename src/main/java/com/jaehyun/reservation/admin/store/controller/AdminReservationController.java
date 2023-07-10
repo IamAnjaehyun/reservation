@@ -1,10 +1,15 @@
 package com.jaehyun.reservation.admin.store.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jaehyun.reservation.admin.smsservice.service.AdminReservationService;
 import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.user.reservation.domain.dto.ReservationResDto;
 import com.jaehyun.reservation.user.type.ReservationStatus;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +65,8 @@ public class AdminReservationController {
       @PathVariable Long reservationId,
       @PathVariable ReservationStatus reservationStatus,
       @RequestParam ReservationStatus changeStatus,
-      Principal principal) {
+      Principal principal)
+      throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
 
     return APIResponse.success("statusChanged",
         adminReservationService.changeReservationStatus(
