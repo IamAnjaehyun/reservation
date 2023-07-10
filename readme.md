@@ -46,6 +46,7 @@
 ### [ Goal of this project ]
 
 - AWS 웹 호스팅, CI/CD
+  - ![aws.png](doc/img/aws.png)
 
 - Elasticsearch 를 통한 실시간 검색 순위 구현
 
