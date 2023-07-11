@@ -45,12 +45,16 @@
 
 ### [ Goal of this project ]
 
-- AWS 웹 호스팅, CI/CD
+✅ AWS 웹 호스팅, CI/CD
   - ![aws.png](doc/img/aws.png)
+
+✅ 예약 승인, 예약 거절, 예약시간 경우에 SENS(Simple & Easy Notification Service)를 통해 SMS 전송
+
+- 예약 시간 10분전 SENS(Simple & Easy Notification Service)를 통해 SMS 전송
 
 - Elasticsearch 를 통한 실시간 검색 순위 구현
 
-- 예약 승인, 예약 거절, 예약시간 10분 전 세 가지 경우에 SENS(Simple & Easy Notification Service)를 통해 SMS 전송
+
 
 ## ERD
 
@@ -62,13 +66,15 @@
 
 ### Tech Stack
 
-<div align=center> 
+<div align=> 
   <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-square&logo=SpringBoot&logoColor=white"/>
   <img src="https://img.shields.io/badge/Java-007396?style=for-the-square&logo=java&logoColor=white">
   <img src="https://img.shields.io/badge/github-181717?style=for-the-square&logo=github&logoColor=white">
   <img src="https://img.shields.io/badge/Mysql-E6B91E?style=for-the-square&logo=MySql&logoColor=white">
   <img src="https://img.shields.io/badge/gradle-02303A?style=for-the-square&logo=gradle&logoColor=white">
+  <img src="https://img.shields.io/badge/AWS EC2-232F3E?style=for-the-square&logo=amazonaws&logoColor=white">
+  <img src="https://img.shields.io/badge/AWS S3-232F3E?style=for-the-square&logo=amazonaws&logoColor=white">
+  <img src="https://img.shields.io/badge/AWS RDS-232F3E?style=for-the-square&logo=amazonaws&logoColor=white">
 
 [//]: # (  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-square&logo=Docker&logoColor=white"/> )
-[//]: # (  <img src="https://img.shields.io/badge/AWS-232F3E?style=for-the-square&logo=amazonaws&logoColor=white">)
 </div>
