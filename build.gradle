@@ -22,7 +22,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.projectlombok:lombok'
-    runtimeOnly 'com.mysql:mysql-connector-j'
+	implementation 'com.mysql:mysql-connector-j:8.0.32'
+	runtimeOnly 'com.mysql:mysql-connector-j:8.0.32'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 	//jwt 로그인
