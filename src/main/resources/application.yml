@@ -21,3 +21,4 @@ spring:
 sms_accessKey: ${sms_accessKey}
 sms_senderPhone: ${sms_senderPhone}
 sms_serviceId: ${sms_serviceId}
+sms_secretKey: ${sms_secretKey}
