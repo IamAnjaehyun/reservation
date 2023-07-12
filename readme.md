@@ -45,12 +45,12 @@
 
 ### [ Goal of this project ]
 
-✅ AWS 웹 호스팅, CI/CD
+- ✅ AWS 웹 호스팅, CI/CD
   - ![aws.png](doc/img/aws.png)
 
-✅ 예약 승인, 예약 거절, 예약시간 경우에 SENS(Simple & Easy Notification Service)를 통해 SMS 전송
-
-✅ 예약 시간 10분전 SENS(Simple & Easy Notification Service)를 통해 SMS 전송
+- ✅ 예약 승인, 예약 거절, 예약시간 경우에 SENS(Simple & Easy Notification Service)를 통해 SMS 전송
+- ✅ 예약 시간 30분전 SENS(Simple & Easy Notification Service)를 통해 SMS 전송
+  - ![img.png](doc/sens/img.png)
 
 - Elasticsearch 를 통한 실시간 검색 순위 구현
 
