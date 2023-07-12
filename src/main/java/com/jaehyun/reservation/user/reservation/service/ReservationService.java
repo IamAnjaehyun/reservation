@@ -166,6 +166,10 @@ public class ReservationService {
                 + "에 예약하신 예약시간까지 30분 남았습니다. 현 시간 이후로 예약 취소는 불가능합니다.")
             .build();
         smsService.sendSms(smsDto);
+
+        //문자를 보냈다면 더이상 예약 취소가 불가능 하기 때문에 상태를 USED로 변경
+        reservation.setStatus(ReservationStatus.USED);
+        reservationRepository.save(reservation);
       }
     }
   }
