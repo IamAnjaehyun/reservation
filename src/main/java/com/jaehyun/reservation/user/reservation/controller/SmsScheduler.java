@@ -12,6 +12,8 @@
 //import org.springframework.scheduling.annotation.Scheduled;
 //import org.springframework.stereotype.Component;
 //
+
+//리뷰 후 삭제예정
 //@Slf4j
 //@Component
 //@RequiredArgsConstructor

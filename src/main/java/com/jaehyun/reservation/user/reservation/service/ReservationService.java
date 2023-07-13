@@ -147,30 +147,31 @@ public class ReservationService {
     return reservation.getStatus();
   }
 
-  public void checkAndSendSms()
-      throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
-    List<Reservation> reservationList = reservationRepository.findAllByStatus(
-        ReservationStatus.OKAY);
-    for (Reservation reservation : reservationList) {
-      LocalDateTime reservationDateTimeMinus30Minutes = reservation.getReservationDateTime()
-          .minusMinutes(30);
-      LocalDateTime currentDateTime = LocalDateTime.now();
-
-      if (reservationDateTimeMinus30Minutes.isBefore(currentDateTime)) {
-        User user = reservation.getUser(); // User 객체를 가져오는 방법이 구현되어 있다고 가정
-
-        SmsDto smsDto = new SmsDto().builder()
-            .to(user.getPhoneNum())
-            .content(reservation.getStore().getName() + "\n" + user.getName() + "님께서 "
-                + reservation.getReservationDateTime()
-                + "에 예약하신 예약시간까지 30분 남았습니다. 현 시간 이후로 예약 취소는 불가능합니다.")
-            .build();
-        smsService.sendSms(smsDto);
-
-        //문자를 보냈다면 더이상 예약 취소가 불가능 하기 때문에 상태를 USED로 변경
-        reservation.setStatus(ReservationStatus.USED);
-        reservationRepository.save(reservation);
-      }
-    }
-  }
+//스프링 배치로 구현
+//  public void checkAndSendSms()
+//      throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+//    List<Reservation> reservationList = reservationRepository.findAllByStatus(
+//        ReservationStatus.OKAY);
+//    for (Reservation reservation : reservationList) {
+//      LocalDateTime reservationDateTimeMinus30Minutes = reservation.getReservationDateTime()
+//          .minusMinutes(30);
+//      LocalDateTime currentDateTime = LocalDateTime.now();
+//
+//      if (reservationDateTimeMinus30Minutes.isBefore(currentDateTime)) {
+//        User user = reservation.getUser(); // User 객체를 가져오는 방법이 구현되어 있다고 가정
+//
+//        SmsDto smsDto = new SmsDto().builder()
+//            .to(user.getPhoneNum())
+//            .content(reservation.getStore().getName() + "\n" + user.getName() + "님께서 "
+//                + reservation.getReservationDateTime()
+//                + "에 예약하신 예약시간까지 30분 남았습니다. 현 시간 이후로 예약 취소는 불가능합니다.")
+//            .build();
+//        smsService.sendSms(smsDto);
+//
+//        //문자를 보냈다면 더이상 예약 취소가 불가능 하기 때문에 상태를 USED로 변경
+//        reservation.setStatus(ReservationStatus.USED);
+//        reservationRepository.save(reservation);
+//      }
+//    }
+//  }
 }
