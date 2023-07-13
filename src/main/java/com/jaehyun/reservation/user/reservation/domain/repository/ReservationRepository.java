@@ -14,6 +14,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
   List<Reservation> findAllByUser(User user);
+  List<Reservation> findAllByStatus(ReservationStatus status);
 
   Page<Reservation> findAllByStore(Store store, Pageable pageable);
 
@@ -29,6 +30,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
       LocalDateTime startTime, LocalDateTime endTime, Pageable pageable);
 
   Optional<Reservation> findByUserAndId(User user, Long id);
+  Optional<Reservation> findByIdAndStatus(Long id, ReservationStatus status);
 
   boolean existsByReservationDateTimeAndUser(LocalDateTime localDateTime, User user);
 
