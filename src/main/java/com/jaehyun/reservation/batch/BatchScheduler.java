@@ -26,7 +26,7 @@
 //  private final JobLauncher jobLauncher;
 //  private final Job job;
 //
-//  @Scheduled(cron = "0 * * * * *") // 매 분마다 실행 (1분마다 실행하려면 "0 * * * * *"로 수정)
+//  @Scheduled(cron = "0 * * * * *") // 매 분마다 실행
 //  public void jobScheduled() throws JobParametersInvalidException, JobExecutionAlreadyRunningException,
 //      JobRestartException, JobInstanceAlreadyCompleteException {
 //
@@ -47,6 +47,7 @@
 //      log.info("...");
 //    }
 //
+      //TODO:주석을 이렇게 다 달아야하는지 고민
 //    log.info("Job Execution: " + jobExecution.getStatus());
 //    log.info("Job getJobConfigurationName: " + jobExecution.getJobConfigurationName());
 //    log.info("Job getJobId: " + jobExecution.getJobId());

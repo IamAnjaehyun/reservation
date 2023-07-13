@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Slf4j
 @RequiredArgsConstructor
-@Configuration // Spring Batch의 모든 Job은 @Configuration으로 등록해서 사용해야 한다.
+@Configuration
 public class SmsBatch {
 
   private final JobBuilderFactory jobBuilderFactory;
@@ -41,20 +41,20 @@ public class SmsBatch {
         .tasklet((contribution, chunkContext) -> {
           log.info(">>>>> This is myStep");
           List<Reservation> reservationList = reservationRepository.findAllByStatus(
-              ReservationStatus.OKAY);
+              ReservationStatus.OKAY); //OKAK => 관리자가 예약 승인까지 완료한 상태
           for (Reservation reservation : reservationList) {
             LocalDateTime reservationDateTimeMinus30Minutes = reservation.getReservationDateTime()
                 .minusMinutes(30);
             LocalDateTime currentDateTime = LocalDateTime.now();
 
             if (reservationDateTimeMinus30Minutes.isBefore(currentDateTime)) {
-              User user = reservation.getUser(); // User 객체를 가져오는 방법이 구현되어 있다고 가정
+              User user = reservation.getUser();
 
               SmsDto smsDto = new SmsDto().builder()
                   .to(user.getPhoneNum())
                   .content(reservation.getStore().getName() + "\n" + user.getName() + "님께서 "
                       + reservation.getReservationDateTime()
-                      + "에 예약하신 예약시간까지 30분 남았습니다. 현 시간 이후로 예약 취소는 불가능합니다. " )
+                      + "에 예약하신 예약시간까지 30분 남았습니다. 현 시간 이후로 예약 취소는 불가능합니다. ")
                   .build();
               smsService.sendSms(smsDto);
 
