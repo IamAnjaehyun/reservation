@@ -29,8 +29,8 @@ public class SmsBatch {
   private final SmsService smsService;
 
   @Bean
-  public Job myJob() {
-    return jobBuilderFactory.get("myJob")
+  public Job smsBatchJob() {
+    return jobBuilderFactory.get("smsBatchJob")
         .start(myStep())
         .build();
   }
@@ -40,31 +40,25 @@ public class SmsBatch {
     return stepBuilderFactory.get("myStep")
         .tasklet((contribution, chunkContext) -> {
           log.info(">>>>> This is myStep");
-          List<Reservation> reservationList = reservationRepository.findAllByStatus(
+          List<Reservation> reservationList = reservationRepository.findAllByReservationDateTimeBeforeAndStatus(
+              LocalDateTime.now().minusMinutes(30),
               ReservationStatus.OKAY); //OKAK => 관리자가 예약 승인까지 완료한 상태
           for (Reservation reservation : reservationList) {
-            LocalDateTime reservationDateTimeMinus30Minutes = reservation.getReservationDateTime()
-                .minusMinutes(30);
-            LocalDateTime currentDateTime = LocalDateTime.now();
+            User user = reservation.getUser();
+            SmsDto smsDto = new SmsDto().builder()
+                .to(user.getPhoneNum())
+                .content(reservation.getStore().getName() + "\n" + user.getName() + "님께서 "
+                    + reservation.getReservationDateTime()
+                    + "에 예약하신 예약시간까지 30분 남았습니다. 현 시간 이후로 예약 취소는 불가능합니다. ")
+                .build();
+            smsService.sendSms(smsDto);
 
-            if (reservationDateTimeMinus30Minutes.isBefore(currentDateTime)) {
-              User user = reservation.getUser();
+            //문자를 보냈다면 더이상 예약 취소가 불가능 하기 때문에 상태를 USED로 변경
+            reservation.setStatus(ReservationStatus.USED);
+            reservationRepository.save(reservation);
 
-              SmsDto smsDto = new SmsDto().builder()
-                  .to(user.getPhoneNum())
-                  .content(reservation.getStore().getName() + "\n" + user.getName() + "님께서 "
-                      + reservation.getReservationDateTime()
-                      + "에 예약하신 예약시간까지 30분 남았습니다. 현 시간 이후로 예약 취소는 불가능합니다. ")
-                  .build();
-              smsService.sendSms(smsDto);
-
-              //문자를 보냈다면 더이상 예약 취소가 불가능 하기 때문에 상태를 USED로 변경
-              reservation.setStatus(ReservationStatus.USED);
-              reservationRepository.save(reservation);
-
-              //SMS가 보내졌으면 log 출력
-              log.info("Sent SMS for reservation ID: {}", reservation.getId());
-            }
+            //SMS가 보내졌으면 log 출력
+            log.info("Sent SMS for reservation ID: {}", reservation.getId());
           }
           return RepeatStatus.FINISHED;
         })

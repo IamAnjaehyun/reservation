@@ -15,6 +15,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
   List<Reservation> findAllByUser(User user);
   List<Reservation> findAllByStatus(ReservationStatus status);
+  List<Reservation> findAllByReservationDateTimeBeforeAndStatus(LocalDateTime dateTime, ReservationStatus status);
 
   Page<Reservation> findAllByStore(Store store, Pageable pageable);
 
