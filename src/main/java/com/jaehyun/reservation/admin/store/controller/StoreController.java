@@ -2,7 +2,7 @@ package com.jaehyun.reservation.admin.store.controller;
 
 import com.jaehyun.reservation.admin.store.domain.dto.StoreReqDto;
 import com.jaehyun.reservation.admin.store.domain.dto.StoreResDto;
-import com.jaehyun.reservation.admin.smsservice.service.StoreService;
+import com.jaehyun.reservation.admin.store.service.StoreService;
 import com.jaehyun.reservation.global.common.APIResponse;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,8 @@
-package com.jaehyun.reservation.admin.smsservice.service;
+package com.jaehyun.reservation.admin.store.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jaehyun.reservation.admin.smsservice.dto.SmsDto;
+import com.jaehyun.reservation.admin.smsservice.service.SmsService;
 import com.jaehyun.reservation.admin.store.domain.entity.Store;
 import com.jaehyun.reservation.admin.store.domain.repository.StoreRepository;
 import com.jaehyun.reservation.global.exception.impl.reservation.NotExistReservationException;

@@ -2,7 +2,7 @@ package com.jaehyun.reservation.admin.store.controller;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.jaehyun.reservation.admin.smsservice.service.AdminReservationService;
+import com.jaehyun.reservation.admin.store.service.AdminReservationService;
 import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.user.reservation.domain.dto.ReservationResDto;
 import com.jaehyun.reservation.user.type.ReservationStatus;
