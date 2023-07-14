@@ -49,7 +49,7 @@ public class SmsBatch {
                 .to(user.getPhoneNum())
                 .content(reservation.getStore().getName() + "\n" + user.getName() + "님께서 "
                     + reservation.getReservationDateTime()
-                    + "에 예약하신 예약시간까지 30분 남았습니다. 현 시간 이후로 예약 취소는 불가능합니다. ")
+                    + "에 예약하신 예약시간까지 30분 남았습니다. 현 시간 이후로 예약 취소가 불가능합니다. ")
                 .build();
             smsService.sendSms(smsDto);
 
