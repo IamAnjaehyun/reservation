@@ -46,20 +46,20 @@ public class UserService {
   }
 
   public String login(UserLoginDto userLoginDto) {
-    Optional<User> user = Optional.ofNullable(userRepository.findByLoginId(userLoginDto.getId())
-        .orElseThrow(NotExistUserException::new));
-    if (!passwordEncoder.matches(userLoginDto.getPassword(), user.get().getPassword())) {
+    User user = userRepository.findByLoginId(userLoginDto.getId())
+        .orElseThrow(NotExistUserException::new);
+    if (!passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword())) {
       throw new IncorrectPassWordException();
     }
 
-    return jwtTokenProvider.createToken(user.get().getLoginId(), user.get().getRoles());
+    return jwtTokenProvider.createToken(user.getLoginId(), user.getRoles());
   }
 
   @Transactional
   public void quit(Principal principal) {
-    Optional<User> user = Optional.ofNullable(userRepository.findByLoginId(principal.getName())
-        .orElseThrow(NotExistUserException::new));
-    userRepository.deleteById(user.get().getId());
+    User user = userRepository.findByLoginId(principal.getName())
+        .orElseThrow(NotExistUserException::new);
+    userRepository.deleteById(user.getId());
     APIResponse.delete();
   }
 

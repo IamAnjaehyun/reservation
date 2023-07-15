@@ -6,6 +6,7 @@ import com.jaehyun.reservation.global.exception.impl.favorite.AlreadyExistFavori
 import com.jaehyun.reservation.global.exception.impl.favorite.NotFavoriteStoreException;
 import com.jaehyun.reservation.global.exception.impl.store.CantFindStoreException;
 import com.jaehyun.reservation.global.exception.impl.store.NotExistStoreException;
+import com.jaehyun.reservation.global.exception.impl.user.NotExistUserException;
 import com.jaehyun.reservation.user.favorite.domain.Favorite;
 import com.jaehyun.reservation.user.favorite.domain.dto.FavoriteResDto;
 import com.jaehyun.reservation.user.favorite.domain.repository.FavoriteRepository;
@@ -37,7 +38,7 @@ public class FavoriteService {
   public synchronized Long addStoreToFavorite(Long storeId, Principal principal) {
 
     Store store = storeRepository.findById(storeId).orElseThrow(CantFindStoreException::new);
-    User user = userRepository.findByLoginId(principal.getName()).get();
+    User user = userRepository.findByLoginId(principal.getName()).orElseThrow(NotExistUserException::new);
     Favorite favorite = favoriteRepository.findByUser(user);
 
     if (favorite == null) {
@@ -75,7 +76,8 @@ public class FavoriteService {
   }
 
   @Transactional
-  public synchronized void deleteStoreFromFavorite(Long storeId, Principal principal, boolean deleteAll) {
+  public synchronized void deleteStoreFromFavorite(Long storeId, Principal principal,
+      boolean deleteAll) {
     //상품 뒤에 달려있으면 상품만 삭제 아니면 전체삭제
     User user = userRepository.findByLoginId(principal.getName()).get();
     Favorite favorite = favoriteRepository.findByUser(user);
