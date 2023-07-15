@@ -4,6 +4,7 @@ import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.user.review.domain.dto.ReviewReqDto;
 import com.jaehyun.reservation.user.review.domain.dto.ReviewResDto;
 import com.jaehyun.reservation.user.review.service.ReviewService;
+import io.swagger.annotations.Api;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@Api(tags = {"REVIEW API"}, description = "리뷰 API")
 @RequestMapping("/v1/reservation/user/review")
 public class ReviewController {
 

@@ -3,6 +3,7 @@ package com.jaehyun.reservation.user.favorite.controller;
 import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.user.favorite.domain.dto.FavoriteResDto;
 import com.jaehyun.reservation.user.favorite.service.FavoriteService;
+import io.swagger.annotations.Api;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@Api(tags = {"FAVORITE API"}, description = "즐겨찾기 API")
 @RequestMapping("/v1/reservation/user/favorite")
 public class FavoriteController {
 

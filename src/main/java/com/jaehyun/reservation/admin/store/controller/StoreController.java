@@ -4,6 +4,7 @@ import com.jaehyun.reservation.admin.store.domain.dto.StoreReqDto;
 import com.jaehyun.reservation.admin.store.domain.dto.StoreResDto;
 import com.jaehyun.reservation.admin.store.service.StoreService;
 import com.jaehyun.reservation.global.common.APIResponse;
+import io.swagger.annotations.Api;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@Api(tags = {"STORE API"}, description = "상점 CRUD API")
 @RequestMapping("/v1/reservation/admin/store")
 public class StoreController {
 

@@ -6,6 +6,7 @@ import com.jaehyun.reservation.admin.store.service.AdminReservationService;
 import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.user.reservation.domain.dto.ReservationResDto;
 import com.jaehyun.reservation.user.type.ReservationStatus;
+import io.swagger.annotations.Api;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@Api(tags = {"ADMIN RESERVATION API"}, description = "관리자 예약 관리 API")
 @RequestMapping("/v1/reservation/admin/reservation")
 public class AdminReservationController {
 

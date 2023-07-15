@@ -7,6 +7,7 @@ import com.jaehyun.reservation.global.exception.impl.user.DuplicatedIdOrPhoneNum
 import com.jaehyun.reservation.user.user.domain.dto.UserJoinDto;
 import com.jaehyun.reservation.user.user.domain.dto.UserLoginDto;
 import com.jaehyun.reservation.user.user.service.UserService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@Api(tags = {"GUEST API"}, description = "비로그인 API")
 @RequestMapping("/v1/guest")
 public class GuestController {
 
