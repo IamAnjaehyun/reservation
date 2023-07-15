@@ -26,11 +26,13 @@ import org.springframework.web.client.RestClientException;
 @Api(tags = {"SMS API"}, description = "SMS 전송 기능 API")
 @RequestMapping("/v1/reservation/admin/sms")
 public class SmsController {
+
   private final SmsService smsService;
 
 
   @PostMapping
-  public APIResponse<SmsResDto> sendSms( @RequestBody SmsDto messageDto, Principal principal)
+  public APIResponse<SmsResDto> sendSms(
+      @ApiParam(value = "문자 작성 Dto") @RequestBody SmsDto messageDto, Principal principal)
       throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
     return APIResponse.success("sms", smsService.sendSms(messageDto));
   }

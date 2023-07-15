@@ -4,6 +4,7 @@ import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.user.favorite.domain.dto.FavoriteResDto;
 import com.jaehyun.reservation.user.favorite.service.FavoriteService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +26,7 @@ public class FavoriteController {
   //favorite 목록에 추가
   @PostMapping
   public APIResponse<Long> addStoreToFavorite(
-      @RequestParam Long storeId, Principal principal) {
+      @ApiParam(value = "상점 ID") @RequestParam Long storeId, Principal principal) {
 
     return APIResponse.success("favorite", favoriteService.addStoreToFavorite(storeId, principal));
   }
@@ -41,7 +42,8 @@ public class FavoriteController {
   //requestParam 있으면 특정 상품만 삭제하고, 없으면 전체 목록 비우기
   @DeleteMapping
   public APIResponse<Void> deleteStoreFromFavorite(
-      @RequestParam(required = false) Long storeId, Principal principal) {
+      @ApiParam(value = "상점 ID") @RequestParam(required = false) Long storeId,
+      Principal principal) {
     boolean deleteAll = storeId == null;
     favoriteService.deleteStoreFromFavorite(storeId, principal, deleteAll);
     return APIResponse.delete();

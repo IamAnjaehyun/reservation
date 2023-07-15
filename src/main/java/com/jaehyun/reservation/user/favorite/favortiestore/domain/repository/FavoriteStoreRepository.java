@@ -1,8 +1,8 @@
-package com.jaehyun.reservation.user.favorite.store.domain.repository;
+package com.jaehyun.reservation.user.favorite.favortiestore.domain.repository;
 
 import com.jaehyun.reservation.admin.store.domain.entity.Store;
 import com.jaehyun.reservation.user.favorite.domain.Favorite;
-import com.jaehyun.reservation.user.favorite.store.domain.entity.FavoriteStore;
+import com.jaehyun.reservation.user.favorite.favortiestore.domain.entity.FavoriteStore;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

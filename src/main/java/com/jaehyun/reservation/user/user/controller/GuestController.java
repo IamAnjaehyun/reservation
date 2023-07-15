@@ -8,6 +8,7 @@ import com.jaehyun.reservation.user.user.domain.dto.UserJoinDto;
 import com.jaehyun.reservation.user.user.domain.dto.UserLoginDto;
 import com.jaehyun.reservation.user.user.service.UserService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,13 +30,15 @@ public class GuestController {
 
   // 회원가입
   @PostMapping("/join")
-  public APIResponse<String> join(@RequestBody UserJoinDto userJoinDto)
+  public APIResponse<String> join(
+      @ApiParam(value = "회원가입 Dto") @RequestBody UserJoinDto userJoinDto)
       throws DuplicatedIdOrPhoneNumException {
     return APIResponse.success("user", userService.join(userJoinDto));
   }
 
   @GetMapping("/login")
-  public APIResponse<String> login(@RequestBody UserLoginDto userLoginDto) {
+  public APIResponse<String> login(
+      @ApiParam(value = "로그인 Dto") @RequestBody UserLoginDto userLoginDto) {
     return APIResponse.success("accessToken", userService.login(userLoginDto));
   }
 
@@ -47,7 +50,8 @@ public class GuestController {
 
   //상점 상세 조회
   @GetMapping("/store/{storeId}")
-  public APIResponse<StoreViewDto> storeDetail(@PathVariable Long storeId) {
+  public APIResponse<StoreViewDto> storeDetail(
+      @ApiParam(value = "상점 ID") @PathVariable Long storeId) {
     return APIResponse.success("store", storeService.getStoreDetail(storeId));
   }
 }

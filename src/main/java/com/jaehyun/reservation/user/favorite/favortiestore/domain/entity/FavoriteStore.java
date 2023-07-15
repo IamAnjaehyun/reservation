@@ -1,4 +1,4 @@
-package com.jaehyun.reservation.user.favorite.store.domain.entity;
+package com.jaehyun.reservation.user.favorite.favortiestore.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jaehyun.reservation.admin.store.domain.entity.Store;

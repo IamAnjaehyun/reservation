@@ -1,7 +1,6 @@
 package com.jaehyun.reservation.user.favorite.domain.dto;
 
-import com.jaehyun.reservation.user.favorite.store.domain.dto.FavoriteStoreResDto;
-import com.jaehyun.reservation.user.favorite.store.domain.entity.FavoriteStore;
+import com.jaehyun.reservation.user.favorite.favortiestore.domain.dto.FavoriteStoreResDto;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

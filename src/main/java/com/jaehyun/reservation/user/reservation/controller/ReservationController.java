@@ -7,6 +7,7 @@ import com.jaehyun.reservation.user.reservation.domain.dto.ReservationResDto;
 import com.jaehyun.reservation.user.reservation.service.ReservationService;
 import com.jaehyun.reservation.user.type.ReservationStatus;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
@@ -32,8 +33,10 @@ public class ReservationController {
   private final ReservationService reservationService;
 
   @PostMapping("/{storeId}")
-  public APIResponse<ReservationResDto> createReservation(@PathVariable Long storeId,
-      @RequestBody ReservationReqDto reservationReqDto, Principal principal)
+  public APIResponse<ReservationResDto> createReservation(
+      @ApiParam(value = "상점 ID") @PathVariable Long storeId,
+      @ApiParam(value = "예약 요청 Dto") @RequestBody ReservationReqDto reservationReqDto,
+      Principal principal)
       throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
     return APIResponse.success("reservation",
         reservationService.createReservation(storeId, reservationReqDto, principal));
@@ -45,14 +48,16 @@ public class ReservationController {
   }
 
   @GetMapping("/{reservationId}")
-  public APIResponse<ReservationResDto> getReservationDetail(@PathVariable Long reservationId,
+  public APIResponse<ReservationResDto> getReservationDetail(
+      @ApiParam(value = "예약 ID") @PathVariable Long reservationId,
       Principal principal) {
     return APIResponse.success("reservation",
         reservationService.getReservationDetail(reservationId, principal));
   }
 
   @PostMapping("/cancel/{reservationId}")
-  public APIResponse<ReservationStatus> cancelReservation(@PathVariable Long reservationId,
+  public APIResponse<ReservationStatus> cancelReservation(
+      @ApiParam(value = "예약 ID") @PathVariable Long reservationId,
       Principal principal)
       throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
     return APIResponse.success("statusChanged",

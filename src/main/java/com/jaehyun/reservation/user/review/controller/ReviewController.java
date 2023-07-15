@@ -5,6 +5,7 @@ import com.jaehyun.reservation.user.review.domain.dto.ReviewReqDto;
 import com.jaehyun.reservation.user.review.domain.dto.ReviewResDto;
 import com.jaehyun.reservation.user.review.service.ReviewService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@Api(tags = {"REVIEW API"}, description = "리뷰 API")
+@Api(tags = {"REVIEW API"}, description = "리 API")
 @RequestMapping("/v1/reservation/user/review")
 public class ReviewController {
 
@@ -27,23 +28,27 @@ public class ReviewController {
 
   //상점 대한 리뷰 작성
   @PostMapping("/create/{reservationId}")
-  public APIResponse<ReviewResDto> createReview(@PathVariable Long reservationId,
-      @RequestBody ReviewReqDto reviewReqDto,
+  public APIResponse<ReviewResDto> createReview(
+      @ApiParam(value = "예약 ID") @PathVariable Long reservationId,
+      @ApiParam(value = "리뷰 작성 Dto") @RequestBody ReviewReqDto reviewReqDto,
       Principal principal) {
     return APIResponse.success("review",
         reviewService.createReview(reviewReqDto, reservationId, principal));
   }
 
   @PutMapping("/{reviewId}")
-  public APIResponse<ReviewResDto> updateReview(@PathVariable Long reviewId,
-      @RequestBody ReviewReqDto reviewReqDto,
+  public APIResponse<ReviewResDto> updateReview(
+      @ApiParam(value = "리뷰 ID") @PathVariable Long reviewId,
+      @ApiParam(value = "리뷰 작성 Dto") @RequestBody ReviewReqDto reviewReqDto,
       Principal principal) {
     return APIResponse.success("updatedReview",
         reviewService.updateReview(reviewId, reviewReqDto, principal));
   }
 
   @DeleteMapping("/{reviewId}")
-  public APIResponse<Void> deleteReview(@PathVariable Long reviewId, Principal principal) {
+  public APIResponse<Void> deleteReview(
+      @ApiParam(value = "리뷰 ID") @PathVariable Long reviewId,
+      Principal principal) {
     reviewService.deleteReview(reviewId, principal);
     return APIResponse.delete();
   }
