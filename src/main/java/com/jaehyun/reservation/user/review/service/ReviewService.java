@@ -8,6 +8,7 @@ import com.jaehyun.reservation.global.exception.impl.review.AlreadyExistReviewEx
 import com.jaehyun.reservation.global.exception.impl.review.NotExistReviewException;
 import com.jaehyun.reservation.global.exception.impl.role.UnauthorizedException;
 import com.jaehyun.reservation.global.exception.impl.store.NotExistStoreException;
+import com.jaehyun.reservation.global.exception.impl.user.NotExistUserException;
 import com.jaehyun.reservation.user.reservation.domain.entity.Reservation;
 import com.jaehyun.reservation.user.reservation.domain.repository.ReservationRepository;
 import com.jaehyun.reservation.user.review.domain.dto.ReviewReqDto;
@@ -35,10 +36,11 @@ public class ReviewService {
 
   public ReviewResDto createReview(ReviewReqDto reviewReqDto, Long reservationId,
       Principal principal) {
-    User user = userRepository.findByLoginId(principal.getName()).get();
+    User user = userRepository.findByLoginId(principal.getName()).orElseThrow(
+        NotExistUserException::new);
     Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(
         NotExistReservationException::new); //예약 번호가 존재하지 않을 경우 작성 불가
-    if(!reservation.getUser().getId().equals(user.getId())){
+    if (!reservation.getUser().getId().equals(user.getId())) {
       throw new UnauthorizedException(); //예약자와 내가 일치하지 않을 경우 작성 불가
     } else if (reservation.getStatus() != ReservationStatus.USED) {
       throw new NotUsedStoreException(); //USED 아닌 상태에서 리뷰 작성 불가
@@ -65,7 +67,7 @@ public class ReviewService {
   public ReviewResDto updateReview(Long reviewId, ReviewReqDto reviewReqDto, Principal principal) {
     User user = userRepository.findByLoginId(principal.getName()).get();
     Review review = reviewRepository.findById(reviewId).orElseThrow(NotExistReviewException::new);
-    if(!review.getUser().getId().equals(user.getId())){
+    if (!review.getUser().getId().equals(user.getId())) {
       throw new UnauthorizedException(); //리뷰 작성자가 본인이 아닐 경우 오류 발생
     }
 

@@ -6,12 +6,13 @@ import com.jaehyun.reservation.global.exception.impl.favorite.AlreadyExistFavori
 import com.jaehyun.reservation.global.exception.impl.favorite.NotFavoriteStoreException;
 import com.jaehyun.reservation.global.exception.impl.store.CantFindStoreException;
 import com.jaehyun.reservation.global.exception.impl.store.NotExistStoreException;
+import com.jaehyun.reservation.global.exception.impl.user.NotExistUserException;
 import com.jaehyun.reservation.user.favorite.domain.Favorite;
 import com.jaehyun.reservation.user.favorite.domain.dto.FavoriteResDto;
 import com.jaehyun.reservation.user.favorite.domain.repository.FavoriteRepository;
-import com.jaehyun.reservation.user.favorite.store.domain.dto.FavoriteStoreResDto;
-import com.jaehyun.reservation.user.favorite.store.domain.entity.FavoriteStore;
-import com.jaehyun.reservation.user.favorite.store.domain.repository.FavoriteStoreRepository;
+import com.jaehyun.reservation.user.favorite.favortiestore.domain.dto.FavoriteStoreResDto;
+import com.jaehyun.reservation.user.favorite.favortiestore.domain.entity.FavoriteStore;
+import com.jaehyun.reservation.user.favorite.favortiestore.domain.repository.FavoriteStoreRepository;
 import com.jaehyun.reservation.user.user.domain.entity.User;
 import com.jaehyun.reservation.user.user.domain.repository.UserRepository;
 import java.security.Principal;
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +38,7 @@ public class FavoriteService {
   public synchronized Long addStoreToFavorite(Long storeId, Principal principal) {
 
     Store store = storeRepository.findById(storeId).orElseThrow(CantFindStoreException::new);
-    User user = userRepository.findByLoginId(principal.getName()).get();
+    User user = userRepository.findByLoginId(principal.getName()).orElseThrow(NotExistUserException::new);
     Favorite favorite = favoriteRepository.findByUser(user);
 
     if (favorite == null) {
@@ -76,7 +76,8 @@ public class FavoriteService {
   }
 
   @Transactional
-  public synchronized void deleteStoreFromFavorite(Long storeId, Principal principal, boolean deleteAll) {
+  public synchronized void deleteStoreFromFavorite(Long storeId, Principal principal,
+      boolean deleteAll) {
     //상품 뒤에 달려있으면 상품만 삭제 아니면 전체삭제
     User user = userRepository.findByLoginId(principal.getName()).get();
     Favorite favorite = favoriteRepository.findByUser(user);

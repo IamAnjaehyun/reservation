@@ -45,8 +45,7 @@ public class ReservationService {
   public ReservationResDto createReservation(Long storeId,
       ReservationReqDto reservationReqDto, Principal principal)
       throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
-    Store store = storeRepository.findById(storeId)
-        .orElseThrow(NotExistStoreException::new);
+    Store store = storeRepository.findById(storeId).orElseThrow(NotExistStoreException::new);
     User user = userRepository.findByLoginId(principal.getName())
         .orElseThrow(NotExistUserException::new);
 
@@ -91,11 +90,11 @@ public class ReservationService {
   }
 
   public List<ReservationResDto> getReservationList(Principal principal) {
-    Optional<User> user = Optional.ofNullable(userRepository.findByLoginId(principal.getName())
-        .orElseThrow(NotExistUserException::new));
+    User user = userRepository.findByLoginId(principal.getName())
+        .orElseThrow(NotExistUserException::new);
 
     List<ReservationResDto> reservationResDtoList = new ArrayList<>();
-    List<Reservation> reservationList = reservationRepository.findAllByUser(user.get());
+    List<Reservation> reservationList = reservationRepository.findAllByUser(user);
 
     for (Reservation reservation : reservationList) {
       reservationResDtoList.add(ReservationResDto.fromReservation(reservation));
@@ -105,14 +104,12 @@ public class ReservationService {
 
   public ReservationResDto getReservationDetail(Long reservationId,
       Principal principal) {
-    Optional<User> user = Optional.ofNullable(userRepository.findByLoginId(principal.getName())
-        .orElseThrow(NotExistUserException::new));
+    User user = userRepository.findByLoginId(principal.getName())
+        .orElseThrow(NotExistUserException::new);
 
-    Optional<Reservation> reservationOptional = Optional.ofNullable(
-        reservationRepository.findByUserAndId(user.get(), reservationId)
-            .orElseThrow(NotExistStoreException::new));
+    Reservation reservation = reservationRepository.findByUserAndId(user, reservationId)
+        .orElseThrow(NotExistStoreException::new);
 
-    Reservation reservation = reservationOptional.get();
     return ReservationResDto.fromReservation(reservation);
   }
 
@@ -121,11 +118,9 @@ public class ReservationService {
     User user = userRepository.findByLoginId(principal.getName())
         .orElseThrow(NotExistUserException::new);
 
-    Optional<Reservation> reservationOptional = Optional.ofNullable(
-        reservationRepository.findByUserAndId(user, reservationId)
-            .orElseThrow(NotExistStoreException::new));
+    Reservation reservation = reservationRepository.findByUserAndId(user, reservationId)
+        .orElseThrow(NotExistStoreException::new);
 
-    Reservation reservation = reservationOptional.get();
     reservation.setStatus(ReservationStatus.CANCEL);
     reservationRepository.save(reservation);
 

@@ -2,7 +2,7 @@ package com.jaehyun.reservation.user.favorite.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.jaehyun.reservation.global.entity.BaseTimeEntity;
-import com.jaehyun.reservation.user.favorite.store.domain.entity.FavoriteStore;
+import com.jaehyun.reservation.user.favorite.favortiestore.domain.entity.FavoriteStore;
 import com.jaehyun.reservation.user.user.domain.entity.User;
 import java.util.List;
 import javax.persistence.CascadeType;

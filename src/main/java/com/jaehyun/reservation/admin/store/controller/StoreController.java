@@ -4,6 +4,8 @@ import com.jaehyun.reservation.admin.store.domain.dto.StoreReqDto;
 import com.jaehyun.reservation.admin.store.domain.dto.StoreResDto;
 import com.jaehyun.reservation.admin.store.service.StoreService;
 import com.jaehyun.reservation.global.common.APIResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@Api(tags = {"STORE API"}, description = "상점 CRUD API")
 @RequestMapping("/v1/reservation/admin/store")
 public class StoreController {
 
@@ -25,19 +28,23 @@ public class StoreController {
 
 
   @PostMapping
-  public APIResponse<StoreResDto> createStore(@RequestBody StoreReqDto storeReqDto,
+  public APIResponse<StoreResDto> createStore(
+      @ApiParam(value = "상점 상점 등록(수정) Dto") @RequestBody StoreReqDto storeReqDto,
       Principal principal) {
     return APIResponse.success("store", storeService.createStore(storeReqDto, principal));
   }
 
   @PutMapping("/{storeId}")
-  public APIResponse<StoreResDto> updateStore(@PathVariable Long storeId,
-      @RequestBody StoreReqDto storeReqDto, Principal principal) {
-    return APIResponse.success("updatedStore", storeService.updateStore(storeId, storeReqDto, principal));
+  public APIResponse<StoreResDto> updateStore(@ApiParam(value = "상점 ID") @PathVariable Long storeId,
+      @ApiParam(value = "상점 등록(수정) Dto") @RequestBody StoreReqDto storeReqDto,
+      Principal principal) {
+    return APIResponse.success("updatedStore",
+        storeService.updateStore(storeId, storeReqDto, principal));
   }
 
   @DeleteMapping("/{storeId}")
-  public APIResponse<Void> deleteStore(@PathVariable Long storeId, Principal principal) {
+  public APIResponse<Void> deleteStore(@ApiParam(value = "상점 ID") @PathVariable Long storeId,
+      Principal principal) {
     storeService.deleteStore(storeId, principal);
     return APIResponse.delete();
   }

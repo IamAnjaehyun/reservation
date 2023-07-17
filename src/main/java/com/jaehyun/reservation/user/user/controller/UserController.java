@@ -2,6 +2,7 @@ package com.jaehyun.reservation.user.user.controller;
 
 import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.user.user.service.UserService;
+import io.swagger.annotations.Api;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@Api(tags = {"USER API"}, description = "회원 관련 API")
 @RequestMapping("/v1/reservation/user")
 public class UserController {
 
