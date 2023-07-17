@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@Api(tags = {"REVIEW API"}, description = "리 API")
+@Api(tags = {"REVIEW API"}, description = "리뷰 API")
 @RequestMapping("/v1/reservation/user/review")
 public class ReviewController {
 

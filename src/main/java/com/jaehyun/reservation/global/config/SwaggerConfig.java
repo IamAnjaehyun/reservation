@@ -46,7 +46,7 @@ public class SwaggerConfig {
 
   private ApiInfo apiInfo() {
     return new ApiInfoBuilder()
-        .title("CASEALOT-SHOP REST API")
+        .title("RESERVATION REST API")
         .description("Swagger Documentation for REST API")
         .version("1.0.0")
         .build();

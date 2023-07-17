@@ -1,6 +1,6 @@
 # 🗒 상점 예약 서비스
 
-등록된 매장에 한해서 실시간 검색 순위를 볼 수 있으며, 예약시간 10분전 SMS 문자알림이 가는 식당 예약 API 입니다.
+예약시간 30분전 SMS 문자알림이 가는 식당 예약 API 입니다.
 
 ## 프로젝트 기능 및 설계
 
@@ -8,7 +8,7 @@
 
 - 회원가입 기능
     - 사용자는 회원가입을 할 수 있다. 일반적으로 모든 사용자는 회원가입시 USER 권한 (일반 권한)을 지닌다.
-    - 회원가입시 아이디와 패스워드를 입력받으며, 아이디는 unique 해야한다.
+    - 회원가입시 아이디와 패스워드를 입력받으며, 아이디는 중복될 수 없다.
 
 - 로그인 기능
     - 사용자는 로그인을 할 수 있다. 로그인시 회원가입때 사용한 아이디와 패스워드가 일치해야한다.
@@ -52,9 +52,10 @@
 - ✅ 예약 시간 30분전 SENS(Simple & Easy Notification Service)를 통해 SMS 전송
   - ![img.png](doc/sens/img.png)
 
-- Elasticsearch 를 통한 실시간 검색 순위 구현
+~~- Elasticsearch 를 통한 실시간 검색 순위 구현~~
 
-
+## [SWAGGER](http://15.164.105.168:8080/swagger-ui/index.html#/)
+![SWAGGER](doc/img/swagger.png)
 
 ## ERD
 
@@ -76,5 +77,4 @@
   <img src="https://img.shields.io/badge/AWS S3-232F3E?style=for-the-square&logo=amazonaws&logoColor=white">
   <img src="https://img.shields.io/badge/AWS RDS-232F3E?style=for-the-square&logo=amazonaws&logoColor=white">
 
-[//]: # (  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-square&logo=Docker&logoColor=white"/> )
 </div>
