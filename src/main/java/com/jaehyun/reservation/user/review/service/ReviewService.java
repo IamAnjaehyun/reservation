@@ -8,7 +8,6 @@ import com.jaehyun.reservation.global.exception.impl.review.AlreadyExistReviewEx
 import com.jaehyun.reservation.global.exception.impl.review.NotExistReviewException;
 import com.jaehyun.reservation.global.exception.impl.role.UnauthorizedException;
 import com.jaehyun.reservation.global.exception.impl.store.NotExistStoreException;
-import com.jaehyun.reservation.global.exception.impl.user.NotExistUserException;
 import com.jaehyun.reservation.user.reservation.domain.entity.Reservation;
 import com.jaehyun.reservation.user.reservation.domain.repository.ReservationRepository;
 import com.jaehyun.reservation.user.review.domain.dto.ReviewReqDto;
@@ -17,7 +16,7 @@ import com.jaehyun.reservation.user.review.domain.entity.Review;
 import com.jaehyun.reservation.user.review.domain.repository.ReviewRepository;
 import com.jaehyun.reservation.user.type.ReservationStatus;
 import com.jaehyun.reservation.user.user.domain.entity.User;
-import com.jaehyun.reservation.user.user.domain.repository.UserRepository;
+import com.jaehyun.reservation.user.user.service.UserService;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,13 +30,12 @@ public class ReviewService {
   private final StoreRepository storeRepository;
 
   private final ReviewRepository reviewRepository;
-  private final UserRepository userRepository;
+  private final UserService userService;
   private final ReservationRepository reservationRepository;
 
   public ReviewResDto createReview(ReviewReqDto reviewReqDto, Long reservationId,
       Principal principal) {
-    User user = userRepository.findByLoginId(principal.getName()).orElseThrow(
-        NotExistUserException::new);
+    User user = userService.findUserByPrincipal(principal);
     Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(
         NotExistReservationException::new); //예약 번호가 존재하지 않을 경우 작성 불가
     if (!reservation.getUser().getId().equals(user.getId())) {
@@ -65,7 +63,7 @@ public class ReviewService {
   }
 
   public ReviewResDto updateReview(Long reviewId, ReviewReqDto reviewReqDto, Principal principal) {
-    User user = userRepository.findByLoginId(principal.getName()).get();
+    User user = userService.findUserByPrincipal(principal);
     Review review = reviewRepository.findById(reviewId).orElseThrow(NotExistReviewException::new);
     if (!review.getUser().getId().equals(user.getId())) {
       throw new UnauthorizedException(); //리뷰 작성자가 본인이 아닐 경우 오류 발생
@@ -79,7 +77,7 @@ public class ReviewService {
   }
 
   public void deleteReview(Long reviewId, Principal principal) {
-    User user = userRepository.findByLoginId(principal.getName()).get();
+    User user = userService.findUserByPrincipal(principal);
     Review review = reviewRepository.findByIdAndUser(reviewId, user)
         .orElseThrow(NotExistReviewException::new);
 

@@ -1,23 +1,20 @@
 package com.jaehyun.reservation.user.reservation.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.jaehyun.reservation.admin.smsservice.controller.SmsController;
 import com.jaehyun.reservation.admin.smsservice.dto.SmsDto;
 import com.jaehyun.reservation.admin.smsservice.service.SmsService;
 import com.jaehyun.reservation.admin.store.domain.entity.Store;
 import com.jaehyun.reservation.admin.store.domain.repository.StoreRepository;
 import com.jaehyun.reservation.global.exception.impl.reservation.DuplicateReservationException;
-import com.jaehyun.reservation.global.exception.impl.reservation.NotExistReservationException;
 import com.jaehyun.reservation.global.exception.impl.reservation.ReservationDateException;
 import com.jaehyun.reservation.global.exception.impl.store.NotExistStoreException;
-import com.jaehyun.reservation.global.exception.impl.user.NotExistUserException;
 import com.jaehyun.reservation.user.reservation.domain.dto.ReservationReqDto;
 import com.jaehyun.reservation.user.reservation.domain.dto.ReservationResDto;
 import com.jaehyun.reservation.user.reservation.domain.entity.Reservation;
 import com.jaehyun.reservation.user.reservation.domain.repository.ReservationRepository;
 import com.jaehyun.reservation.user.type.ReservationStatus;
 import com.jaehyun.reservation.user.user.domain.entity.User;
-import com.jaehyun.reservation.user.user.domain.repository.UserRepository;
+import com.jaehyun.reservation.user.user.service.UserService;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
@@ -26,7 +23,6 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,7 +33,7 @@ import org.springframework.stereotype.Service;
 public class ReservationService {
 
   private final StoreRepository storeRepository;
-  private final UserRepository userRepository;
+  private final UserService userService;
   private final ReservationRepository reservationRepository;
   private final SmsService smsService;
 
@@ -46,8 +42,7 @@ public class ReservationService {
       ReservationReqDto reservationReqDto, Principal principal)
       throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
     Store store = storeRepository.findById(storeId).orElseThrow(NotExistStoreException::new);
-    User user = userRepository.findByLoginId(principal.getName())
-        .orElseThrow(NotExistUserException::new);
+    User user = userService.findUserByPrincipal(principal);
 
     // 예약 날짜가 현재 시간보다 이전인 경우 예외 처리
     if (reservationReqDto.getReservationDateTime().isBefore(LocalDateTime.now())) {
@@ -90,8 +85,7 @@ public class ReservationService {
   }
 
   public List<ReservationResDto> getReservationList(Principal principal) {
-    User user = userRepository.findByLoginId(principal.getName())
-        .orElseThrow(NotExistUserException::new);
+    User user = userService.findUserByPrincipal(principal);
 
     List<ReservationResDto> reservationResDtoList = new ArrayList<>();
     List<Reservation> reservationList = reservationRepository.findAllByUser(user);
@@ -104,8 +98,7 @@ public class ReservationService {
 
   public ReservationResDto getReservationDetail(Long reservationId,
       Principal principal) {
-    User user = userRepository.findByLoginId(principal.getName())
-        .orElseThrow(NotExistUserException::new);
+    User user = userService.findUserByPrincipal(principal);
 
     Reservation reservation = reservationRepository.findByUserAndId(user, reservationId)
         .orElseThrow(NotExistStoreException::new);
@@ -115,8 +108,7 @@ public class ReservationService {
 
   public ReservationStatus cancelReservation(Long reservationId, Principal principal)
       throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
-    User user = userRepository.findByLoginId(principal.getName())
-        .orElseThrow(NotExistUserException::new);
+    User user = userService.findUserByPrincipal(principal);
 
     Reservation reservation = reservationRepository.findByUserAndId(user, reservationId)
         .orElseThrow(NotExistStoreException::new);

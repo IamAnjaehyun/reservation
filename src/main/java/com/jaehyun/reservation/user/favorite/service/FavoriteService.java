@@ -6,7 +6,6 @@ import com.jaehyun.reservation.global.exception.impl.favorite.AlreadyExistFavori
 import com.jaehyun.reservation.global.exception.impl.favorite.NotFavoriteStoreException;
 import com.jaehyun.reservation.global.exception.impl.store.CantFindStoreException;
 import com.jaehyun.reservation.global.exception.impl.store.NotExistStoreException;
-import com.jaehyun.reservation.global.exception.impl.user.NotExistUserException;
 import com.jaehyun.reservation.user.favorite.domain.Favorite;
 import com.jaehyun.reservation.user.favorite.domain.dto.FavoriteResDto;
 import com.jaehyun.reservation.user.favorite.domain.repository.FavoriteRepository;
@@ -14,7 +13,7 @@ import com.jaehyun.reservation.user.favorite.favortiestore.domain.dto.FavoriteSt
 import com.jaehyun.reservation.user.favorite.favortiestore.domain.entity.FavoriteStore;
 import com.jaehyun.reservation.user.favorite.favortiestore.domain.repository.FavoriteStoreRepository;
 import com.jaehyun.reservation.user.user.domain.entity.User;
-import com.jaehyun.reservation.user.user.domain.repository.UserRepository;
+import com.jaehyun.reservation.user.user.service.UserService;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +31,13 @@ public class FavoriteService {
   private final StoreRepository storeRepository;
   private final FavoriteRepository favoriteRepository;
   private final FavoriteStoreRepository favoriteStoreRepository;
-  private final UserRepository userRepository;
+  private final UserService userService;
 
   @Transactional
   public synchronized Long addStoreToFavorite(Long storeId, Principal principal) {
 
     Store store = storeRepository.findById(storeId).orElseThrow(CantFindStoreException::new);
-    User user = userRepository.findByLoginId(principal.getName()).orElseThrow(NotExistUserException::new);
+    User user = userService.findUserByPrincipal(principal);
     Favorite favorite = favoriteRepository.findByUser(user);
 
     if (favorite == null) {
@@ -48,9 +47,10 @@ public class FavoriteService {
       throw new AlreadyExistFavoriteException();
     }
 
-    FavoriteStore favoriteStore = new FavoriteStore();
-    favoriteStore.setFavorite(favorite);
-    favoriteStore.setStore(store);
+    FavoriteStore favoriteStore = new FavoriteStore().builder()
+        .favorite(favorite)
+        .store(store)
+        .build();
     store.setFavoriteCount(store.getFavoriteCount() + 1);
 
     storeRepository.saveAndFlush(store);
@@ -60,7 +60,7 @@ public class FavoriteService {
   }
 
   public FavoriteResDto getFavoriteList(Principal principal) {
-    User user = userRepository.findByLoginId(principal.getName()).get();
+    User user = userService.findUserByPrincipal(principal);
     Favorite favorite = favoriteRepository.findByUser(user);
     List<FavoriteStore> favoriteStores = favoriteStoreRepository.findAllByFavorite(favorite);
 
@@ -79,7 +79,7 @@ public class FavoriteService {
   public synchronized void deleteStoreFromFavorite(Long storeId, Principal principal,
       boolean deleteAll) {
     //상품 뒤에 달려있으면 상품만 삭제 아니면 전체삭제
-    User user = userRepository.findByLoginId(principal.getName()).get();
+    User user = userService.findUserByPrincipal(principal);
     Favorite favorite = favoriteRepository.findByUser(user);
 
     if (deleteAll) {
@@ -103,10 +103,10 @@ public class FavoriteService {
   }
 
   public Favorite createFavorite(User user) {
-    Favorite favorite = new Favorite();
-    favorite.setUser(user);
-    favorite.setFavoriteStoreList(new ArrayList<>());
-    return favorite;
+    return Favorite.builder()
+        .user(user)
+        .favoriteStoreList(new ArrayList<>())
+        .build();
   }
 
 }
