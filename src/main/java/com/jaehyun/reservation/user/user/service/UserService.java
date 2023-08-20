@@ -2,7 +2,6 @@ package com.jaehyun.reservation.user.user.service;
 
 import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.global.config.JwtTokenProvider;
-import com.jaehyun.reservation.global.exception.impl.token.BadTokenException;
 import com.jaehyun.reservation.global.exception.impl.user.DuplicatedIdOrPhoneNumException;
 import com.jaehyun.reservation.global.exception.impl.user.IncorrectPassWordException;
 import com.jaehyun.reservation.global.exception.impl.user.NotExistUserException;
@@ -12,7 +11,6 @@ import com.jaehyun.reservation.user.user.domain.dto.UserLoginDto;
 import com.jaehyun.reservation.user.user.domain.entity.User;
 import com.jaehyun.reservation.user.user.domain.repository.UserRepository;
 import java.security.Principal;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -57,17 +55,19 @@ public class UserService {
 
   @Transactional
   public void quit(Principal principal) {
-    User user = userRepository.findByLoginId(principal.getName())
-        .orElseThrow(NotExistUserException::new);
+    User user = findUserByPrincipal(principal);
     userRepository.deleteById(user.getId());
     APIResponse.delete();
   }
 
   public String changeRole(Principal principal) {
-    User user = userRepository.findByLoginId(principal.getName())
-        .orElseThrow(BadTokenException::new);
+    User user = findUserByPrincipal(principal);
     user.setRoles(RoleType.ADMIN);
     userRepository.saveAndFlush(user);
     return RoleType.ADMIN.getKey();
+  }
+
+  public User findUserByPrincipal(Principal principal){
+    return userRepository.findByLoginId(principal.getName()).orElseThrow(NotExistUserException::new);
   }
 }

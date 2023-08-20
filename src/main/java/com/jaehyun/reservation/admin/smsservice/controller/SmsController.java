@@ -11,7 +11,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +22,7 @@ import org.springframework.web.client.RestClientException;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@Api(tags = {"SMS API"}, description = "SMS 전송 기능 API")
+@Api(tags = {"SMS API"})
 @RequestMapping("/v1/reservation/admin/sms")
 public class SmsController {
 
@@ -32,7 +31,7 @@ public class SmsController {
 
   @PostMapping
   public APIResponse<SmsResDto> sendSms(
-      @ApiParam(value = "문자 작성 Dto") @RequestBody SmsDto messageDto, Principal principal)
+      @ApiParam(value = "문자 작성 Dto") @RequestBody SmsDto messageDto)
       throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
     return APIResponse.success("sms", smsService.sendSms(messageDto));
   }

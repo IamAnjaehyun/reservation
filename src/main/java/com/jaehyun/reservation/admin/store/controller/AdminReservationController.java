@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@Api(tags = {"ADMIN RESERVATION API"}, description = "관리자 예약 관리 API")
+@Api(tags = {"ADMIN RESERVATION API"})
 @RequestMapping("/v1/reservation/admin/reservation")
 public class AdminReservationController {
 

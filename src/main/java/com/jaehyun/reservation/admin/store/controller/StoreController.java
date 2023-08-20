@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@Api(tags = {"STORE API"}, description = "상점 CRUD API")
+@Api(tags = {"STORE API"})
 @RequestMapping("/v1/reservation/admin/store")
 public class StoreController {
 

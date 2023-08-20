@@ -8,9 +8,8 @@ import com.jaehyun.reservation.admin.store.domain.repository.StoreRepository;
 import com.jaehyun.reservation.global.exception.impl.role.UnauthorizedException;
 import com.jaehyun.reservation.global.exception.impl.store.AlreadyExistStoreException;
 import com.jaehyun.reservation.global.exception.impl.store.NotExistStoreException;
-import com.jaehyun.reservation.global.exception.impl.user.NotExistUserException;
 import com.jaehyun.reservation.user.user.domain.entity.User;
-import com.jaehyun.reservation.user.user.domain.repository.UserRepository;
+import com.jaehyun.reservation.user.user.service.UserService;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,12 +22,11 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class StoreService {
 
-  private final UserRepository userRepository;
+  private final UserService userService;
   private final StoreRepository storeRepository;
 
   public StoreResDto createStore(StoreReqDto storeReqDto, Principal principal) {
-    User admin = userRepository.findByLoginId(principal.getName())
-        .orElseThrow(NotExistUserException::new);
+    User admin = userService.findUserByPrincipal(principal);
     //중복된 상점의 이름이 들어온다면 예외처리
     if (storeRepository.existsByName(storeReqDto.getName())) {
       throw new AlreadyExistStoreException();
@@ -56,8 +54,7 @@ public class StoreService {
     if (storeRepository.existsByName(storeDto.getName())) {
       throw new AlreadyExistStoreException();
     }
-    User admin = userRepository.findByLoginId(principal.getName())
-        .orElseThrow(NotExistUserException::new);
+    User admin = userService.findUserByPrincipal(principal);
     Store store = storeRepository.findById(storeId).orElseThrow(NotExistStoreException::new);
 
     User user = store.getUser();
@@ -77,7 +74,7 @@ public class StoreService {
 
   public void deleteStore(Long storeId, Principal principal) {
 
-    User admin = userRepository.findByLoginId(principal.getName()).get();
+    User admin = userService.findUserByPrincipal(principal);
     Store store = storeRepository.findById(storeId).orElseThrow(NotExistStoreException::new);
     Long storeAdminName = store.getUser().getId();
     if (storeAdminName.equals(admin.getId())) {
