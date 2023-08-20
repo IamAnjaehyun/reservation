@@ -39,13 +39,12 @@ public class SmsBatch {
   public Step myStep() {
     return stepBuilderFactory.get("myStep")
         .tasklet((contribution, chunkContext) -> {
-          log.info(">>>>> This is myStep");
           List<Reservation> reservationList = reservationRepository.findAllByReservationDateTimeBeforeAndStatus(
               LocalDateTime.now().minusMinutes(30),
               ReservationStatus.OKAY); //OKAK => 관리자가 예약 승인까지 완료한 상태
           for (Reservation reservation : reservationList) {
             User user = reservation.getUser();
-            SmsDto smsDto = new SmsDto().builder()
+            SmsDto smsDto = SmsDto.builder()
                 .to(user.getPhoneNum())
                 .content(reservation.getStore().getName() + "\n" + user.getName() + "님께서 "
                     + reservation.getReservationDateTime()

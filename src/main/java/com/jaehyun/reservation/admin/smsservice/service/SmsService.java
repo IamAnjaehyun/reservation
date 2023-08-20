@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jaehyun.reservation.admin.smsservice.dto.SmsDto;
 import com.jaehyun.reservation.admin.smsservice.dto.SmsReqDto;
 import com.jaehyun.reservation.admin.smsservice.dto.SmsResDto;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -30,6 +30,7 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 @Slf4j
 public class SmsService {
+
   @Value("${sms_accessKey}")
   private String accessKey;
 
@@ -42,36 +43,35 @@ public class SmsService {
   @Value("${sms_senderPhone}")
   private String phone;
 
-  public String makeSignature(Long time) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
+  public String makeSignature(Long time) throws NoSuchAlgorithmException, InvalidKeyException {
     String space = " ";
     String newLine = "\n";
     String method = "POST";
-    String url = "/sms/v2/services/"+ this.serviceId+"/messages";
+    String url = "/sms/v2/services/" + this.serviceId + "/messages";
     String timestamp = time.toString();
     String accessKey = this.accessKey;
     String secretKey = this.secretKey;
 
-    String message = new StringBuilder()
-        .append(method)
-        .append(space)
-        .append(url)
-        .append(newLine)
-        .append(timestamp)
-        .append(newLine)
-        .append(accessKey)
-        .toString();
+    String message = method
+        + space
+        + url
+        + newLine
+        + timestamp
+        + newLine
+        + accessKey;
 
-    SecretKeySpec signingKey = new SecretKeySpec(secretKey.getBytes("UTF-8"), "HmacSHA256");
+    SecretKeySpec signingKey = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8),
+        "HmacSHA256");
     Mac mac = Mac.getInstance("HmacSHA256");
     mac.init(signingKey);
 
-    byte[] rawHmac = mac.doFinal(message.getBytes("UTF-8"));
-    String encodeBase64String = Base64.encodeBase64String(rawHmac);
+    byte[] rawHmac = mac.doFinal(message.getBytes(StandardCharsets.UTF_8));
 
-    return encodeBase64String;
+    return Base64.encodeBase64String(rawHmac);
   }
 
-  public SmsResDto sendSms(SmsDto smsDto) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
+  public SmsResDto sendSms(SmsDto smsDto)
+      throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException {
     Long time = System.currentTimeMillis();
 
     HttpHeaders headers = new HttpHeaders();
@@ -98,6 +98,8 @@ public class SmsService {
 
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-    return restTemplate.postForObject(new URI("https://sens.apigw.ntruss.com/sms/v2/services/"+ serviceId +"/messages"), httpBody, SmsResDto.class);
+    return restTemplate.postForObject(
+        new URI("https://sens.apigw.ntruss.com/sms/v2/services/" + serviceId + "/messages"),
+        httpBody, SmsResDto.class);
   }
 }

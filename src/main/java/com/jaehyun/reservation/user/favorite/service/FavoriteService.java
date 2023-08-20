@@ -14,6 +14,7 @@ import com.jaehyun.reservation.user.favorite.favortiestore.domain.entity.Favorit
 import com.jaehyun.reservation.user.favorite.favortiestore.domain.repository.FavoriteStoreRepository;
 import com.jaehyun.reservation.user.user.domain.entity.User;
 import com.jaehyun.reservation.user.user.service.UserService;
+import java.awt.print.Pageable;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
