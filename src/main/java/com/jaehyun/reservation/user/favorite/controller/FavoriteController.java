@@ -7,7 +7,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@Api(tags = {"FAVORITE API"}, description = "즐겨찾기 API")
+@Api(tags = {"FAVORITE API"})
 @RequestMapping("/v1/reservation/user/favorite")
 public class FavoriteController {
 
@@ -34,7 +33,7 @@ public class FavoriteController {
 
   //전체 목록 조회
   @GetMapping
-  public APIResponse<FavoriteResDto> getFavoriteList(Principal principal, Pageable pageable) {
+  public APIResponse<FavoriteResDto> getFavoriteList(Principal principal) {
 
     return APIResponse.success("favoriteList", favoriteService.getFavoriteList(principal));
   }

@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@Api(tags = {"RESERVATION API"}, description = "고객 예약 API")
+@Api(tags = {"RESERVATION API"})
 @RequestMapping("/v1/reservation/user/reservation")
 public class ReservationController {
 

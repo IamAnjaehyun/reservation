@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@Api(tags = {"GUEST API"}, description = "비로그인 API")
+@Api(tags = {"GUEST API"})
 @RequestMapping("/v1/guest")
 public class GuestController {
 
