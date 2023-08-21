@@ -6,6 +6,7 @@ import com.jaehyun.reservation.global.entity.BaseTimeEntity;
 import com.jaehyun.reservation.user.favorite.domain.Favorite;
 import com.jaehyun.reservation.user.review.domain.entity.Review;
 import com.jaehyun.reservation.user.type.RoleType;
+import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -29,7 +30,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "USER")
-public class User extends BaseTimeEntity{
+public class User extends BaseTimeEntity implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

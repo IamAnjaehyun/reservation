@@ -10,6 +10,7 @@ import com.jaehyun.reservation.user.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +44,7 @@ public class GuestController {
   }
 
   //상점 조회
+  @Cacheable(value = "store")
   @GetMapping("/store")
   public APIResponse<Page<StoreViewDto>> storeList(Pageable pageable) {
     return APIResponse.success("storeList", storeService.getStoreList(pageable));
