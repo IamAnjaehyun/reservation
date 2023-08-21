@@ -29,5 +29,15 @@
   </br> nohup java -jar $JAR_FILE --spring.config.location=/home/ubuntu/properties/application.yml > $APP_LOG 2>&1 $ERROR_LOG &
   </br> 조건을 걸어 실행시에 application.yml 을 물고 올라가서 실행시에 환경변수를 강제로 대입시켜 문제 해결
     - 참고 링크 https://shinsunyoung.tistory.com/120
+    
   - 메모리 스왑을 통해 해결
     - 참고 링크 https://velog.io/@kku64r/ec2freetier
+
+#### 03
+- 발생일시 20230821 17:46 ~ 20230821 17:54
+
+- 문제점
+  - redis 캐싱 기능 적용시 직렬화가 되지 않아 오류 발생
+  
+- 해결법
+  - APIResponse 와 캐싱하려는 클래스에 implements Serializable 추가하여 직렬화 가능하게 적용
