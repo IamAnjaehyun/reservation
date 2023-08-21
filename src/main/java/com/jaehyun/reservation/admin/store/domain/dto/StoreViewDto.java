@@ -1,6 +1,7 @@
 package com.jaehyun.reservation.admin.store.domain.dto;
 
 import com.jaehyun.reservation.admin.store.domain.entity.Store;
+import java.io.Serializable;
 import javax.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StoreViewDto {
+public class StoreViewDto implements Serializable {
   private Long storeId; //매장 고유 번호
   private String name; //매장 이름
 
