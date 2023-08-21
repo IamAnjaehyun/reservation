@@ -40,8 +40,13 @@ dependencies {
     implementation "io.springfox:springfox-boot-starter:3.0.0"
     implementation "io.springfox:springfox-swagger-ui:3.0.0"
 
+	//lombok
 	testAnnotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.projectlombok:lombok'
+
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
 }
 
 tasks.named('test') {

@@ -13,6 +13,7 @@ import com.jaehyun.reservation.user.user.domain.repository.UserRepository;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,6 +68,7 @@ public class UserService {
     return RoleType.ADMIN.getKey();
   }
 
+  @Cacheable(value = "user")
   public User findUserByPrincipal(Principal principal){
     return userRepository.findByLoginId(principal.getName()).orElseThrow(NotExistUserException::new);
   }

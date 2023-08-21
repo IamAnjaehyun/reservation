@@ -1,5 +1,6 @@
 package com.jaehyun.reservation.global.common;
 
+import java.io.Serializable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -9,7 +10,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public class APIResponse<T> {
+public class APIResponse<T> implements Serializable {
   private final static String SUCCESS_MESSAGE = "SUCCESS";
 
   private final APIResponseHeader header;
