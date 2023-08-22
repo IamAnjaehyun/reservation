@@ -7,7 +7,6 @@ import com.jaehyun.reservation.admin.smsservice.service.SmsService;
 import com.jaehyun.reservation.global.common.APIResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
-import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -32,7 +31,7 @@ public class SmsController {
   @PostMapping
   public APIResponse<SmsResDto> sendSms(
       @ApiParam(value = "문자 작성 Dto") @RequestBody SmsDto messageDto)
-      throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
+      throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException {
     return APIResponse.success("sms", smsService.sendSms(messageDto));
   }
 }

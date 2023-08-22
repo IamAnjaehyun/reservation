@@ -15,7 +15,6 @@ import com.jaehyun.reservation.user.reservation.domain.repository.ReservationRep
 import com.jaehyun.reservation.user.type.ReservationStatus;
 import com.jaehyun.reservation.user.user.domain.entity.User;
 import com.jaehyun.reservation.user.user.domain.repository.UserRepository;
-import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -89,7 +88,7 @@ public class AdminReservationService {
   public ReservationStatus changeReservationStatus(Long storeId,
       Long reservationId, ReservationStatus reservationStatus, ReservationStatus changeStatus,
       Principal principal)
-      throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+      throws URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
     //내가 가게의 사장인지 확인
     User user = userRepository.findByLoginId(principal.getName())
         .orElseThrow(NotExistUserException::new);
@@ -101,7 +100,7 @@ public class AdminReservationService {
     reservationRepository.save(reservation);
 
     //상태 변경시 문자 발송
-    SmsDto smsDto = new SmsDto().builder()
+    SmsDto smsDto = SmsDto.builder()
         .to(reservation.getUser().getPhoneNum())
         .content(reservation.getStore().getName() + "\n" + user.getName() + "님께서 "
             + reservation.getReservationDateTime() + "에 요청하신 예약 상태가 " + changeStatus

@@ -1,5 +1,6 @@
 package com.jaehyun.reservation.global.exception;
 
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ public class CustomExceptionHandler {
                 .code(e.getStatusCode())
                 .message(e.getMessage())
                 .build();
-        return new ResponseEntity<>(errorResponse, HttpStatus.resolve(e.getStatusCode()));
+        return new ResponseEntity<>(errorResponse,
+            Objects.requireNonNull(HttpStatus.resolve(e.getStatusCode())));
     }
 }

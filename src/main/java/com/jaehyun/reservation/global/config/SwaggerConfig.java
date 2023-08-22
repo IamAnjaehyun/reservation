@@ -1,6 +1,7 @@
 package com.jaehyun.reservation.global.config;
 
 import io.swagger.annotations.Api;
+import java.util.Collections;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -38,8 +39,8 @@ public class SwaggerConfig {
         .paths(PathSelectors.any())
         .build()
         .apiInfo(apiInfo())
-        .securityContexts(Arrays.asList(securityContext()))
-        .securitySchemes(Arrays.asList(apiKey()))
+        .securityContexts(Collections.singletonList(securityContext()))
+        .securitySchemes(List.of(apiKey()))
         .produces(DEFAULT_PRODUCES_AND_CONSUMES)
         .consumes(DEFAULT_PRODUCES_AND_CONSUMES);
   }
@@ -66,7 +67,7 @@ public class SwaggerConfig {
     AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
     AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
     authorizationScopes[0] = authorizationScope;
-    return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
+    return List.of(new SecurityReference("JWT", authorizationScopes));
   }
 
   private ApiKey apiKey() {
