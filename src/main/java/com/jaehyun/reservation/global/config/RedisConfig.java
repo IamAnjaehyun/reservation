@@ -46,7 +46,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         .RedisCacheManagerBuilder
         .fromConnectionFactory(lettuceConnectionFactory());
     RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig()
-        .entryTtl(Duration.ofHours(timeout));
+        .entryTtl(Duration.ofMinutes(timeout));
     builder.cacheDefaults(configuration);
     return builder.build();
   }
