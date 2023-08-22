@@ -26,7 +26,7 @@ public class APIResponse<T> implements Serializable {
     return new APIResponse(new APIResponseHeader(HttpStatus.OK.value(), SUCCESS_MESSAGE), body);
   }
 
-  public static <T> APIResponse<T> create(String name, T body) {
+  public static <T> APIResponse create(String name, T body) {
     Map<String, T> map = new HashMap<>();
     map.put(name, body);
     return new APIResponse(new APIResponseHeader(HttpStatus.CREATED.value(), SUCCESS_MESSAGE), map);

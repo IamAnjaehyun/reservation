@@ -18,10 +18,13 @@ spring:
   redis:
     port: 6379
     host: localhost
-    timeout: 6
+    timeout: 30 #캐시 30분
 
   jwt:
     secret: ${SPRING_JWT_SECRET}
+    time: 3600000
+    header: "Authorization"
+    prefix: "Bearer "
 
 sms_accessKey: ${sms_accessKey}
 sms_senderPhone: ${sms_senderPhone}

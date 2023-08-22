@@ -1,6 +1,5 @@
 package com.jaehyun.reservation.global.config;
 
-import com.jaehyun.reservation.user.type.RoleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
