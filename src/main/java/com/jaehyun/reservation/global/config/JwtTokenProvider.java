@@ -28,11 +28,15 @@ public class JwtTokenProvider {
   @Value("${spring.jwt.secret}")
   private String secretKey;
 
-  public static String TOKEN_HEADER = "Authorization";
-  public static String TOKEN_PREFIX = "Bearer ";
-
   // 토큰 유효시간 1시간
-  private long tokenValidTime = 1000 * 60 * 60; //1시간(1000 * 60 * 60)
+  @Value("${spring.jwt.time}")
+  private long tokenValidTime;
+
+  @Value("${spring.jwt.header}")
+  private String TOKEN_HEADER;
+
+  @Value("${spring.jwt.prefix}")
+  private String TOKEN_PREFIX;
 
   private final CustomUserDetailService userDetailsService;
 
