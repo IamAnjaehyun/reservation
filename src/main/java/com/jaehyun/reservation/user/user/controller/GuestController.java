@@ -3,6 +3,7 @@ package com.jaehyun.reservation.user.user.controller;
 import com.jaehyun.reservation.admin.store.domain.dto.StoreViewDto;
 import com.jaehyun.reservation.admin.store.service.StoreService;
 import com.jaehyun.reservation.global.common.APIResponse;
+import com.jaehyun.reservation.global.entity.dto.Token;
 import com.jaehyun.reservation.global.exception.impl.user.DuplicatedIdOrPhoneNumException;
 import com.jaehyun.reservation.user.user.domain.dto.UserJoinDto;
 import com.jaehyun.reservation.user.user.domain.dto.UserLoginDto;
@@ -38,7 +39,7 @@ public class GuestController {
   }
 
   @GetMapping("/login")
-  public APIResponse<String> login(
+  public APIResponse<Token> login(
       @ApiParam(value = "로그인 Dto") @RequestBody UserLoginDto userLoginDto) {
     return APIResponse.success("accessToken", userService.login(userLoginDto));
   }

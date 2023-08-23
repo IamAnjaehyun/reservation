@@ -2,6 +2,7 @@ package com.jaehyun.reservation.user.user.service;
 
 import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.global.config.JwtTokenProvider;
+import com.jaehyun.reservation.global.entity.dto.Token;
 import com.jaehyun.reservation.global.exception.impl.user.DuplicatedIdOrPhoneNumException;
 import com.jaehyun.reservation.global.exception.impl.user.IncorrectPassWordException;
 import com.jaehyun.reservation.global.exception.impl.user.NotExistUserException;
@@ -44,14 +45,16 @@ public class UserService {
     return user.getLoginId();
   }
 
-  public String login(UserLoginDto userLoginDto) {
+  public Token login(UserLoginDto userLoginDto) {
     User user = userRepository.findByLoginId(userLoginDto.getId())
         .orElseThrow(NotExistUserException::new);
     if (!passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword())) {
       throw new IncorrectPassWordException();
     }
-
-    return jwtTokenProvider.createToken(user.getLoginId(), user.getRoles());
+    Token token =jwtTokenProvider.createToken(user.getLoginId(), user.getRoles());
+    user.setRefreshToken(token.getRefreshToken());
+    userRepository.save(user);
+    return token;
   }
 
   @Transactional
