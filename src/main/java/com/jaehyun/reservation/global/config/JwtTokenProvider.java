@@ -1,9 +1,11 @@
 package com.jaehyun.reservation.global.config;
 
+import com.jaehyun.reservation.global.entity.dto.Token;
 import com.jaehyun.reservation.global.service.CustomUserDetailService;
 import com.jaehyun.reservation.user.type.RoleType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Base64;
@@ -47,17 +49,20 @@ public class JwtTokenProvider {
   }
 
   // JWT 토큰 생성
-  public String createToken(String userPk, RoleType roles) {
+  public Token createToken(String userPk, RoleType roles) {
     Claims claims = Jwts.claims().setSubject(userPk);
     claims.put("roles", roles); // 정보는 key / value 쌍으로 저장
     Date now = new Date();
-    return Jwts.builder()
-        .setClaims(claims) // 정보 저장
-        .setIssuedAt(now) // 토큰 발행 시간 정보
-        .setExpiration(new Date(now.getTime() + tokenValidTime)) // 토큰 유효기간
-        .signWith(SignatureAlgorithm.HS512, secretKey)  // 사용할 암호화 알고리즘
-        // signature 에 들어갈 secret값 세팅
-        .compact();
+
+    return Token.builder()
+        .accessToken(Jwts.builder()
+            .setClaims(claims) // 정보 저장
+            .setIssuedAt(now) // 토큰 발행 시간 정보
+            .setExpiration(new Date(now.getTime() + tokenValidTime)) // 토큰 유효기간
+            .signWith(SignatureAlgorithm.HS512, secretKey)  // 사용할 암호화 알고리즘
+            .compact())
+        .refreshToken(createRefreshToken())
+        .build();
   }
 
   // JWT 토큰에서 인증 정보 조회
@@ -90,5 +95,14 @@ public class JwtTokenProvider {
     } catch (Exception e) {
       return false;
     }
+  }
+
+  public String createRefreshToken() {
+    Date now = new Date();
+    return Jwts.builder()
+        .setIssuedAt(now)
+        .setExpiration(new Date(now.getTime() + tokenValidTime * 30))
+        .signWith(SignatureAlgorithm.HS512, secretKey)
+        .compact();
   }
 }
