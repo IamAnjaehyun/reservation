@@ -10,6 +10,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -33,6 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
+        .cors(cors-> cors.configurationSource(corsConfigurationSource()))
         .httpBasic().disable() // rest api 만을 고려하여 기본 설정은 해제하겠습니다.
         .csrf().disable() // csrf 보안 토큰 disable처리.
         .sessionManagement()
@@ -46,7 +49,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
             UsernamePasswordAuthenticationFilter.class);
-    // JwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 전에 넣는다
   }
-
+  @Bean
+  public UrlBasedCorsConfigurationSource corsConfigurationSource(){
+    CorsConfiguration corsConfiguration = new CorsConfiguration();
+    corsConfiguration.addAllowedOriginPattern("*");
+    corsConfiguration.addAllowedMethod("*");
+    corsConfiguration.addAllowedHeader("*");
+    corsConfiguration.setAllowCredentials(true);
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", corsConfiguration);
+    return source;
+  }
 }
