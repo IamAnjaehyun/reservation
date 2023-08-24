@@ -51,7 +51,7 @@ public class UserService {
     if (!passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword())) {
       throw new IncorrectPassWordException();
     }
-    Token token =jwtTokenProvider.createToken(user.getLoginId(), user.getRoles());
+    Token token = jwtTokenProvider.createToken(user.getLoginId(), user.getRoles());
     user.setRefreshToken(token.getRefreshToken());
     userRepository.save(user);
     return token;
@@ -72,7 +72,8 @@ public class UserService {
   }
 
   @Cacheable(value = "user")
-  public User findUserByPrincipal(Principal principal){
-    return userRepository.findByLoginId(principal.getName()).orElseThrow(NotExistUserException::new);
+  public User findUserByPrincipal(Principal principal) {
+    return userRepository.findByLoginId(principal.getName())
+        .orElseThrow(NotExistUserException::new);
   }
 }
