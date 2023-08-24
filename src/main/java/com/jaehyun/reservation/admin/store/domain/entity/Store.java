@@ -22,9 +22,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -64,24 +66,4 @@ public class Store extends BaseTimeEntity {
   @JsonBackReference
   @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
   private List<Review> reviewList; //리뷰 목록
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public void setLocation(String location) {
-    this.location = location;
-  }
-
-  public void setPhoneNum(String phoneNum) {
-    this.phoneNum = phoneNum;
-  }
-
-  public void setFavoriteCount(int favoriteCount) {
-    this.favoriteCount = favoriteCount;
-  }
 }
