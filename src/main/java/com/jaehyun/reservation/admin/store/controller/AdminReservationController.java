@@ -75,7 +75,7 @@ public class AdminReservationController {
       @ApiParam(value = "변경전 예약 상태") @PathVariable ReservationStatus reservationStatus,
       @ApiParam(value = "변경후 예약 상태") @RequestParam ReservationStatus changeStatus,
       Principal principal)
-      throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+      throws URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
 
     return APIResponse.success("statusChanged",
         adminReservationService.changeReservationStatus(
