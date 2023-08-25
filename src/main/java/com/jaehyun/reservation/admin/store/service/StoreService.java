@@ -48,18 +48,18 @@ public class StoreService {
 
   }
 
-  public StoreResDto updateStore(Long storeId, StoreReqDto storeDto,
-      Principal principal) {
+  public StoreResDto updateStore(Long storeId, StoreReqDto storeDto, Principal principal) {
     //상점 중복이름 불가
     if (storeRepository.existsByName(storeDto.getName())) {
       throw new AlreadyExistStoreException();
     }
+
     User admin = userService.findUserByPrincipal(principal);
     Store store = storeRepository.findById(storeId).orElseThrow(NotExistStoreException::new);
 
     User user = store.getUser();
 
-    if (user.getId().equals(admin.getId())) {
+    if (user != null && user.getId() != null && user.getId().equals(admin.getId())) {
       store.setName(storeDto.getName());
       store.setDescription(storeDto.getDescription());
       store.setLocation(storeDto.getLocation());
@@ -73,16 +73,18 @@ public class StoreService {
   }
 
   public void deleteStore(Long storeId, Principal principal) {
-
     User admin = userService.findUserByPrincipal(principal);
     Store store = storeRepository.findById(storeId).orElseThrow(NotExistStoreException::new);
-    Long storeAdminName = store.getUser().getId();
-    if (storeAdminName.equals(admin.getId())) {
+
+    Long storeAdminId = store.getUser().getId(); // Assuming this is the ID of the store admin
+
+    if (storeAdminId != null && storeAdminId.equals(admin.getId())) {
       storeRepository.deleteById(store.getId());
     } else {
       throw new UnauthorizedException();
     }
   }
+
 
   public Page<StoreViewDto> getStoreList(Pageable pageable) {
     Page<Store> storePage = storeRepository.findAll(pageable);
