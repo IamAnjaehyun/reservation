@@ -46,6 +46,8 @@ public class User extends BaseTimeEntity implements Serializable {
 
   private String name; //유저 이름
 
+  private String refreshToken;
+
   @Enumerated(EnumType.STRING)
   private RoleType roles; //ADMIN or USER
 
@@ -62,5 +64,9 @@ public class User extends BaseTimeEntity implements Serializable {
 
   public void setRoles(RoleType roles) {
     this.roles = roles;
+  }
+
+  public void setRefreshToken(String refreshToken) {
+    this.refreshToken = refreshToken;
   }
 }
