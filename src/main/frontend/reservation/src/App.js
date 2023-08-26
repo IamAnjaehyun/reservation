@@ -1,4 +1,4 @@
-/* eslint-disable*/
+/* eslint-disable */
 import React, {useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
@@ -37,8 +37,24 @@ function App() {
         <p>한식당</p>
         <hr/>
       </div>
+
+      <Modal/>
     </div>
   );
+
+}
+
+// 제목은 대문자로
+function Modal(){
+  return(
+    <>
+    <div className='modal'>
+        <h2>제목</h2>
+        <p>날짜</p>
+        <p>상세내용</p>
+    </div>
+    </>
+  )
 }
 
 export default App;
