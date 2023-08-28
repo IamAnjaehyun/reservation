@@ -7,6 +7,7 @@ import './App.css';
 function App() {
   let [글목록, 글목록변경] = useState([]);
   let [좋아요, 좋아요변경] = useState(0);
+  const [상점선택, 상점변경] = useState(null); // State to store the selected name
 
   useEffect(() => {
     // 네트워크 요청을 보내어 JSON 데이터 받아오기
@@ -20,6 +21,24 @@ function App() {
       });
   }, []); // 빈 배열을 두 번째 인자로 전달하여 최초 렌더링 시에만 호출되도록 설정
   let styles = { color: 'gray', fontSize: '30px' };
+  const 선택한상점변경 = (name) => {
+    상점변경(name);
+  };
+
+  const 모달닫기 = () => {
+    상점변경(null); // Clear the selected 글 when closing the modal
+  };
+
+  const fetchStoreDetails = (storeId) => {
+    axios.get(`http://localhost:8080/v1/guest/store/${storeId}`)
+      .then(response => {
+        상점변경(response.data.body.store);
+      })
+      .catch(error => {
+        console.error('Error fetching store data:', error);
+      });
+  };
+
   return (
     <div className="App">
       <div className='black-nav'>
@@ -29,29 +48,43 @@ function App() {
     
       {글목록.map((글, index) => (
         <div className='list' key={index}>
-          <h3> {글.name} <span onClick={() => { 좋아요변경(좋아요 + 1) }}>👍</span> {좋아요} </h3>
+          <h3 onClick={() => fetchStoreDetails(글.storeId)}> {글.name} <span onClick={() => { 
+            글목록변경(prevState => {
+              const 새목록 = [...prevState];
+              새목록[index] = { ...새목록[index], favoriteCount: 새목록[index].favoriteCount + 1 };
+              return 새목록;
+            });
+          }}>👍</span> {글.favoriteCount}</h3>
           <p>전화번호: {글.phoneNum}</p>
+          <p>거리: {글.description}</p>
           <p>평균 평점: {글.averageRating}</p>
           <p>리뷰 수: {글.totalReviewCount}</p>
-          <p>좋아요 수: {글.favoriteCount}</p>
           <hr />
         </div>
       ))}
-      <Modal />
+      <Modal 선택한상점={상점선택} 모달닫기={모달닫기} />
     </div>
   );
 }
 
-function Modal() {
+function Modal({ 선택한상점, 모달닫기 }) {
   return (
-    <>
-      <div className='modal'>
-        <h2>제목</h2>
-        <p>날짜</p>
-        <p>상세내용</p>
-      </div>
-    </>
-  )
+    <div className='modal'>
+      {선택한상점 ? (
+        <>
+          <h2>선택한 상점: {선택한상점.name}</h2>
+          <p>전화번호: {선택한상점.phoneNum}</p>
+          <p>거리: {선택한상점.description}</p>
+          <p>평균 평점: {선택한상점.averageRating}</p>
+          <p>리뷰 수: {선택한상점.totalReviewCount}</p>
+          <p>좋아요 수: {선택한상점.favoriteCount}</p>
+        </>
+      ) : (
+        <p>상세보기를 원하는 상점의 제목을 클릭해주세요.</p>
+      )}
+      <button onClick={모달닫기}>닫기</button>
+    </div>
+  );
 }
 
 export default App;
