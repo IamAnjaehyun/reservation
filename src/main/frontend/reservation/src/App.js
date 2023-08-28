@@ -29,7 +29,15 @@ function App() {
     상점변경(null); // Clear the selected 글 when closing the modal
   };
 
-
+  const fetchStoreDetails = (storeId) => {
+    axios.get(`http://localhost:8080/v1/guest/store/${storeId}`)
+      .then(response => {
+        상점변경(response.data.body.store);
+      })
+      .catch(error => {
+        console.error('Error fetching store data:', error);
+      });
+  };
 
   return (
     <div className="App">
@@ -40,7 +48,7 @@ function App() {
     
       {글목록.map((글, index) => (
         <div className='list' key={index}>
-          <h3 onClick={() => 선택한상점변경(글.name)}> {글.name} <span onClick={() => { 
+          <h3 onClick={() => fetchStoreDetails(글.storeId)}> {글.name} <span onClick={() => { 
             글목록변경(prevState => {
               const 새목록 = [...prevState];
               새목록[index] = { ...새목록[index], favoriteCount: 새목록[index].favoriteCount + 1 };
@@ -54,24 +62,22 @@ function App() {
           <hr />
         </div>
       ))}
-      <Modal 선택한상점={상점선택} 글목록={글목록} 모달닫기={모달닫기} />
+      <Modal 선택한상점={상점선택} 모달닫기={모달닫기} />
     </div>
   );
 }
 
-function Modal({ 선택한상점, 글목록, 모달닫기 }) {
-  // 선택한 상점의 이름을 이용하여 해당 상점 정보 찾기
-  const selectedStore = 글목록.find(store => store.name === 선택한상점);
-
+function Modal({ 선택한상점, 모달닫기 }) {
   return (
     <div className='modal'>
-      {selectedStore ? (
+      {선택한상점 ? (
         <>
-          <h2>선택한 상점: {selectedStore.name}</h2>
-          <p>전화번호: {selectedStore.phoneNum}</p>
-          <p>거리: {selectedStore.description}</p>
-          <p>평균 평점: {selectedStore.averageRating}</p>
-          <p>리뷰 수: {selectedStore.totalReviewCount}</p>
+          <h2>선택한 상점: {선택한상점.name}</h2>
+          <p>전화번호: {선택한상점.phoneNum}</p>
+          <p>거리: {선택한상점.description}</p>
+          <p>평균 평점: {선택한상점.averageRating}</p>
+          <p>리뷰 수: {선택한상점.totalReviewCount}</p>
+          <p>좋아요 수: {선택한상점.favoriteCount}</p>
         </>
       ) : (
         <p>상세보기를 원하는 상점의 제목을 클릭해주세요.</p>
@@ -82,8 +88,3 @@ function Modal({ 선택한상점, 글목록, 모달닫기 }) {
 }
 
 export default App;
-
-
-
-
-
