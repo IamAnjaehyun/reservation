@@ -11,7 +11,7 @@ function App() {
 
   useEffect(() => {
     // 네트워크 요청을 보내어 JSON 데이터 받아오기
-    axios.get('http://localhost:8080/v1/guest/store')
+    axios.get('http://15.164.105.168:8080/v1/guest/store')
       .then(response => {
         // 받아온 데이터의 content 배열의 name 값만 추출하여 글제목에 설정
         글목록변경(response.data.body.storeList.content);
@@ -30,7 +30,7 @@ function App() {
   };
 
   const fetchStoreDetails = (storeId) => {
-    axios.get(`http://localhost:8080/v1/guest/store/${storeId}`)
+    axios.get(`http://15.164.105.168:8080/v1/guest/store/${storeId}`)
       .then(response => {
         상점변경(response.data.body.store);
       })
@@ -74,6 +74,7 @@ function Modal({ 선택한상점, 모달닫기 }) {
         <>
           <h2>선택한 상점: {선택한상점.name}</h2>
           <p>전화번호: {선택한상점.phoneNum}</p>
+          <p>위치: {선택한상점.location}</p>
           <p>거리: {선택한상점.description}</p>
           <p>평균 평점: {선택한상점.averageRating}</p>
           <p>리뷰 수: {선택한상점.totalReviewCount}</p>
