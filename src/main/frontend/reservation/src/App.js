@@ -106,7 +106,6 @@ function Modal({ 선택한상점, 모달닫기 }) {
               <ul>
                 {댓글리스트.map((댓글) => (
                   <li key={댓글.reviewId}>
-                    <p>리뷰 ID: {댓글.reviewId}</p>
                     <p>사용자 이름: {댓글.userName}</p>
                     <p>평점: {댓글.stars}</p>
                     <p>리뷰 내용: {댓글.reviewText}</p>
