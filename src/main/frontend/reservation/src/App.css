@@ -25,6 +25,46 @@ body {
   padding: 20px;
   background: #eee;
 }
+/* 아래 스타일을 기존 CSS에 추가하세요 */
+.comment-list {
+  list-style: none;
+  padding: 0;
+}
+
+.comment-item {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.comment-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.comment-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+  margin-right: 10px;
+}
+
+.comment-stars,
+.comment-review {
+  margin: 0;
+}
+
+.comment-author {
+  margin: 0;
+}
+
+.comment-divider {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 10px 0;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

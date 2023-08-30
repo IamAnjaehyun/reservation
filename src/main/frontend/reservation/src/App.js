@@ -103,25 +103,28 @@ function Modal({ 선택한상점, 모달닫기 }) {
           {댓글보기 && (
             <>
               <h3>댓글 리스트</h3>
-              <ul>
-                {댓글리스트.map((댓글) => (
-                  <li key={댓글.reviewId}>
-                    <p>사용자 이름: {댓글.userName}</p>
-                    <p>평점: {댓글.stars}</p>
-                    <p>리뷰 내용: {댓글.reviewText}</p>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-        </>
-      ) : (
-        <p>상세보기를 원하는 상점의 제목을 클릭해주세요.</p>
-      )}
-      <button onClick={모달닫기}>닫기</button>
-    </div>
-  );
-}
+              <ul className="comment-list">
+                {댓글리스트.map((댓글, index) => (
+                  <li className="comment-item" key={댓글.reviewId}>
+                    <div className="comment-content">
+                      <div className="comment-details">
+                        <p className="comment-stars">평점: {댓글.stars}</p>
+                        <p className="comment-review">리뷰 내용: {댓글.reviewText}</p>
+                      </div>
+                      <p className="comment-author">작성자: {댓글.userName}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>          </>
+        )}
+      </>
+    ) : (
+      <p>상세보기를 원하는 상점의 제목을 클릭해주세요.</p>
+    )}
+    <button onClick={모달닫기}>닫기</button>
+  </div>
+);
+      }  
 
 
 export default App;
