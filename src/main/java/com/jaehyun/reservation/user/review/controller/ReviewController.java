@@ -3,13 +3,16 @@ package com.jaehyun.reservation.user.review.controller;
 import com.jaehyun.reservation.global.common.APIResponse;
 import com.jaehyun.reservation.user.review.domain.dto.ReviewReqDto;
 import com.jaehyun.reservation.user.review.domain.dto.ReviewResDto;
+import com.jaehyun.reservation.user.review.domain.entity.Review;
 import com.jaehyun.reservation.user.review.service.ReviewService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import java.security.Principal;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -51,5 +54,11 @@ public class ReviewController {
       Principal principal) {
     reviewService.deleteReview(reviewId, principal);
     return APIResponse.delete();
+  }
+
+  @GetMapping("/stores/{storeId}")
+  public APIResponse<List<ReviewResDto>> getReview(
+      @ApiParam(value = "상점 ID") @PathVariable Long storeId) {
+    return APIResponse.success(reviewService.getReview(storeId));
   }
 }

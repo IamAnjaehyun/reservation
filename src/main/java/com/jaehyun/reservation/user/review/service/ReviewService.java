@@ -18,6 +18,8 @@ import com.jaehyun.reservation.user.type.ReservationStatus;
 import com.jaehyun.reservation.user.user.domain.entity.User;
 import com.jaehyun.reservation.user.user.service.UserService;
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -49,7 +51,7 @@ public class ReviewService {
     if (reviewRepository.existsByReservationIdAndUser(reservationId, user)) {
       throw new AlreadyExistReviewException();
     }
-    Review review = new Review().builder()
+    Review review = Review.builder()
         .store(store)
         .user(user)
         .reviewText(reviewReqDto.getReviewText())
@@ -82,5 +84,13 @@ public class ReviewService {
         .orElseThrow(NotExistReviewException::new);
 
     reviewRepository.delete(review);
+  }
+
+  public List<ReviewResDto> getReview(Long storeId) {
+    Store store = storeRepository.findById(storeId).orElseThrow(NotExistStoreException::new);
+    List<Review> reviewList = reviewRepository.findAllByStoreId(store.getId());
+    return reviewList.stream()
+        .map(ReviewResDto::fromReviewResDto)
+        .collect(Collectors.toList());
   }
 }
