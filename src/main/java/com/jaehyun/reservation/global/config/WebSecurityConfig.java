@@ -35,23 +35,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
-        .cors(cors-> cors.configurationSource(corsConfigurationSource()))
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .httpBasic().disable() // rest api 만을 고려하여 기본 설정은 해제하겠습니다.
         .csrf().disable() // csrf 보안 토큰 disable처리.
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 역시 사용하지 않습니다.
         .and()
         .authorizeRequests() // 요청에 대한 사용권한 체크
+        .antMatchers("/v1/guest/**", "/v1/reservation/user/review/stores/**").permitAll()
         .antMatchers("/v1/reservation/user/**")
         .hasAnyRole("USER", "ADMIN") // USER 또는 ADMIN 역할을 가진 사용자 접근 가능
         .antMatchers("/v1/reservation/admin/**").hasRole("ADMIN")
-        .antMatchers("/v1/guest/**").permitAll()
         .and()
         .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
             UsernamePasswordAuthenticationFilter.class);
   }
+
   @Bean
-  public UrlBasedCorsConfigurationSource corsConfigurationSource(){
+  public UrlBasedCorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration corsConfiguration = new CorsConfiguration();
     corsConfiguration.addAllowedOriginPattern("*");
     corsConfiguration.addAllowedMethod("*");

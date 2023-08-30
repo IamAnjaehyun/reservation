@@ -11,7 +11,7 @@ function App() {
 
   useEffect(() => {
     // 네트워크 요청을 보내어 JSON 데이터 받아오기
-    axios.get('http://localhost:8080/v1/guest/store')
+    axios.get('http://15.164.105.168:8080/v1/guest/store')
       .then(response => {
         // 받아온 데이터의 content 배열의 name 값만 추출하여 글제목에 설정
         글목록변경(response.data.body.storeList.content);
@@ -30,7 +30,7 @@ function App() {
   };
 
   const fetchStoreDetails = (storeId) => {
-    axios.get(`http://localhost:8080/v1/guest/store/${storeId}`)
+    axios.get(`http://15.164.105.168:8080/v1/guest/store/${storeId}`)
       .then(response => {
         상점변경(response.data.body.store);
       })
@@ -68,16 +68,52 @@ function App() {
 }
 
 function Modal({ 선택한상점, 모달닫기 }) {
+  const [댓글리스트, set댓글리스트] = useState([]);
+  const [댓글보기, 댓글보기변경] = useState(false);
+
+  useEffect(() => {
+    if (선택한상점) {
+      axios.get(`http://15.164.105.168:8080/v1/reservation/user/review/stores/${선택한상점.storeId}`)
+        .then(response => {
+          set댓글리스트(response.data.body);
+        })
+        .catch(error => {
+          console.error('Error fetching comments:', error);
+        });
+    }
+  }, [선택한상점]);
+
+  const 토글댓글보기 = () => {
+    댓글보기변경(!댓글보기);
+  };
+
   return (
     <div className='modal'>
       {선택한상점 ? (
         <>
           <h2>선택한 상점: {선택한상점.name}</h2>
           <p>전화번호: {선택한상점.phoneNum}</p>
+          <p>위치: {선택한상점.location}</p>
           <p>거리: {선택한상점.description}</p>
           <p>평균 평점: {선택한상점.averageRating}</p>
           <p>리뷰 수: {선택한상점.totalReviewCount}</p>
-          <p>좋아요 수: {선택한상점.favoriteCount}</p>
+          <button onClick={토글댓글보기}>
+            {댓글보기 ? '댓글 숨기기' : '댓글 보기'}
+          </button>
+          {댓글보기 && (
+            <>
+              <h3>댓글 리스트</h3>
+              <ul>
+                {댓글리스트.map((댓글) => (
+                  <li key={댓글.reviewId}>
+                    <p>사용자 이름: {댓글.userName}</p>
+                    <p>평점: {댓글.stars}</p>
+                    <p>리뷰 내용: {댓글.reviewText}</p>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </>
       ) : (
         <p>상세보기를 원하는 상점의 제목을 클릭해주세요.</p>
@@ -86,5 +122,6 @@ function Modal({ 선택한상점, 모달닫기 }) {
     </div>
   );
 }
+
 
 export default App;
