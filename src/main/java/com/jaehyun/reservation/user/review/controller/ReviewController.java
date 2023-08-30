@@ -30,7 +30,7 @@ public class ReviewController {
   private final ReviewService reviewService;
 
   //상점 대한 리뷰 작성
-  @PostMapping("/create/{reservationId}")
+  @PostMapping("/{reservationId}")
   public APIResponse<ReviewResDto> createReview(
       @ApiParam(value = "예약 ID") @PathVariable Long reservationId,
       @ApiParam(value = "리뷰 작성 Dto") @RequestBody ReviewReqDto reviewReqDto,
